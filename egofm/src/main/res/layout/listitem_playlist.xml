@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Daft Punk feat. Julian Casablanca"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+
+        android:textColor="@color/egofm_green"
+        android:layout_toLeftOf="@+id/playlist_date"
+        android:layout_alignParentLeft="true"
+
+        android:id="@+id/playlist_artist" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        tools:text="Instant Crush (Radio Edit)"
+        android:layout_below="@+id/playlist_artist"
+        android:layout_toLeftOf="@+id/playlist_time"
+        android:layout_alignParentLeft="true"
+        android:textStyle="normal"
+        android:fontFamily="sans-serif-light"
+
+        android:id="@+id/playlist_title" />
+
+    <TextView
+        android:layout_marginLeft="8dp"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        tools:text="22.01.2014"
+        android:fontFamily="sans-serif-thin"
+        android:id="@+id/playlist_date" />
+
+
+    <TextView
+        android:layout_marginLeft="8dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/playlist_date"
+        android:gravity="bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        tools:text="22:35"
+        android:fontFamily="sans-serif-light"
+        android:id="@+id/playlist_time" />
+
+
+</RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+
+

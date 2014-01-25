@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="@layout/activity_main"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_light_grey"
+    android:layout_height="match_parent" >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="com.nilsbo.egofm.fragments.PlaylistFragment"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+
+        android:dividerPadding="2dp"
+        android:background="@drawable/playlist_timepicker_bg"
+        >
+
+
+        <Button
+            android:id="@+id/btn_date"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:textSize="16sp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:textColor="#444444"
+            style="@style/Spinneregofm"
+            />
+
+        <Button
+            android:id="@+id/btn_time"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:textColor="#444444"
+            android:textSize="16sp"
+            android:layout_weight="1"
+            android:singleLine="true"
+            style="@style/Spinneregofm"
+            />
+
+        <Button
+            android:layout_margin="0dp"
+            android:id="@+id/btn_now"
+            android:layout_width="match_parent"
+            android:textSize="16sp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:text="@string/datetimepicker_now"
+            />
+
+    </LinearLayout>
+
+    <ListView
+        tools:listitem="@layout/listitem_playlist"
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical">
+        <ProgressBar
+            android:id="@+id/empty_playlist_progress"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            />
+        <TextView
+            android:visibility="gone"
+            android:gravity="center_horizontal"
+            android:id="@+id/empty_playlist_text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:fontFamily="sans-serif-condensed"
+            android:textStyle="bold"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

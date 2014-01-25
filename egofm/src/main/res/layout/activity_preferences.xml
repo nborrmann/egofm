@@ -1,0 +1,15 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/egofm_grey"
+    android:fitsSystemWindows="true"
+    >
+
+    <fragment
+        android:background="@color/background_light_grey"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.nilsbo.egofm.fragments.SettingsFragment"
+        android:id="@+id/fragment"
+        android:layout_gravity="center_horizontal" />
+</FrameLayout>

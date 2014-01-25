@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/egofm/libs/android-styled-dialogs-library/android-styled-dialogs-library.iml" filepath="$PROJECT_DIR$/egofm/libs/android-styled-dialogs-library/android-styled-dialogs-library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/egofm/libs/datetimepicker-library/datetimepicker-library.iml" filepath="$PROJECT_DIR$/egofm/libs/datetimepicker-library/datetimepicker-library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/egofm/egofm.iml" filepath="$PROJECT_DIR$/egofm/egofm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/egofmProject.iml" filepath="$PROJECT_DIR$/egofmProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/egofm/libs/libs.iml" filepath="$PROJECT_DIR$/egofm/libs/libs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/egofm/libs/volley/volley.iml" filepath="$PROJECT_DIR$/egofm/libs/volley/volley.iml" />
+    </modules>
+  </component>
+</project>
+
