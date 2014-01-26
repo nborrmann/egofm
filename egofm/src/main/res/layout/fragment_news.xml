@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:background="@color/background_light_grey"
     android:layout_height="match_parent"
+
     >
 
     <ListView
@@ -13,7 +14,9 @@
         android:divider="@null"
         android:dividerHeight="0dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+
+        />
 
     <LinearLayout
         android:id="@android:id/empty"

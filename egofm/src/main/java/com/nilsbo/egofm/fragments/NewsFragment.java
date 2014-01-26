@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,13 +31,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class NewsFragment extends ListFragment implements Response.ErrorListener, Response.Listener<ArrayList<NewsItem>> {
+public class NewsFragment extends ListFragment implements Response.ErrorListener, Response.Listener<ArrayList<NewsItem>>, AbsListView.OnScrollListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.NewsFragment";
 
     final RequestQueue requestQueue = MyVolley.getRequestQueue();
     private ArrayList<NewsItem> news = new ArrayList<NewsItem>();
     private View parentView;
     private NewsAdapter adapter;
+    private String url_pattern = "http://egofm.de.ps-server.net/app-news?tmpl=app&start=%d";
+    private int page = 0;
+    private boolean isLoading;
 
     /**
      * Use this factory method to create a new instance of
@@ -58,16 +62,19 @@ public class NewsFragment extends ListFragment implements Response.ErrorListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String url = "http://egofm.de.ps-server.net/app-news?tmpl=app";
-        NewsListRequest playlistRequest = new NewsListRequest(url, this, this);
+        loadNews();
+
+    }
+
+    private void loadNews() {
+        Log.d(TAG, "loading page " + page);
+        isLoading = true;
+        NewsListRequest playlistRequest = new NewsListRequest(getUrl(), this, this);
         playlistRequest.setRetryPolicy(new DefaultRetryPolicy(
                 20000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(playlistRequest);
-
-//        adapter.setItems(null);
-
     }
 
     @Override
@@ -78,6 +85,25 @@ public class NewsFragment extends ListFragment implements Response.ErrorListener
         setListAdapter(adapter);
 
 
+        getListView().setOnScrollListener(this);
+    }
+
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount > 10 && !isLoading) {
+            page++;
+            loadNews();
+        }
+    }
+
+    private String getUrl() {
+        return String.format(url_pattern, page * 15);
     }
 
     @Override
@@ -94,13 +120,14 @@ public class NewsFragment extends ListFragment implements Response.ErrorListener
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        Log.d(TAG, "onErrorResponse");
         Log.d(TAG, "onErrorResponse "+error.getMessage());
+        isLoading = false;
     }
 
     @Override
     public void onResponse(ArrayList<NewsItem> response) {
         Log.d(TAG, "onResponse");
-        adapter.setItems(response);
+        adapter.addItems(response);
+        isLoading = false;
     }
 }

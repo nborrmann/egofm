@@ -29,6 +29,7 @@ public class MyVolley {
     public static class MyUrlRewriter implements HurlStack.UrlRewriter     {
         @Override
         public String rewriteUrl(String originalUrl) {
+            originalUrl = originalUrl.replaceAll(" ", "%20");
             return URI.create(originalUrl).toASCIIString();
         }
     }

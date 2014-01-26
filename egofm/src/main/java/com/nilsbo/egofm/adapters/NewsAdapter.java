@@ -14,7 +14,6 @@ import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.util.NewsItem;
 
-import java.net.URI;
 import java.util.ArrayList;
 
 /**
@@ -23,20 +22,29 @@ import java.util.ArrayList;
 public class NewsAdapter extends BaseAdapter {
     private static final String TAG = "com.nilsbo.egofm.adapters.PlaylistAdapter";
 
-    private ArrayList<NewsItem> songs = new ArrayList<NewsItem>();
+    private ArrayList<NewsItem> newsItems = new ArrayList<NewsItem>();
     private final LayoutInflater mflater;
     final ImageLoader imageLoader = MyVolley.getImageLoader();
 
-    public NewsAdapter(ArrayList<NewsItem> songs, Context context) {
-        this.songs = songs;
+    public NewsAdapter(ArrayList<NewsItem> newsItems, Context context) {
+        this.newsItems = newsItems;
         mflater = LayoutInflater.from(context);
+    }
+
+    public void addItems(ArrayList<NewsItem> items) {
+        if (items == null) {
+            newsItems = new ArrayList<NewsItem>();
+        } else {
+            newsItems.addAll(items);
+        }
+        notifyDataSetChanged();
     }
 
     public void setItems(ArrayList<NewsItem> items) {
         if (items != null) {
-            songs = items;
+            newsItems = items;
         } else {
-            songs = new ArrayList<NewsItem>();
+            newsItems = new ArrayList<NewsItem>();
         }
         notifyDataSetChanged();
     }
@@ -44,7 +52,7 @@ public class NewsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        NewsItem newsItem = songs.get(position);
+        NewsItem newsItem = newsItems.get(position);
 
         if (convertView == null) {
             holder = new ViewHolder();
@@ -68,12 +76,12 @@ public class NewsAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return songs.size();
+        return newsItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return songs.get(position);
+        return newsItems.get(position);
     }
 
     @Override
