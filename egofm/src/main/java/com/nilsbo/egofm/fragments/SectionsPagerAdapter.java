@@ -22,12 +22,18 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return PlaylistFragment.newInstance();
+        switch (position) {
+            case 0:
+                return PlaylistFragment.newInstance();
+            case 1:
+                return NewsFragment.newInstance();
+        }
+        return null;
     }
 
     @Override
     public int getCount() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -36,6 +42,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return context.getString(R.string.tab_playlist).toUpperCase(l);
+            case 1:
+                return context.getString(R.string.tab_news).toUpperCase(l);
         }
         return null;
     }

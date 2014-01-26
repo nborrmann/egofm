@@ -27,6 +27,7 @@
     <string name="title_activity_license">Lizenzen</string>
     <string name="licenses_title">Lizenzen</string>
     <string name="prefs_metadata">Notification-Metadaten aktualisieren</string>
+    <string name="tab_news">News</string>
 
     <string-array name="quality_entries">
         <item>Hoch (192 kbits)</item>
