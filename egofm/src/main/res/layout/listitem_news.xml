@@ -5,9 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/newslist_item_padding"
-    android:paddingRight="@dimen/newslist_item_padding"
-    android:paddingTop="@dimen/newslist_item_padding"
+    android:background="@drawable/listitem_bg_selector"
 
     >
 
@@ -19,8 +17,6 @@
         android:src="@drawable/testbild"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-
-
         />
 
 

@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * Created by Nils on 23.01.14.
  */
 public class NewsAdapter extends BaseAdapter {
-    private static final String TAG = "com.nilsbo.egofm.adapters.PlaylistAdapter";
+    private static final String TAG = "com.nilsbo.egofm.adapters.NewsAdapter";
 
     private ArrayList<NewsItem> newsItems = new ArrayList<NewsItem>();
     private final LayoutInflater mflater;
@@ -68,7 +68,6 @@ public class NewsAdapter extends BaseAdapter {
         Log.d(TAG, newsItem.imgUrl);
         holder.title.setText(newsItem.title);
         holder.subtitle.setText(newsItem.subtitle);
-        holder.imageView.setImageUrl("http://egofm.de" + newsItem.imgUrl, imageLoader);
 
         convertView.setTag(holder);
         return convertView;

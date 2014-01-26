@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="egofm_green">#96c11f</color>
+    <color name="egofm_green_transparent">#9996c11f</color>
     <color name="egofm_grey">#282828</color>
     <color name="background_light_grey">#f1f1f1</color>
+    <color name="transparent">#00ffffff</color>
 </resources>

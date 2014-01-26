@@ -96,7 +96,7 @@ public class NewsFragment extends ListFragment implements Response.ErrorListener
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount > 10 && !isLoading) {
+        if (firstVisibleItem + visibleItemCount  == totalItemCount-2 && totalItemCount > 10 && !isLoading) {
             page++;
             loadNews();
         }

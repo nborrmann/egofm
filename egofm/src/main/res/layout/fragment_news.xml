@@ -12,9 +12,14 @@
         tools:listitem="@layout/listitem_news"
         android:id="@android:id/list"
         android:divider="@null"
-        android:dividerHeight="0dp"
+        android:dividerHeight="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:drawSelectorOnTop="true"
+        android:padding="5dp"
+        android:clipToPadding="false"
+
+        android:listSelector="@drawable/listitem_bg_selector"
 
         />
 
