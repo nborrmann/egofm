@@ -1,7 +1,6 @@
 package com.nilsbo.egofm.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,9 +64,9 @@ public class NewsAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Log.d(TAG, newsItem.imgUrl);
         holder.title.setText(newsItem.title);
         holder.subtitle.setText(newsItem.subtitle);
+        holder.imageView.setImageUrl("http://egofm.de" + newsItem.imgUrl, imageLoader);
 
         convertView.setTag(holder);
         return convertView;
