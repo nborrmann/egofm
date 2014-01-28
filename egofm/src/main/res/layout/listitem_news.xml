@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/newslistitem_image"
-        android:src="@drawable/testbild"
+        android:src="@drawable/default_news_image"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         />

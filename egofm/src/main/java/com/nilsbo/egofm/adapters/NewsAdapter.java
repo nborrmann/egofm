@@ -60,6 +60,9 @@ public class NewsAdapter extends BaseAdapter {
             holder.title = (TextView) convertView.findViewById(R.id.newslistitem_title);
             holder.subtitle = (TextView) convertView.findViewById(R.id.newslistitem_subtitle);
             holder.imageView = (NetworkImageView) convertView.findViewById(R.id.newslistitem_image);
+
+            holder.imageView.setDefaultImageResId(R.drawable.default_news_image);
+            holder.imageView.setErrorImageResId(R.drawable.default_news_image);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }

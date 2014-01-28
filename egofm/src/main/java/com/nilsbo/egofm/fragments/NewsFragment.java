@@ -1,38 +1,31 @@
 package com.nilsbo.egofm.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.GridView;
+import android.widget.LinearLayout;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.adapters.NewsAdapter;
-import com.nilsbo.egofm.adapters.PlaylistAdapter;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.networking.NewsListRequest;
-import com.nilsbo.egofm.networking.PlaylistRequest;
 import com.nilsbo.egofm.util.NewsItem;
-import com.nilsbo.egofm.util.PlaylistItem;
-import com.sleepbot.datetimepicker.time.RadialPickerLayout;
-import com.sleepbot.datetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 
-public class NewsFragment extends ListFragment implements Response.ErrorListener, Response.Listener<ArrayList<NewsItem>>, AbsListView.OnScrollListener {
+public class NewsFragment extends Fragment implements Response.ErrorListener, Response.Listener<ArrayList<NewsItem>>, AbsListView.OnScrollListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.NewsFragment";
+    private static final String SAVED_STATE_NEWS_ARRAY = "savedstatenews";
 
     final RequestQueue requestQueue = MyVolley.getRequestQueue();
     private ArrayList<NewsItem> news = new ArrayList<NewsItem>();
@@ -62,7 +55,6 @@ public class NewsFragment extends ListFragment implements Response.ErrorListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        loadNews();
 
     }
 
@@ -82,10 +74,21 @@ public class NewsFragment extends ListFragment implements Response.ErrorListener
         super.onActivityCreated(savedInstanceState);
 
         adapter = new NewsAdapter(news, getActivity());
-        setListAdapter(adapter);
 
+        if (savedInstanceState != null) {
+            news = savedInstanceState.getParcelableArrayList(SAVED_STATE_NEWS_ARRAY);
+            adapter.setItems(news);
+        } else {
+            loadNews();
+        }
 
-        getListView().setOnScrollListener(this);
+        GridView view = (GridView) getView().findViewById(R.id.newslist);
+        LinearLayout emptyView = (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_news_empty, null, false);
+
+        view.setAdapter(adapter);
+        view.setOnScrollListener(this);
+        view.setEmptyView(emptyView);
+
     }
 
 
@@ -96,7 +99,7 @@ public class NewsFragment extends ListFragment implements Response.ErrorListener
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (firstVisibleItem + visibleItemCount  == totalItemCount-2 && totalItemCount > 10 && !isLoading) {
+        if (firstVisibleItem + visibleItemCount >= totalItemCount - 3 && totalItemCount > 10 && !isLoading) {
             page++;
             loadNews();
         }
@@ -114,8 +117,7 @@ public class NewsFragment extends ListFragment implements Response.ErrorListener
 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        outState.putParcelableArrayList(SAVED_STATE_PLAYLIST_ARRAY, songs);
-//        outState.putIntArray(SAVED_STATE_TIME, new int[]{year, month, day, hour, minute});
+        outState.putParcelableArrayList(SAVED_STATE_NEWS_ARRAY, news);
     }
 
     @Override
