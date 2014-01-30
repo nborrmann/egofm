@@ -61,10 +61,12 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebChromeClient(new WebChromeClient());
 
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
         webView.getSettings().setLoadWithOverviewMode(true);
-        webView.getSettings().setTextZoom(150);
-//        webView.getSettings().setUseWideViewPort(true);
-        webView.setInitialScale(100);
+//        webView.getSettings().setTextZoom(150);
+        webView.getSettings().setUseWideViewPort(true);
+//        webView.setInitialScale(200);
+//        webView.setInitialScale(100);
 
 //        webView.setOnLongClickListener(new View.OnLongClickListener() {
 //            @Override

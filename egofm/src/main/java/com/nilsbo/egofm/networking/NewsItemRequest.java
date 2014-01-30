@@ -1,5 +1,7 @@
 package com.nilsbo.egofm.networking;
 
+import android.util.Log;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -48,9 +50,11 @@ public class NewsItemRequest extends Request<String> {
 
         try {
             final Document doc = Jsoup.parse(parsed);
-            doc.select("script, .hidden, div.app_date, div.app_image, div.app_title, a.app_back, div.app_h1, div.itp-share, div.cck_headline").remove();
+            doc.select("script, .hidden, meta, div.app_date, div.app_image, div.app_title, a.app_back, div.app_h1, div.itp-share, div.cck_headline").remove();
             doc.select("div#inner-wrapper").attr("style", "margin-bottom: 0px; text-align: justify;");
+            doc.head().append("    <meta name=\"viewport\" content=\"width=600px, user-scalable=no\" />\n");
             content = doc.html();
+            Log.d(TAG, content);
 
         } catch (Exception e) {
             return null;
