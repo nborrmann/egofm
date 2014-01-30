@@ -1,12 +1,12 @@
 package com.nilsbo.egofm.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.view.Menu;
 
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.fragments.NewsItemFragment;
 
-public class NewsItemActivity extends Activity {
+public class NewsItemActivity extends EgofmActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,4 +24,12 @@ public class NewsItemActivity extends Activity {
                     .commit();
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.settings, menu);
+        return true;
+    }
+
 }

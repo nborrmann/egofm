@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -22,18 +21,18 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.nilsbo.egofm.Interfaces.MainActivityInterface;
+import com.nilsbo.egofm.Interfaces.EgofmActivityInterface;
 import com.nilsbo.egofm.Interfaces.MediaServiceInterface;
-import com.nilsbo.egofm.util.EgoFmNotificationManager;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.networking.TrackRequest;
+import com.nilsbo.egofm.util.EgoFmNotificationManager;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
-import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 
 public class MediaService extends Service implements MediaServiceInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener, MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
@@ -49,7 +48,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     private ScheduledFuture metaDataHandler;
     final RequestQueue requestQueue = MyVolley.getRequestQueue();
     private EgoFmNotificationManager notificationManager;
-    private MainActivityInterface activityCallback;
+    private EgofmActivityInterface activityCallback;
     private MediaService.IntentReceiver receiver = new IntentReceiver();
     private AudioManager audioManager;
 
@@ -295,7 +294,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     }
 
     @Override
-    public void registerActivityCallback(MainActivityInterface activityCallback) {
+    public void registerActivityCallback(EgofmActivityInterface activityCallback) {
         this.activityCallback = activityCallback;
     }
 

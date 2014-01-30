@@ -3,9 +3,8 @@
     tools:context="com.nilsbo.egofm.activities.MainActivity">
 
     <item
-        android:id="@+id/action_play"
-        android:icon="@drawable/ic_action_play"
-        android:title="@string/menu_start_playback"
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
         android:orderInCategory="100"
-        android:showAsAction="always" />
+        android:showAsAction="never" />
 </menu>
