@@ -1,5 +1,6 @@
 package com.nilsbo.egofm.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 
@@ -15,6 +17,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.nilsbo.egofm.R;
+import com.nilsbo.egofm.activities.NewsItemActivity;
 import com.nilsbo.egofm.adapters.NewsAdapter;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.networking.NewsListRequest;
@@ -88,6 +91,16 @@ public class NewsFragment extends Fragment implements Response.ErrorListener, Re
         view.setAdapter(adapter);
         view.setOnScrollListener(this);
         view.setEmptyView(emptyView);
+        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "onClick");
+                Intent intent = new Intent(getActivity(), NewsItemActivity.class);
+                intent.putExtra("url", news.get(position).link);
+                startActivity(intent);
+
+            }
+        });
 
     }
 
@@ -122,7 +135,7 @@ public class NewsFragment extends Fragment implements Response.ErrorListener, Re
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        Log.d(TAG, "onErrorResponse "+error.getMessage());
+        Log.d(TAG, "onErrorResponse " + error.getMessage());
         isLoading = false;
     }
 

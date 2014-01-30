@@ -34,7 +34,6 @@
         <item>wifihigh</item>
         <item>low</item>
     </string-array>
-
     <string-array name="metadata_entries">
         <item>Every five seconds</item>
         <item>Every ten seconds</item>
@@ -50,11 +49,13 @@
         <item>60</item>
     </string-array>
 
-
     <string name="url_stream_high">http://edge.live.mp3.mdn.newmedia.nacamar.net/egofm_192/livestream.mp3</string>
     <string name="url_stream_low">http://edge.live.mp3.mdn.newmedia.nacamar.net/egofm_128/livestream.mp3</string>
     <string name="license_datetimepicker"><![CDATA[Copyright 2013 Flavien Laurent (DatePicker) edisonw (TimePicker)\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.]]></string>
     <string name="license_volley"><![CDATA[Copyright © 2012 The Android Open Source Project\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\n     http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.]]></string>
     <string name="license_jsoup"><![CDATA[The MIT License\nCopyright © 2009 – 2013 Jonathan Hedley (jonathan@hedley.net)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.]]></string>
     <string name="tab_news">News</string>
+    <string name="title_activity_news_item_fragment">News</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>

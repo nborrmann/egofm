@@ -30,16 +30,21 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_egofm</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Egofm</item>
 
+        <!-- Light.DarkActionBar specific -->
+        <item name="android:actionBarWidgetTheme">@style/Theme.Egofm.Widget</item>
+
         <item name="android:buttonStyle">@style/Buttonegofm</item>
         <item name="android:imageButtonStyle">@style/ImageButtonegofm</item>
         <item name="android:dropDownSpinnerStyle">@style/Spinneregofm</item>
         <item name="android:listChoiceIndicatorSingle">@drawable/egofm_btn_radio_holo_light</item>
         <item name="android:listViewStyle">@style/ListView</item>
 
-        <!-- Light.DarkActionBar specific -->
-        <item name="android:actionBarWidgetTheme">@style/Theme.Egofm.Widget</item>
-
         <item name="android:windowTranslucentStatus">true</item>
+
+        <!--<item name="android:textColorHighlight">#9996c11f</item>-->
+        <!--<item name="android:textSelectHandleLeft">@drawable/apptheme_text_select_handle_left</item>-->
+        <!--<item name="android:textSelectHandleRight">@drawable/apptheme_text_select_handle_right</item>-->
+        <!--<item name="android:textSelectHandle">@drawable/apptheme_text_select_handle_middle</item>-->
 
     </style>
 
