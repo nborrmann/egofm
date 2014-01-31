@@ -28,7 +28,7 @@ import com.nilsbo.egofm.util.NewsItem;
 import java.util.ArrayList;
 
 
-public class NewsFragment extends Fragment implements Response.ErrorListener, Response.Listener<ArrayList<NewsItem>>, AbsListView.OnScrollListener {
+public class NewsFragment extends Fragment implements AbsListView.OnScrollListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.NewsFragment";
 
     private static final String SAVED_STATE_PAGE = "savedStatePage";
@@ -89,8 +89,6 @@ public class NewsFragment extends Fragment implements Response.ErrorListener, Re
         @Override
         public void onResponse(ArrayList<NewsItem> response) {
             Log.d(TAG, "onResponse");
-            response.remove(0);
-            response.remove(0);
             adapter.addItems(response);
             isLoading = false;
         }
@@ -181,18 +179,5 @@ public class NewsFragment extends Fragment implements Response.ErrorListener, Re
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(SAVED_STATE_NEWS_ARRAY, news);
         outState.putInt(SAVED_STATE_PAGE, page);
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError error) {
-        Log.d(TAG, "onErrorResponse " + error.getMessage());
-        isLoading = false;
-    }
-
-    @Override
-    public void onResponse(ArrayList<NewsItem> response) {
-        Log.d(TAG, "onResponse");
-        adapter.addItems(response);
-        isLoading = false;
     }
 }

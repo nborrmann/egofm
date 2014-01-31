@@ -57,12 +57,18 @@ public class NewsItemRequest extends Request<String> {
 
             for (Element e : doc.select("div.app_text [width]")) {
                 String width = e.attr("width");
+                String height = e.attr("height");
                 if (width.matches("\\d+") && Integer.valueOf(width) > 560) {
-                    e.attr("width", "100%");
-                    e.removeAttr("height");
-                    Log.d(TAG, e.outerHtml());
-                }
+                    int w = Integer.valueOf(width);
+                    e.attr("width", "560");
 
+                    if (height.matches("\\d+")) {
+                        int h = Integer.valueOf(height);
+                        e.attr("height", String.valueOf(h*560/w));
+                    } else {
+                        e.removeAttr("height");
+                    }
+                }
             }
 
             content = doc.html();
