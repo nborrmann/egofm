@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- File created by the Android Action Bar Style Generator
+<?xml version="1.0" encoding="utf-8"?><!-- File created by the Android Action Bar Style Generator
 
      Copyright (C) 2011 The Android Open Source Project
      Copyright (C) 2012 readyState Software Ltd
@@ -42,9 +41,10 @@
         <item name="android:windowTranslucentStatus">true</item>
 
         <!--<item name="android:textColorHighlight">#9996c11f</item>-->
-        <!--<item name="android:textSelectHandleLeft">@drawable/apptheme_text_select_handle_left</item>-->
-        <!--<item name="android:textSelectHandleRight">@drawable/apptheme_text_select_handle_right</item>-->
-        <!--<item name="android:textSelectHandle">@drawable/apptheme_text_select_handle_middle</item>-->
+        <item name="android:textSelectHandleLeft">@drawable/apptheme_text_select_handle_left</item>
+        <item name="android:textSelectHandleRight">@drawable/apptheme_text_select_handle_right
+        </item>
+        <item name="android:textSelectHandle">@drawable/apptheme_text_select_handle_middle</item>
 
     </style>
 
@@ -89,11 +89,11 @@
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_egofm</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_egofm</item>
     </style>
-    
+
     <style name="ProgressBar.Egofm" parent="@android:style/Widget.Holo.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_egofm</item>
     </style>
-    
+
     <style name="ActionButton.CloseMode.Egofm" parent="@android:style/Widget.Holo.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_egofm</item>
     </style>
@@ -117,5 +117,10 @@
         <item name="android:dropDownSelector">@drawable/egofm_list_selector_holo_light</item>
     </style>
 
+    <style name="RefreshHeaderText" parent="android:style/TextAppearance.Medium">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
 
 </resources>

@@ -49,4 +49,31 @@ public class NewsItem implements Parcelable {
         link = in.readString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || NewsItem.class != o.getClass()) return false;
+
+        NewsItem newsItem = (NewsItem) o;
+
+        if (date != null ? !date.equals(newsItem.date) : newsItem.date != null) return false;
+        if (imgUrl != null ? !imgUrl.equals(newsItem.imgUrl) : newsItem.imgUrl != null)
+            return false;
+        if (link != null ? !link.equals(newsItem.link) : newsItem.link != null) return false;
+        if (subtitle != null ? !subtitle.equals(newsItem.subtitle) : newsItem.subtitle != null)
+            return false;
+        if (title != null ? !title.equals(newsItem.title) : newsItem.title != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = date != null ? date.hashCode() : 0;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (subtitle != null ? subtitle.hashCode() : 0);
+        result = 31 * result + (imgUrl != null ? imgUrl.hashCode() : 0);
+        result = 31 * result + (link != null ? link.hashCode() : 0);
+        return result;
+    }
 }

@@ -16,6 +16,8 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.activities.NewsItemActivity;
 import com.nilsbo.egofm.adapters.NewsAdapter;
@@ -28,8 +30,10 @@ import java.util.ArrayList;
 
 public class NewsFragment extends Fragment implements Response.ErrorListener, Response.Listener<ArrayList<NewsItem>>, AbsListView.OnScrollListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.NewsFragment";
-    private static final String SAVED_STATE_NEWS_ARRAY = "savedstatenews";
 
+    private static final String SAVED_STATE_PAGE = "savedStatePage";
+
+    private static final String SAVED_STATE_NEWS_ARRAY = "savedstatenews";
     final RequestQueue requestQueue = MyVolley.getRequestQueue();
     private ArrayList<NewsItem> news = new ArrayList<NewsItem>();
     private View parentView;
@@ -37,6 +41,7 @@ public class NewsFragment extends Fragment implements Response.ErrorListener, Re
     private String url_pattern = "http://egofm.de.ps-server.net/app-news?tmpl=app&start=%d";
     private int page = 0;
     private boolean isLoading;
+    private PullToRefreshGridView gridView;
 
     /**
      * Use this factory method to create a new instance of
@@ -57,19 +62,59 @@ public class NewsFragment extends Fragment implements Response.ErrorListener, Re
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     private void loadNews() {
         Log.d(TAG, "loading page " + page);
         isLoading = true;
-        NewsListRequest playlistRequest = new NewsListRequest(getUrl(), this, this);
-        playlistRequest.setRetryPolicy(new DefaultRetryPolicy(
-                20000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        NewsListRequest playlistRequest = new NewsListRequest(String.format(url_pattern, page * 15), new LoadListener(), new LoadListener());
+        playlistRequest.setRetryPolicy(new DefaultRetryPolicy(20000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(playlistRequest);
+    }
+
+    private void refreshNews() {
+        isLoading = true;
+        NewsListRequest playlistRequest = new NewsListRequest(String.format(url_pattern, 0), new RefreshListener(), new RefreshListener());
+        playlistRequest.setRetryPolicy(new DefaultRetryPolicy(20000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(playlistRequest);
+    }
+
+    private class LoadListener implements Response.ErrorListener, Response.Listener<ArrayList<NewsItem>> {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse " + error.getMessage());
+            isLoading = false;
+        }
+
+        @Override
+        public void onResponse(ArrayList<NewsItem> response) {
+            Log.d(TAG, "onResponse");
+            response.remove(0);
+            response.remove(0);
+            adapter.addItems(response);
+            isLoading = false;
+        }
+    }
+
+    private class RefreshListener implements Response.ErrorListener, Response.Listener<ArrayList<NewsItem>> {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d(TAG, "onErrorResponse " + error.getMessage());
+            gridView.onRefreshComplete();
+            isLoading = false;
+        }
+
+        @Override
+        public void onResponse(ArrayList<NewsItem> response) {
+            Log.d(TAG, "onResponse");
+            if (!response.get(0).equals(news.get(0))) {
+                // don't merge the lists. This is too much of a hassle and will yield duplicate news when loading additional pages
+                adapter.setItems(response);
+                page = 0;
+            }
+            gridView.onRefreshComplete();
+            isLoading = false;
+        }
     }
 
     @Override
@@ -80,18 +125,26 @@ public class NewsFragment extends Fragment implements Response.ErrorListener, Re
 
         if (savedInstanceState != null) {
             news = savedInstanceState.getParcelableArrayList(SAVED_STATE_NEWS_ARRAY);
+            page = savedInstanceState.getInt(SAVED_STATE_PAGE);
             adapter.setItems(news);
         } else {
             loadNews();
         }
 
-        GridView view = (GridView) getView().findViewById(R.id.newslist);
+        gridView = (PullToRefreshGridView) getView().findViewById(R.id.newslist);
         LinearLayout emptyView = (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_news_empty, null, false);
 
-        view.setAdapter(adapter);
-        view.setOnScrollListener(this);
-        view.setEmptyView(emptyView);
-        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<GridView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<GridView> refreshView) {
+                refreshNews();
+            }
+        });
+
+        gridView.setAdapter(adapter);
+        gridView.setOnScrollListener(this);
+        gridView.setEmptyView(emptyView);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "onClick");
@@ -118,10 +171,6 @@ public class NewsFragment extends Fragment implements Response.ErrorListener, Re
         }
     }
 
-    private String getUrl() {
-        return String.format(url_pattern, page * 15);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_news, container, false);
@@ -131,6 +180,7 @@ public class NewsFragment extends Fragment implements Response.ErrorListener, Re
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(SAVED_STATE_NEWS_ARRAY, news);
+        outState.putInt(SAVED_STATE_PAGE, page);
     }
 
     @Override

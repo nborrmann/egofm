@@ -29,11 +29,17 @@ android {
             zipAlign true
         }
     }
+    packagingOptions {
+        exclude 'AndroidManifest.xml'
+    }
+
 }
 
 dependencies {
     compile 'com.android.support:support-v4:19.0.1'
     compile 'org.jsoup:jsoup:1.7.3'
+//    compile 'com.github.chrisbanes.pulltorefresh:library:2.1.1'
+    compile project('libs:pullToRefresh-library')
     compile project('libs:datetimepicker-library')
     compile project('libs:volley')
 }
