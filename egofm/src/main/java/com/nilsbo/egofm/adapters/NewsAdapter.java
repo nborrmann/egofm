@@ -30,24 +30,6 @@ public class NewsAdapter extends BaseAdapter {
         mflater = LayoutInflater.from(context);
     }
 
-    public void addItems(ArrayList<NewsItem> items) {
-        if (items == null) {
-            newsItems = new ArrayList<NewsItem>();
-        } else {
-            newsItems.addAll(items);
-        }
-        notifyDataSetChanged();
-    }
-
-    public void setItems(ArrayList<NewsItem> items) {
-        if (items != null) {
-            newsItems = items;
-        } else {
-            newsItems = new ArrayList<NewsItem>();
-        }
-        notifyDataSetChanged();
-    }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
