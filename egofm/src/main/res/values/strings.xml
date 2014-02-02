@@ -14,7 +14,7 @@
     <string name="tab_playlist">Playlist</string>
     <string name="datetimepicker_now">Now</string>
     <string name="playlist_no_results">No songs were found for the specified time period!</string>
-    <string name="playlist_connection_error">An error occurred: %s</string>
+    <string name="list_connection_error">A connection error occurred.</string>
     <string name="title_activity_settings">Settings</string>
     <string name="prefs_streamquality_title">Stream quality</string>
     <string name="prefs_streamquality_summary">Sound-quality of the music stream</string>
@@ -57,5 +57,6 @@
     <string name="tab_news">News</string>
     <string name="title_activity_news_item_fragment">News</string>
     <string name="hello_world">Hello world!</string>
+    <string name="empty_news">Es wurden keine News gefunden!</string>
 
 </resources>

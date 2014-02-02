@@ -1,18 +1,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/empty"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal|center_vertical">
 
     <ProgressBar
-        android:id="@+id/empty_playlist_progress"
+        android:id="@+id/empty_news_progress"
         android:layout_width="64dp"
         android:layout_height="64dp" />
 
     <TextView
         android:visibility="gone"
         android:gravity="center_horizontal"
-        android:id="@+id/empty_playlist_text"
+        android:id="@+id/empty_news_text"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:fontFamily="sans-serif-condensed"
         android:textStyle="bold"

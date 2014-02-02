@@ -11,6 +11,8 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
@@ -42,6 +44,9 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
     private int page = 0;
     private boolean isLoading;
     private PullToRefreshGridView gridView;
+    private ProgressBar emptyProgress;
+    private TextView emptyText;
+    private boolean isError = false;
 
     /**
      * Use this factory method to create a new instance of
@@ -64,58 +69,74 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
         super.onCreate(savedInstanceState);
     }
 
-    private void loadNews() {
+    private void loadNews(int page, VolleyListener listener) {
+        setLoadingStatus(true);
+
         Log.d(TAG, "loading page " + page);
-        isLoading = true;
-        NewsListRequest playlistRequest = new NewsListRequest(String.format(url_pattern, page * 15), new LoadListener(), new LoadListener());
+        NewsListRequest playlistRequest = new NewsListRequest(String.format(url_pattern, page * 15), listener, listener);
         playlistRequest.setRetryPolicy(new DefaultRetryPolicy(20000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(playlistRequest);
     }
 
-    private void refreshNews() {
-        isLoading = true;
-        NewsListRequest playlistRequest = new NewsListRequest(String.format(url_pattern, 0), new RefreshListener(), new RefreshListener());
-        playlistRequest.setRetryPolicy(new DefaultRetryPolicy(20000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(playlistRequest);
-    }
-
-    private class LoadListener implements Response.ErrorListener, Response.Listener<ArrayList<NewsItem>> {
+    private class LoadListener extends VolleyListener implements Response.ErrorListener, Response.Listener<ArrayList<NewsItem>> {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse " + error.getMessage());
-            isLoading = false;
+            Log.d(TAG, "onErrorResponse " + error.getLocalizedMessage());
+            emptyText.setText(getResources().getString(R.string.list_connection_error));
+            setLoadingStatus(false);
+            isError = true;
         }
 
         @Override
         public void onResponse(ArrayList<NewsItem> response) {
-            Log.d(TAG, "onResponse");
-            news.addAll(response);
-            adapter.setItems(news);
-            adapter.notifyDataSetChanged();
-            isLoading = false;
+            if (response.size() == 0) {
+                emptyProgress.setVisibility(View.GONE);
+                emptyText.setVisibility(View.VISIBLE);
+                emptyText.setText(getResources().getString(R.string.empty_news));
+            } else {
+                news.addAll(response);
+                adapter.setItems(news);
+                adapter.notifyDataSetChanged();
+                page++;
+            }
+            setLoadingStatus(false);
         }
     }
 
-    private class RefreshListener implements Response.ErrorListener, Response.Listener<ArrayList<NewsItem>> {
+    private class RefreshListener extends VolleyListener implements Response.ErrorListener, Response.Listener<ArrayList<NewsItem>> {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse " + error.getMessage());
+            Log.d(TAG, "onErrorResponse " + error.getLocalizedMessage());
+            emptyText.setText(getResources().getString(R.string.list_connection_error));
             gridView.onRefreshComplete();
-            isLoading = false;
+            setLoadingStatus(false);
         }
-
         @Override
         public void onResponse(ArrayList<NewsItem> response) {
-            Log.d(TAG, "onResponse");
-            if (!response.get(0).equals(news.get(0))) {
+            if (news.size() == 0 || !response.get(0).equals(news.get(0))) {
                 // don't merge the lists. This is too much of a hassle and will yield duplicate news when loading additional pages
                 news = response;
                 adapter.setItems(response);
                 adapter.notifyDataSetChanged();
-                page = 0;
+                page = 1;
             }
             gridView.onRefreshComplete();
-            isLoading = false;
+            setLoadingStatus(false);
+        }
+    }
+
+    private abstract class VolleyListener implements Response.ErrorListener, Response.Listener<ArrayList<NewsItem>> {
+    }
+
+
+    private void setLoadingStatus(boolean loading) {
+        isLoading = loading;
+        if (loading) {
+            emptyProgress.setVisibility(View.VISIBLE);
+            emptyText.setVisibility(View.GONE);
+        } else {
+            emptyProgress.setVisibility(View.GONE);
+            emptyText.setVisibility(View.VISIBLE);
         }
     }
 
@@ -124,6 +145,12 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
         super.onActivityCreated(savedInstanceState);
 
         adapter = new NewsAdapter(news, getActivity());
+        parentView = getView();
+
+        gridView = (PullToRefreshGridView) getView().findViewById(R.id.newslist);
+        LinearLayout emptyView = (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_news_empty, null, false);
+        emptyProgress = (ProgressBar) emptyView.findViewById(R.id.empty_news_progress);
+        emptyText = (TextView) emptyView.findViewById(R.id.empty_news_text);
 
         if (savedInstanceState != null) {
             news = savedInstanceState.getParcelableArrayList(SAVED_STATE_NEWS_ARRAY);
@@ -131,16 +158,13 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
             adapter.setItems(news);
             adapter.notifyDataSetChanged();
         } else {
-            loadNews();
+            loadNews(0, new LoadListener());
         }
-
-        gridView = (PullToRefreshGridView) getView().findViewById(R.id.newslist);
-        LinearLayout emptyView = (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_news_empty, null, false);
 
         gridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<GridView>() {
             @Override
             public void onRefresh(PullToRefreshBase<GridView> refreshView) {
-                refreshNews();
+                loadNews(0, new RefreshListener());
             }
         });
 
@@ -157,6 +181,7 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
 
             }
         });
+
     }
 
 
@@ -167,9 +192,12 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (firstVisibleItem + visibleItemCount >= totalItemCount - 3 && totalItemCount > 10 && !isLoading) {
-            page++;
-            loadNews();
+        if (firstVisibleItem + visibleItemCount >= totalItemCount - 3 && totalItemCount > 10 && !isLoading && !isError) {
+            loadNews(page, new LoadListener());
+        }
+        if (isError && firstVisibleItem + visibleItemCount < totalItemCount - 2 && totalItemCount > 10) {
+            isError = false;
+            Log.d(TAG, "isError false");
         }
     }
 

@@ -14,7 +14,7 @@
     <string name="tab_playlist">Playlist</string>
     <string name="datetimepicker_now">Jetzt</string>
     <string name="playlist_no_results">Für den eingegebenen Zeitraum wurden keine Titel gefunden!</string>
-    <string name="playlist_connection_error">Es ist ein Fehler aufgetreten: %s</string>
+    <string name="list_connection_error">Es ist ein Verbindungsfehler aufgetreten.</string>
 
     <string name="title_activity_settings">Einstellungen</string>
     <string name="url_stream_high">http://edge.live.mp3.mdn.newmedia.nacamar.net/egofm_192/livestream.mp3</string>
@@ -28,6 +28,7 @@
     <string name="licenses_title">Lizenzen</string>
     <string name="prefs_metadata">Notification-Metadaten aktualisieren</string>
     <string name="tab_news">News</string>
+    <string name="empty_news">Es wurden keine News gefunden!</string>
 
     <string-array name="quality_entries">
         <item>Hoch (192 kbits)</item>
