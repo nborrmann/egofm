@@ -72,6 +72,10 @@ public class NewsAdapter extends BaseAdapter {
         return 0;
     }
 
+    public void setItems(ArrayList<NewsItem> news) {
+        newsItems = news;
+    }
+
     private class ViewHolder {
         public TextView title;
         public TextView subtitle;

@@ -90,8 +90,8 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
         public void onResponse(ArrayList<NewsItem> response) {
             Log.d(TAG, "onResponse");
             news.addAll(response);
+            adapter.setItems(news);
             adapter.notifyDataSetChanged();
-//            adapter.addItems(response);
             isLoading = false;
         }
     }
@@ -110,7 +110,7 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
             if (!response.get(0).equals(news.get(0))) {
                 // don't merge the lists. This is too much of a hassle and will yield duplicate news when loading additional pages
                 news = response;
-//                adapter.setItems(response);
+                adapter.setItems(response);
                 adapter.notifyDataSetChanged();
                 page = 0;
             }
@@ -128,8 +128,8 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
         if (savedInstanceState != null) {
             news = savedInstanceState.getParcelableArrayList(SAVED_STATE_NEWS_ARRAY);
             page = savedInstanceState.getInt(SAVED_STATE_PAGE);
+            adapter.setItems(news);
             adapter.notifyDataSetChanged();
-//            adapter.setItems(news);
         } else {
             loadNews();
         }
