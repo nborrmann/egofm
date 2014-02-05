@@ -51,7 +51,7 @@ public class NewsAdapter extends BaseAdapter {
 
         holder.title.setText(newsItem.title);
         holder.subtitle.setText(newsItem.subtitle);
-        holder.imageView.setImageUrl("http://egofm.de" + newsItem.imgUrl, imageLoader);
+        holder.imageView.setImageUrl(newsItem.imgUrl, imageLoader);
 
         convertView.setTag(holder);
         return convertView;

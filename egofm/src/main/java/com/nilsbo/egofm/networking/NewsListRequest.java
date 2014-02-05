@@ -7,7 +7,6 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.nilsbo.egofm.util.NewsItem;
-import com.nilsbo.egofm.util.PlaylistItem;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,6 +23,7 @@ public class NewsListRequest extends Request<ArrayList<NewsItem>> {
     private static final String TAG = "com.nilsbo.egofm.volley.PlaylistRequest";
 
     private final Listener<ArrayList<NewsItem>> mListener;
+    private static final String BASE_URL = "http://www.egofm.de%s";
 
     public NewsListRequest(int method, String url, Listener<ArrayList<NewsItem>> listener, ErrorListener errorListener) {
         super(method, url, errorListener);
@@ -60,10 +60,10 @@ public class NewsListRequest extends Request<ArrayList<NewsItem>> {
                 n.date = news.getElementsByClass("app_date").text();
                 n.title = news.getElementsByClass("app_title").text();
                 n.subtitle = news.getElementsByClass("app_hl").text();
-                n.imgUrl = news.select("div.app_image a > img").first().attr("src");
-                n.link = news.select("div.app_image a").first().attr("href");
+                n.imgUrl = String.format(BASE_URL, news.select("div.app_image a > img").first().attr("src"));
+                n.imgUrlBig = n.imgUrl.replace("_thumb4", "_thumb2");
+                n.link = String.format(BASE_URL, news.select("div.app_image a").first().attr("href"));
                 newsList.add(n);
-
             }
 
         } catch (Exception e) {

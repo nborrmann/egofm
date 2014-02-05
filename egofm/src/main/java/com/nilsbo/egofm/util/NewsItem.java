@@ -12,6 +12,7 @@ public class NewsItem implements Parcelable {
     public String subtitle;
     public String imgUrl;
     public String link;
+    public String imgUrlBig;
 
     public NewsItem() {
     }
@@ -29,6 +30,7 @@ public class NewsItem implements Parcelable {
         dest.writeString(subtitle);
         dest.writeString(imgUrl);
         dest.writeString(link);
+        dest.writeString(imgUrlBig);
     }
 
     public static final Parcelable.Creator<NewsItem> CREATOR = new Parcelable.Creator<NewsItem>() {
@@ -47,6 +49,7 @@ public class NewsItem implements Parcelable {
         subtitle = in.readString();
         imgUrl = in.readString();
         link = in.readString();
+        imgUrlBig = in.readString();
     }
 
     @Override

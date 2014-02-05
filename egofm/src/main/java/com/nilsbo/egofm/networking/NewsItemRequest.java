@@ -51,9 +51,10 @@ public class NewsItemRequest extends Request<String> {
 
         try {
             final Document doc = Jsoup.parse(parsed);
-            doc.select("script, .hidden, div.app_date, div.app_image, div.app_title, a.app_back, div.app_h1, div.itp-share, div.cck_headline").remove();
+            doc.select("script, meta, .hidden, div.app_date, div.app_title, div.app_hl, div.app_image, div.cck_headline, a.app_back, div.itp-share").remove(); //
             doc.select("div#inner-wrapper").attr("style", "margin-bottom: 0px; text-align: justify;");
             doc.head().append("    <style type=\"text/css\"> ::selection {background: #96c11f; color: #fff;} </style>\n");
+            doc.head().append("<meta name=\"viewport\" content=\"width=560; user-scalable=0;\" />");
 
             for (Element e : doc.select("div.app_text [width]")) {
                 String width = e.attr("width");

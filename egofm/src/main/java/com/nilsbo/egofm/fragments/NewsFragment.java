@@ -34,8 +34,8 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
     private static final String TAG = "com.nilsbo.egofm.fragments.NewsFragment";
 
     private static final String SAVED_STATE_PAGE = "savedStatePage";
-
     private static final String SAVED_STATE_NEWS_ARRAY = "savedstatenews";
+
     final RequestQueue requestQueue = MyVolley.getRequestQueue();
     private ArrayList<NewsItem> news = new ArrayList<NewsItem>();
     private View parentView;
@@ -174,9 +174,8 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onClick");
                 Intent intent = new Intent(getActivity(), NewsItemActivity.class);
-                intent.putExtra("url", news.get(position).link);
+                intent.putExtra("news_header", news.get(position));
                 startActivity(intent);
 
             }

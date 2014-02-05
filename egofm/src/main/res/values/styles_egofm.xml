@@ -39,6 +39,11 @@
         <item name="android:listViewStyle">@style/ListView</item>
 
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:homeAsUpIndicator">@null</item>
+
 
         <!--<item name="android:textColorHighlight">#9996c11f</item>-->
         <item name="android:textSelectHandleLeft">@drawable/apptheme_text_select_handle_left</item>
@@ -58,7 +63,8 @@
 
 
     <style name="ActionBar.Solid.Egofm" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/ab_solid_egofm</item>
+        <item name="android:background">@null</item>
+        <!--<item name="android:background">@drawable/ab_solid_egofm</item>-->
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_egofm</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_egofm</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Egofm</item>
