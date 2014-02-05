@@ -2,8 +2,8 @@
 
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/news_item_header_text"
-    android:paddingLeft="1dp"
-    android:paddingRight="12dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="6dp"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/actionBarSize"
     android:singleLine="true"
@@ -12,6 +12,5 @@
     android:shadowDx="1"
     android:shadowDy="1"
     android:shadowRadius="1"
-    android:gravity="center"
-    android:text="SAY LOU LOU - FEELS LIKE WE ONLY GO BACKWARDS (TAME IMPALA COVER)"
+    android:gravity="center_vertical"
     style="@style/MyActionBarTitleText" />
