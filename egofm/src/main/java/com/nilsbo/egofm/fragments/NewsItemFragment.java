@@ -31,24 +31,29 @@ import com.nilsbo.egofm.widgets.ObservableScrollView;
  */
 public class NewsItemFragment extends Fragment implements Response.ErrorListener, Response.Listener<String>, ObservableScrollView.ScrollViewListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.NewsItemFragment";
-    private final String SAVE_STATED_WEBVIEW_TEXT = "SAVE_STATE_WEBVIEW_TEXT";
-    private ActionBar mActionBar;
 
-    private View rootView;
-    private WebView webView;
+    private static final String SAVE_STATED_WEBVIEW_TEXT = "SAVE_STATE_WEBVIEW_TEXT";
+    private static final int MAX_HEADER_TRANSPARENCY = 180;
+
     final RequestQueue requestQueue = MyVolley.getRequestQueue();
     private String webViewText;
+    private int mActionBarHeight;
+    private int mHeaderActionBarDiff;
+    private int mSubheaderHeight;
+
+    private ActionBar mActionBar;
+    private View rootView;
+    private WebView webView;
     private ObservableScrollView mScrollView;
     private NetworkImageView mHeaderImage;
-    private int mActionBarHeight;
     private RelativeLayout mHeader;
-
     private LayoutInflater mInflater;
     private TextView customHeaderView;
-    private int mHeaderActionBarDiff;
     private NewsItem mNewsItem;
     private TextView mHeaderText;
     private TextView mSubtitleText;
+    private TextView mDateText;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,12 +68,24 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
 
         initContent();
         initWebView();
+        initActionBar();
 
+        if (savedInstanceState != null) {
+            webViewText = savedInstanceState.getString(SAVE_STATED_WEBVIEW_TEXT);
+            webView.loadDataWithBaseURL("http://www.egofm.de/", webViewText, "text/html", "UTF-8", null);
+        } else {
+            loadPage();
+        }
+
+    }
+
+    private void initActionBar() {
         mActionBar = getActivity().getActionBar();
         mActionBarHeight = getActionBarHeight();
 
         customHeaderView = (TextView) mInflater.inflate(R.layout.fragment_news_item_title, null, false);
         customHeaderView.setText(mNewsItem.title);
+
         mActionBar.setCustomView(customHeaderView);
         mActionBar.setDisplayShowCustomEnabled(true);
         mActionBar.setDisplayHomeAsUpEnabled(false);
@@ -78,15 +95,17 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         mHeader = (RelativeLayout) rootView.findViewById(R.id.news_item_header);
         mHeaderText = (TextView) rootView.findViewById(R.id.news_item_header_text);
         mHeaderText.setText(mNewsItem.title);
+        mHeaderText.setSelected(true);
         mSubtitleText = (TextView) rootView.findViewById(R.id.news_item_subtitle);
         mSubtitleText.setText(mNewsItem.subtitle);
-        mHeaderImage = (NetworkImageView) rootView.findViewById(R.id.news_item_header_image);
-        mHeaderImage.setImageUrl(mNewsItem.imgUrlBig, MyVolley.getImageLoader());
-
+        mDateText = (TextView) rootView.findViewById(R.id.news_item_date);
+        mDateText.setText(mNewsItem.date);
         mScrollView = (ObservableScrollView) rootView.findViewById(R.id.news_item_scrollcontainer);
         mScrollView.setScrollViewListener(this);
-        rootView.findViewById(R.id.news_item_header_text).setSelected(true);
 
+        mHeaderImage = (NetworkImageView) rootView.findViewById(R.id.news_item_header_image);
+        mHeaderImage.setMinimumHeight(mActionBarHeight);
+        mHeaderImage.setImageUrl(mNewsItem.imgUrlBig, MyVolley.getImageLoader());
         mHeaderImage.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
@@ -98,19 +117,11 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
                     }
                 });
 
-                mHeaderActionBarDiff = -mHeaderImage.getHeight() + mActionBarHeight;
+                mSubheaderHeight = mSubtitleText.getHeight() + rootView.findViewById(R.id.news_item_seperator).getHeight() + mDateText.getHeight();
+                mHeaderActionBarDiff = mActionBarHeight - mHeaderImage.getHeight();
                 scrollHeader(mScrollView.getScrollY());
             }
         });
-
-
-        if (savedInstanceState != null) {
-            webViewText = savedInstanceState.getString(SAVE_STATED_WEBVIEW_TEXT);
-            webView.loadDataWithBaseURL("http://www.egofm.de/", webViewText, "text/html", "UTF-8", null);
-        } else {
-            loadPage();
-        }
-
     }
 
     private void initContent() {
@@ -148,15 +159,20 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
 
     @Override
     public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
+        y = Math.max(0, y - mSubheaderHeight);
         scrollHeader(y);
     }
 
     private void scrollHeader(int y) {
-        mHeader.setTranslationY(Math.max(-y, mHeaderActionBarDiff));
-        mHeader.setScrollY(Math.max(-y, mHeaderActionBarDiff) / 2);
         if (mHeaderActionBarDiff != 0) {
-            mHeaderImage.setColorFilter(clamp((180 * -y / mHeaderActionBarDiff), 180, 0) << 24, PorterDuff.Mode.SRC_ATOP);
+            mHeader.setTranslationY(Math.max(-y, mHeaderActionBarDiff));
+            mHeader.setScrollY(Math.max(-y, mHeaderActionBarDiff) / 2);
+            mHeaderImage.setColorFilter(clamp((MAX_HEADER_TRANSPARENCY * -y / mHeaderActionBarDiff), MAX_HEADER_TRANSPARENCY, 0) << 24, PorterDuff.Mode.SRC_ATOP);
             customHeaderView.setAlpha(clamp(((5 * (1.0f * -y / mHeaderActionBarDiff) - 4)), 1, 0)); // I have no idea what I'm doing here.
+            mHeaderText.setVisibility(View.VISIBLE);
+        } else {
+            customHeaderView.setAlpha(1);
+            mHeaderText.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -175,6 +191,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     @Override
     public void onResponse(String response) {
         Log.d(TAG, "onResponse");
+        webView.clearView();
         webView.loadDataWithBaseURL("http://www.egofm.de/", response, "text/html", "UTF-8", null);
         webViewText = response;
     }
@@ -190,12 +207,9 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         int actionBarHeight = TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics());
 
         if (android.os.Build.VERSION.SDK_INT >= 19) {
-            int result = 0;
             int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-                result = getResources().getDimensionPixelSize(resourceId);
-            }
-            actionBarHeight += result;
+            if (resourceId > 0)
+                actionBarHeight += getResources().getDimensionPixelSize(resourceId);
         }
         return actionBarHeight;
     }

@@ -12,6 +12,7 @@ import com.nilsbo.egofm.Interfaces.MediaServiceInterface;
 import com.nilsbo.egofm.MediaService;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.fragments.SectionsPagerAdapter;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class MainActivity extends EgofmActivity {
     private static final String TAG = "com.nilsbo.egofm.activities.MainActivity";
@@ -40,13 +41,17 @@ public class MainActivity extends EgofmActivity {
         PagerTitleStrip pagerTabStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
         pagerTabStrip.setTextSpacing(200);
 
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        tintManager.setStatusBarTintResource(R.color.egofm_grey);
+
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.action_settings:
                 Intent mIntent = new Intent(this, SettingsActivity.class);
                 startActivity(mIntent);

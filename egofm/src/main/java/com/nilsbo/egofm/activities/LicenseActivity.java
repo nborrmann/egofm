@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nilsbo.egofm.R;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class LicenseActivity extends EgofmActivity {
 
@@ -14,6 +15,10 @@ public class LicenseActivity extends EgofmActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_license);
+
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        tintManager.setStatusBarTintResource(R.color.egofm_grey);
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()

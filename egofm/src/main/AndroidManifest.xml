@@ -50,6 +50,7 @@
         <activity
             android:name=".activities.NewsItemActivity"
             android:label="@string/title_activity_news_item_fragment"
+            android:theme="@style/Theme.Egofm.TransparentActionBar"
             android:parentActivityName="com.nilsbo.egofm.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -39,11 +39,8 @@
         <item name="android:listViewStyle">@style/ListView</item>
 
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:homeAsUpIndicator">@null</item>
 
+        <item name="android:windowBackground">@null</item>
 
         <!--<item name="android:textColorHighlight">#9996c11f</item>-->
         <item name="android:textSelectHandleLeft">@drawable/apptheme_text_select_handle_left</item>
@@ -52,6 +49,17 @@
         <item name="android:textSelectHandle">@drawable/apptheme_text_select_handle_middle</item>
 
     </style>
+
+    <style name="Theme.Egofm.TransparentActionBar" parent="Theme.Egofm">
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.Egofm.Transparent</item>
+        <item name="android:actionModeBackground">@null</item>
+        <item name="android:actionModeSplitBackground">@null</item>
+
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:homeAsUpIndicator">@null</item>
+    </style>
+
 
     <style name="MyActionBarTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/egofm_green</item>
@@ -63,12 +71,16 @@
 
 
     <style name="ActionBar.Solid.Egofm" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@null</item>
-        <!--<item name="android:background">@drawable/ab_solid_egofm</item>-->
+        <!--<item name="android:background">@null</item>-->
+        <item name="android:background">@drawable/ab_solid_egofm</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_egofm</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_egofm</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Egofm</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+    </style>
+
+    <style name="ActionBar.Solid.Egofm.Transparent" parent="ActionBar.Solid.Egofm">
+        <item name="android:background">@null</item>
     </style>
 
     <style name="ActionBar.Transparent.Egofm" parent="@android:style/Widget.Holo.ActionBar">

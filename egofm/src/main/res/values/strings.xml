@@ -19,7 +19,7 @@
     <string name="prefs_streamquality_title">Stream quality</string>
     <string name="prefs_streamquality_summary">Sound-quality of the music stream</string>
     <string name="prefs_about">About</string>
-    <string name="prefs_disclaimer">This app is not an official app by egoFM. It was developed independently and without and without mandate of egoFM. All displayed content can also be found on the offical website.</string>
+    <string name="prefs_disclaimer">This app is not an official app by egoFM. It was developed independently and without mandate of egoFM. All displayed content can also be found on the offical website.</string>
     <string name="title_activity_license">Licenses</string>
     <string name="licenses_title">Licenses</string>
     <string name="prefs_metadata">Update notification-metadata</string>
@@ -56,7 +56,6 @@
     <string name="license_jsoup"><![CDATA[The MIT License\nCopyright © 2009 – 2013 Jonathan Hedley (jonathan@hedley.net)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.]]></string>
     <string name="tab_news">News</string>
     <string name="title_activity_news_item_fragment">News</string>
-    <string name="hello_world">Hello world!</string>
     <string name="empty_news">Es wurden keine News gefunden!</string>
 
 </resources>

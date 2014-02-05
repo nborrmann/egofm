@@ -5,5 +5,4 @@
     android:layout_height="match_parent"
     tools:context="com.nilsbo.egofm.activities.LicenseActivity"
     tools:ignore="MergeRootFrame"
-    android:fitsSystemWindows="true"
-    android:background="@color/egofm_grey"/>
+    android:fitsSystemWindows="true" />

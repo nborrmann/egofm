@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import com.nilsbo.egofm.R;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class SettingsActivity extends EgofmActivity {
 
@@ -11,6 +12,10 @@ public class SettingsActivity extends EgofmActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
+
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        tintManager.setStatusBarTintResource(R.color.egofm_grey);
     }
 
     @Override
