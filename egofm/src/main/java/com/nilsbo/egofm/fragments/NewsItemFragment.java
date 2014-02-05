@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -44,7 +43,6 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     private int mActionBarHeight;
     private RelativeLayout mHeader;
 
-    private View offsetView;
     private LayoutInflater mInflater;
     private TextView customHeaderView;
     private int mHeaderActionBarDiff;
@@ -88,14 +86,17 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         mScrollView = (ObservableScrollView) rootView.findViewById(R.id.news_item_scrollcontainer);
         mScrollView.setScrollViewListener(this);
         rootView.findViewById(R.id.news_item_header_text).setSelected(true);
-        offsetView = rootView.findViewById(R.id.news_item_list_offset);
 
         mHeaderImage.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                final ViewGroup.LayoutParams offsetParams = offsetView.getLayoutParams();
-                offsetParams.height = Math.max(mHeaderImage.getHeight(), mActionBarHeight);
-                offsetView.setLayoutParams(offsetParams);
+                final int offset = Math.max(mHeaderImage.getHeight(), mActionBarHeight);
+                mScrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mScrollView.setPadding(mScrollView.getPaddingLeft(), offset, mScrollView.getPaddingRight(), mScrollView.getPaddingBottom());
+                    }
+                });
 
                 mHeaderActionBarDiff = -mHeaderImage.getHeight() + mActionBarHeight;
                 scrollHeader(mScrollView.getScrollY());
@@ -134,44 +135,16 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
             webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
             webView.getSettings().setUseWideViewPort(true);
         } else {
-//            webView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
-//            webView.getSettings().setTextZoom(120);
-//            webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            webView.getSettings().setTextZoom(90);
+            webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             webView.getSettings().setUseWideViewPort(false);
         }
 
         webView.getSettings().setPluginState(WebSettings.PluginState.ON);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new MyWebClient());
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setSupportZoom(false);
-        new WebViewClient();
-
-//        webView.setInitialScale(100);
-
     }
-
-    public class MyWebClient extends WebViewClient {
-        @Override
-        public void onScaleChanged(WebView view, float oldScale, float newScale) {
-            Log.d(TAG, "onScaleChanged");
-            if (view != null) {
-                view.invalidate();
-                view.forceLayout();
-            }
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            Log.d(TAG, "onPageFinished");
-            if (view != null) {
-                view.invalidate();
-            }
-
-        }
-
-    }
-
 
     @Override
     public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
