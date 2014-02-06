@@ -19,8 +19,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
     }
     buildTypes {
         release {
@@ -29,11 +29,17 @@ android {
             zipAlign true
         }
     }
+    packagingOptions {
+        exclude 'AndroidManifest.xml'
+    }
+
 }
 
 dependencies {
     compile 'com.android.support:support-v4:19.0.1'
     compile 'org.jsoup:jsoup:1.7.3'
+    compile 'com.readystatesoftware.systembartint:systembartint:+'
+    compile project('libs:pullToRefresh-library')
     compile project('libs:datetimepicker-library')
     compile project('libs:volley')
 }

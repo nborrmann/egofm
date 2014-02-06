@@ -17,9 +17,9 @@ import com.android.volley.VolleyError;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.adapters.PlaylistAdapter;
-import com.nilsbo.egofm.util.PlaylistItem;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.networking.PlaylistRequest;
+import com.nilsbo.egofm.util.PlaylistItem;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 
@@ -115,10 +115,10 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
-        hour = calendar.get(Calendar.HOUR_OF_DAY)-1;
+        hour = calendar.get(Calendar.HOUR_OF_DAY) - 1;
         minute = calendar.get(Calendar.MINUTE);
 
-        if (hour < 0)  {
+        if (hour < 0) {
             hour = 0;
             minute = 0;
         }
@@ -160,9 +160,10 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
 
     @Override
     public void onErrorResponse(VolleyError error) {
+        Log.d(TAG, "onErrorResponse " + error.getLocalizedMessage());
         emptyProgress.setVisibility(View.GONE);
         emptyText.setVisibility(View.VISIBLE);
-        emptyText.setText(String.format(getResources().getString(R.string.playlist_connection_error), error.getLocalizedMessage()));
+        emptyText.setText(getResources().getString(R.string.list_connection_error));
     }
 
     @Override
@@ -199,7 +200,7 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
     }
 
     private void setBtnText() {
-        date = String.format("%02d.%02d.%02d", day, month+1, year);
+        date = String.format("%02d.%02d.%02d", day, month + 1, year);
         dateBtn.setText(date);
         time = String.format("%02d:%02d", hour, minute);
         timeBtn.setText(time);

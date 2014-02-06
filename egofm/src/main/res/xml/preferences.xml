@@ -21,13 +21,21 @@
         android:title="@string/prefs_about"
         android:key="pref_key_storage_settings">
 
+        <Preference
+            android:title="@string/prefs_playstore"
+            android:summary="@string/prefs_rate_playstore">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="market://details?id=com.nilsbo.egofm" />
+        </Preference>
+
         <Preference android:title="@string/licenses_title" >
             <intent android:action="com.nilsbo.egofm.LicenseActivity"/>
         </Preference>
 
         <com.nilsbo.egofm.widgets.CustomTextPreference
-        android:key="pref_static_field_key"
-        android:selectable="false"
-        android:summary="@string/prefs_disclaimer"/>
+            android:key="pref_static_field_key"
+            android:selectable="false"
+            android:summary="@string/prefs_disclaimer" />
     </PreferenceCategory>
 </PreferenceScreen>

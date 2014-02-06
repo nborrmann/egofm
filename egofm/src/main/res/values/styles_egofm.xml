@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- File created by the Android Action Bar Style Generator
+<?xml version="1.0" encoding="utf-8"?><!-- File created by the Android Action Bar Style Generator
 
      Copyright (C) 2011 The Android Open Source Project
      Copyright (C) 2012 readyState Software Ltd
@@ -19,7 +18,11 @@
 
 <resources>
 
-    <style name="Theme.Egofm" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="Theme.Egofm" parent="Theme.Egofm.Base">
+        <!-- add styles for other api versions here -->
+    </style>
+
+    <style name="Theme.Egofm.Base" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarItemBackground">@drawable/selectable_background_egofm</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Egofm</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Egofm</item>
@@ -30,18 +33,34 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_egofm</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Egofm</item>
 
+        <!-- Light.DarkActionBar specific -->
+        <item name="android:actionBarWidgetTheme">@style/Theme.Egofm.Widget</item>
+
         <item name="android:buttonStyle">@style/Buttonegofm</item>
         <item name="android:imageButtonStyle">@style/ImageButtonegofm</item>
         <item name="android:dropDownSpinnerStyle">@style/Spinneregofm</item>
         <item name="android:listChoiceIndicatorSingle">@drawable/egofm_btn_radio_holo_light</item>
         <item name="android:listViewStyle">@style/ListView</item>
 
-        <!-- Light.DarkActionBar specific -->
-        <item name="android:actionBarWidgetTheme">@style/Theme.Egofm.Widget</item>
+        <item name="android:windowBackground">@null</item>
 
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:textSelectHandleLeft">@drawable/apptheme_text_select_handle_left</item>
+        <item name="android:textSelectHandleRight">@drawable/apptheme_text_select_handle_right
+        </item>
+        <item name="android:textSelectHandle">@drawable/apptheme_text_select_handle_middle</item>
 
     </style>
+
+    <style name="Theme.Egofm.TransparentActionBar" parent="Theme.Egofm">
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.Egofm.Transparent</item>
+        <item name="android:actionModeBackground">@null</item>
+        <item name="android:actionModeSplitBackground">@null</item>
+
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:homeAsUpIndicator">@null</item>
+    </style>
+
 
     <style name="MyActionBarTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/egofm_green</item>
@@ -53,11 +72,16 @@
 
 
     <style name="ActionBar.Solid.Egofm" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <!--<item name="android:background">@null</item>-->
         <item name="android:background">@drawable/ab_solid_egofm</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_egofm</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_egofm</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Egofm</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+    </style>
+
+    <style name="ActionBar.Solid.Egofm.Transparent" parent="ActionBar.Solid.Egofm">
+        <item name="android:background">@null</item>
     </style>
 
     <style name="ActionBar.Transparent.Egofm" parent="@android:style/Widget.Holo.ActionBar">
@@ -84,11 +108,11 @@
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_egofm</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_egofm</item>
     </style>
-    
+
     <style name="ProgressBar.Egofm" parent="@android:style/Widget.Holo.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_egofm</item>
     </style>
-    
+
     <style name="ActionButton.CloseMode.Egofm" parent="@android:style/Widget.Holo.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_egofm</item>
     </style>
@@ -112,5 +136,10 @@
         <item name="android:dropDownSelector">@drawable/egofm_list_selector_holo_light</item>
     </style>
 
+    <style name="RefreshHeaderText" parent="android:style/TextAppearance.Medium">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
 
 </resources>

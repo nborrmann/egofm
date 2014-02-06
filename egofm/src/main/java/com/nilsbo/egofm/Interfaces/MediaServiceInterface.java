@@ -5,7 +5,10 @@ package com.nilsbo.egofm.Interfaces;
  */
 public interface MediaServiceInterface {
     public boolean isStarted();
+
     public void startMediaPlayer();
+
     public void stopMediaPlayer();
-    public void registerActivityCallback(MainActivityInterface activityCallback);
+
+    public void registerActivityCallback(EgofmActivityInterface activityCallback);
 }

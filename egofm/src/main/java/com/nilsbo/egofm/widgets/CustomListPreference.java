@@ -49,7 +49,7 @@ public class CustomListPreference extends ListPreference implements AdapterView.
 
     @Override
     protected View onCreateDialogView() {
-        // inflate custom layout with custom title & listview
+        // inflate custom layout with custom date & listview
         View view = View.inflate(getContext(), R.layout.qustom_dialog_layout, null);
 
         mDialogTitle = getDialogTitle();
@@ -82,7 +82,7 @@ public class CustomListPreference extends ListPreference implements AdapterView.
         mClickedDialogEntryIndex = findIndexOfValue(getValue());
 
         // .setTitle(null) to prevent default (blue)
-        // title+divider from showing up
+        // date+divider from showing up
         builder.setTitle(null);
 
         builder.setPositiveButton(null, null);
