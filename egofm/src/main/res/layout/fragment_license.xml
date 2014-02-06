@@ -58,10 +58,44 @@
         android:layout_marginBottom="8dp"/>
     <TextView
         style="@android:style/TextAppearance.DeviceDefault.Small"
+        android:layout_marginBottom="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/license_jsoup"
         />
+
+    <TextView
+        android:text="Android-PullToRefresh"
+        style="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+        android:textColor="@color/egofm_green"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        style="@android:style/TextAppearance.DeviceDefault.Small"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/license_pulltorefresh" />
+
+    <TextView
+        android:text="Android System Bar Tint"
+        style="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+        android:textColor="@color/egofm_green"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        style="@android:style/TextAppearance.DeviceDefault.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/license_systembartint" />
 
 </LinearLayout>
 </ScrollView>

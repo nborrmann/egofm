@@ -6,7 +6,7 @@
     <string name="menu_start_playback">Stream abspielen</string>
     <string name="action_stop_playback">Stopp</string>
     <string name="notification_default_title">egoFM</string>
-    <string name="notification_connecting">Verbinde...</string>
+    <string name="notification_connecting">Verbinde…</string>
     <string name="notification_connection_error">Verbindungsfehler</string>
     <string name="notification_disconnected">Verbindung getrennt</string>
     <string name="notification_default_text">endlich unter uns</string>
@@ -14,12 +14,9 @@
     <string name="tab_playlist">Playlist</string>
     <string name="datetimepicker_now">Jetzt</string>
     <string name="playlist_no_results">Für den eingegebenen Zeitraum wurden keine Titel gefunden!</string>
-    <string name="playlist_connection_error">Es ist ein Fehler aufgetreten: %s</string>
+    <string name="list_connection_error">Es ist ein Verbindungsfehler aufgetreten.</string>
 
     <string name="title_activity_settings">Einstellungen</string>
-    <string name="url_stream_high">http://edge.live.mp3.mdn.newmedia.nacamar.net/egofm_192/livestream.mp3</string>
-    <string name="url_stream_low">http://edge.live.mp3.mdn.newmedia.nacamar.net/egofm_128/livestream.mp3</string>
-
     <string name="prefs_streamquality_title">Stream Qualität</string>
     <string name="prefs_streamquality_summary">Sound-Qualität des Musikstreams</string>
     <string name="prefs_about">Über</string>
@@ -27,6 +24,11 @@
     <string name="title_activity_license">Lizenzen</string>
     <string name="licenses_title">Lizenzen</string>
     <string name="prefs_metadata">Notification-Metadaten aktualisieren</string>
+    <string name="tab_news">News</string>
+    <string name="empty_news">Es wurden keine News gefunden!</string>
+    <string name="title_activity_news_item_fragment">News</string>
+    <string name="prefs_rate_playstore">Die App im Play Store bewerten</string>
+    <string name="prefs_playstore">Play Store</string>
 
     <string-array name="quality_entries">
         <item>Hoch (192 kbits)</item>

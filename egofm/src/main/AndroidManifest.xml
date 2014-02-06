@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nilsbo.egofm" >
+    package="com.nilsbo.egofm">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -11,40 +11,50 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Egofm" >
+        android:theme="@style/Theme.Egofm">
         <service android:name="com.nilsbo.egofm.MediaService" />
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name="com.nilsbo.egofm.activities.MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name="com.nilsbo.egofm.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.MainActivity" >
+            android:parentActivityName="com.nilsbo.egofm.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nilsbo.egofm.MainActivity" />
         </activity>
-
         <activity
-            android:name=".activities.LicenseActivity"
+            android:name="com.nilsbo.egofm.activities.LicenseActivity"
             android:label="@string/title_activity_license"
-            android:parentActivityName=".activities.SettingsActivity" >
+            android:parentActivityName="com.nilsbo.egofm.activities.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nilsbo.egofm.SettingsActivity" />
+
             <intent-filter>
                 <action android:name="com.nilsbo.egofm.LicenseActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.NewsItemActivity"
+            android:label="@string/title_activity_news_item_fragment"
+            android:theme="@style/Theme.Egofm.TransparentActionBar"
+            android:parentActivityName="com.nilsbo.egofm.activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.nilsbo.egofm.activities.MainActivity" />
         </activity>
     </application>
 

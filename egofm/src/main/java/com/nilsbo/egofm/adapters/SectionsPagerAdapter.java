@@ -1,4 +1,4 @@
-package com.nilsbo.egofm.fragments;
+package com.nilsbo.egofm.adapters;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.nilsbo.egofm.R;
+import com.nilsbo.egofm.fragments.NewsFragment;
+import com.nilsbo.egofm.fragments.PlaylistFragment;
 
 import java.util.Locale;
 
@@ -22,12 +24,18 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return PlaylistFragment.newInstance();
+        switch (position) {
+            case 0:
+                return NewsFragment.newInstance();
+            case 1:
+                return PlaylistFragment.newInstance();
+        }
+        return null;
     }
 
     @Override
     public int getCount() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -35,6 +43,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         Locale l = Locale.getDefault();
         switch (position) {
             case 0:
+                return context.getString(R.string.tab_news).toUpperCase(l);
+            case 1:
                 return context.getString(R.string.tab_playlist).toUpperCase(l);
         }
         return null;

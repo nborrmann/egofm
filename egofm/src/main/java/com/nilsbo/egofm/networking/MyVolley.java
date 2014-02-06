@@ -2,12 +2,22 @@ package com.nilsbo.egofm.networking;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
+import org.apache.http.client.utils.URIUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
+
 public class MyVolley {
+    private static final String TAG = "com.nilsbo.egofm.networking.MyVolley";
+
     private static RequestQueue mRequestQueue;
     private static ImageLoader mImageLoader;
 
@@ -16,9 +26,17 @@ public class MyVolley {
         // no instances
     }
 
+    public static class MyUrlRewriter implements HurlStack.UrlRewriter     {
+        @Override
+        public String rewriteUrl(String originalUrl) {
+            originalUrl = originalUrl.replaceAll(" ", "%20");
+            return URI.create(originalUrl).toASCIIString();
+        }
+    }
 
     public static void init(Context context) {
-        mRequestQueue = Volley.newRequestQueue(context);
+        HurlStack myHurl = new HurlStack(new MyUrlRewriter());
+        mRequestQueue = Volley.newRequestQueue(context, myHurl);
 
         int memClass = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE))
                 .getMemoryClass();
