@@ -31,8 +31,6 @@
         ptr:ptrListViewExtrasEnabled="true"
         ptr:ptrScrollingWhileRefreshingEnabled="true"
 
-        android:listSelector="@drawable/listitem_bg_selector"
-
         />
 
 </LinearLayout>

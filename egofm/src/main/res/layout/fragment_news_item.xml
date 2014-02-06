@@ -11,6 +11,8 @@
         android:paddingLeft="16dp"
         android:id="@+id/news_item_scrollcontainer"
         android:clipToPadding="false"
+        android:scrollbars="none"
+        tools:paddingTop="146dp"
         android:background="#ffffff">
 
         <LinearLayout
@@ -40,13 +42,44 @@
                 tools:text="WER VIDEOS EINBETTET, SOLL ZAHLEN"
                 android:paddingTop="1dp"
                 android:paddingBottom="2dp"
-                android:layout_marginBottom="8dp"
                 android:id="@+id/news_item_subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@android:style/TextAppearance.DeviceDefault.Medium" />
 
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/news_item_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp">
+
+                <ProgressBar
+                    android:id="@+id/news_item_empty_progress"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:background="@color/background_light_grey"
+                    android:text="@string/list_connection_error"
+                    android:gravity="center_horizontal"
+                    android:id="@+id/news_item_empty_text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="50dp"
+                    android:paddingRight="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent" />
+            </LinearLayout>
+
+
             <WebView
+                android:visibility="gone"
+                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/news_item_webview" />
@@ -57,14 +90,14 @@
     <RelativeLayout
         android:id="@+id/news_item_header"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#bb000000">
+        android:layout_height="wrap_content">
 
-        <com.android.volley.toolbox.NetworkImageView
+        <com.nilsbo.egofm.widgets.CustomNetworkImageView
             android:id="@+id/news_item_header_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            tools:src="@drawable/default_news_image"
             android:scaleType="centerCrop" />
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -83,6 +116,7 @@
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="1"
+            tools:text="GEMA-GEBÜHREN FÜR YOUTUBE"
             android:layout_alignBottom="@id/news_item_header_image"
             android:gravity="center_vertical"
             style="@style/MyActionBarTitleText" />

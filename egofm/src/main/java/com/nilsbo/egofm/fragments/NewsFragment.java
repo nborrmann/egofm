@@ -1,6 +1,5 @@
 package com.nilsbo.egofm.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -8,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -21,7 +19,6 @@ import com.android.volley.VolleyError;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.nilsbo.egofm.R;
-import com.nilsbo.egofm.activities.NewsItemActivity;
 import com.nilsbo.egofm.adapters.NewsAdapter;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.networking.NewsListRequest;
@@ -111,6 +108,7 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
             gridView.onRefreshComplete();
             setLoadingStatus(false);
         }
+
         @Override
         public void onResponse(ArrayList<NewsItem> response) {
             if (news.size() == 0 || !response.get(0).equals(news.get(0))) {
@@ -171,16 +169,6 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
         gridView.setAdapter(adapter);
         gridView.setOnScrollListener(this);
         gridView.setEmptyView(emptyView);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), NewsItemActivity.class);
-                intent.putExtra("news_header", news.get(position));
-                startActivity(intent);
-
-            }
-        });
-
     }
 
 
@@ -196,7 +184,6 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
         }
         if (isError && firstVisibleItem + visibleItemCount < totalItemCount - 2 && totalItemCount > 10) {
             isError = false;
-            Log.d(TAG, "isError false");
         }
     }
 

@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,11 +21,11 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.NetworkImageView;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.networking.NewsItemRequest;
 import com.nilsbo.egofm.util.NewsItem;
+import com.nilsbo.egofm.widgets.CustomNetworkImageView;
 import com.nilsbo.egofm.widgets.ObservableScrollView;
 
 
@@ -33,7 +36,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     private static final String TAG = "com.nilsbo.egofm.fragments.NewsItemFragment";
 
     private static final String SAVE_STATED_WEBVIEW_TEXT = "SAVE_STATE_WEBVIEW_TEXT";
-    private static final int MAX_HEADER_TRANSPARENCY = 180;
+    private static final int MAX_HEADER_TRANSPARENCY = 170;
 
     final RequestQueue requestQueue = MyVolley.getRequestQueue();
     private String webViewText;
@@ -45,7 +48,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     private View rootView;
     private WebView webView;
     private ObservableScrollView mScrollView;
-    private NetworkImageView mHeaderImage;
+    private CustomNetworkImageView mHeaderImage;
     private RelativeLayout mHeader;
     private LayoutInflater mInflater;
     private TextView customHeaderView;
@@ -53,6 +56,9 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     private TextView mHeaderText;
     private TextView mSubtitleText;
     private TextView mDateText;
+    private LinearLayout mEmptyView;
+    private TextView mErrorText;
+    private ProgressBar mProgressBar;
 
 
     @Override
@@ -98,14 +104,20 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         mHeaderText.setSelected(true);
         mSubtitleText = (TextView) rootView.findViewById(R.id.news_item_subtitle);
         mSubtitleText.setText(mNewsItem.subtitle);
+        if (TextUtils.isEmpty(mNewsItem.subtitle)) mSubtitleText.setVisibility(View.GONE);
         mDateText = (TextView) rootView.findViewById(R.id.news_item_date);
         mDateText.setText(mNewsItem.date);
         mScrollView = (ObservableScrollView) rootView.findViewById(R.id.news_item_scrollcontainer);
         mScrollView.setScrollViewListener(this);
 
-        mHeaderImage = (NetworkImageView) rootView.findViewById(R.id.news_item_header_image);
+        mEmptyView = (LinearLayout) rootView.findViewById(R.id.news_item_empty);
+        mErrorText = (TextView) rootView.findViewById(R.id.news_item_empty_text);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.news_item_empty_progress);
+
+        mHeaderImage = (CustomNetworkImageView) rootView.findViewById(R.id.news_item_header_image);
         mHeaderImage.setMinimumHeight(mActionBarHeight);
-        mHeaderImage.setImageUrl(mNewsItem.imgUrlBig, MyVolley.getImageLoader());
+        mHeaderImage.setDefaultImageResId(R.drawable.default_news_image);
+        mHeaderImage.setImageUrl(mNewsItem.imgUrlBig, mNewsItem.imgUrl, MyVolley.getImageLoader());
         mHeaderImage.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
@@ -128,14 +140,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         if (getActivity() != null && getActivity().getIntent().getParcelableExtra("news_header") != null) {
             mNewsItem = getActivity().getIntent().getParcelableExtra("news_header");
         } else {
-            // TODO Debug NewsItem
-            mNewsItem = new NewsItem();
-            mNewsItem.imgUrl = "http://www.egofm.de/images/content/2335/_thumb4/say_lou_lou.jpg";
-            mNewsItem.imgUrlBig = "http://www.egofm.de/images/content/2335/_thumb2/say_lou_lou.jpg";
-            mNewsItem.subtitle = "DER FREE - DOWNLOAD DES TAGES";
-            mNewsItem.title = "SAY LOU LOU - FEELS LIKE WE ONLY GO BACKWARDS (TAME IMPALA COVER)";
-            mNewsItem.date = "03.02.2014";
-            mNewsItem.link = "http://www.egofm.de/musik/download-des-tages/2335-say-lou-lou-feels-like-we-only-go-backwards-dolo?tmpl=app";
+            getActivity().finish();
         }
     }
 
@@ -155,6 +160,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setSupportZoom(false);
+        webView.getSettings().setAppCacheMaxSize(2 * 1024 * 1024);
     }
 
     @Override
@@ -185,12 +191,18 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.d(TAG, "onErrorResponse " + error.getMessage());
-        //TODO error handling
+
+        webView.setVisibility(View.GONE);
+        mEmptyView.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.GONE);
+        mErrorText.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onResponse(String response) {
         Log.d(TAG, "onResponse");
+        webView.setVisibility(View.VISIBLE);
+        mEmptyView.setVisibility(View.GONE);
         webView.clearView();
         webView.loadDataWithBaseURL("http://www.egofm.de/", response, "text/html", "UTF-8", null);
         webViewText = response;

@@ -99,7 +99,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
             if (action.equals(BROADCAST_ID_CLOSE)) {
                 cleanup();
                 if (isBound) stopForeground(true);
-                else         stopSelf();
+                else stopSelf();
 
             } else if (action.equals(BROADCAST_ID_STARTSTOP)) {
                 if (started) {
@@ -124,7 +124,6 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     }
 
     public void stopMediaPlayer() {
-        mMediaPlayer.stop();
         stopForeground(true);
         cleanup();
     }
@@ -164,7 +163,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
         }
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setDataSource(getUrl());
-        Log.d(TAG, "connecting to "+getUrl());
+        Log.d(TAG, "connecting to " + getUrl());
 
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setOnErrorListener(this);

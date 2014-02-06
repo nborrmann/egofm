@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import com.nilsbo.egofm.Interfaces.MediaServiceInterface;
 import com.nilsbo.egofm.MediaService;
 import com.nilsbo.egofm.R;
-import com.nilsbo.egofm.fragments.SectionsPagerAdapter;
+import com.nilsbo.egofm.adapters.SectionsPagerAdapter;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class MainActivity extends EgofmActivity {

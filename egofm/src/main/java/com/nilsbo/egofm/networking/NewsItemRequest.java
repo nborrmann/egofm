@@ -1,7 +1,5 @@
 package com.nilsbo.egofm.networking;
 
-import android.util.Log;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -65,7 +63,7 @@ public class NewsItemRequest extends Request<String> {
 
                     if (height.matches("\\d+")) {
                         int h = Integer.valueOf(height);
-                        e.attr("height", String.valueOf(h*560/w));
+                        e.attr("height", String.valueOf(h * 560 / w));
                     } else {
                         e.removeAttr("height");
                     }
@@ -73,7 +71,6 @@ public class NewsItemRequest extends Request<String> {
             }
 
             content = doc.html();
-            Log.d(TAG, content);
 
         } catch (Exception e) {
             return null;

@@ -18,7 +18,11 @@
 
 <resources>
 
-    <style name="Theme.Egofm" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="Theme.Egofm" parent="Theme.Egofm.Base">
+        <!-- add styles for other api versions here -->
+    </style>
+
+    <style name="Theme.Egofm.Base" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarItemBackground">@drawable/selectable_background_egofm</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Egofm</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Egofm</item>
@@ -38,11 +42,8 @@
         <item name="android:listChoiceIndicatorSingle">@drawable/egofm_btn_radio_holo_light</item>
         <item name="android:listViewStyle">@style/ListView</item>
 
-        <item name="android:windowTranslucentStatus">true</item>
-
         <item name="android:windowBackground">@null</item>
 
-        <!--<item name="android:textColorHighlight">#9996c11f</item>-->
         <item name="android:textSelectHandleLeft">@drawable/apptheme_text_select_handle_left</item>
         <item name="android:textSelectHandleRight">@drawable/apptheme_text_select_handle_right
         </item>
