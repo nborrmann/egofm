@@ -74,7 +74,9 @@ public class CustomNetworkImageView extends ImageView {
         mDefaultUrl = defaultUrl;
         mImageLoader = imageLoader;
         // The URL has potentially changed. See if we need to load it.
-        setDefaultImageOrNull(false);
+        if (mUrl != null && !mImageLoader.isCached(mUrl, 0, 0)) {
+            setDefaultImageOrNull(false);
+        }
         loadImageIfNecessary(false);
     }
 

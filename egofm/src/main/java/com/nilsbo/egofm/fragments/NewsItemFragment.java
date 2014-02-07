@@ -59,6 +59,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     private LinearLayout mEmptyView;
     private TextView mErrorText;
     private ProgressBar mProgressBar;
+    private float mScrollRetardation;
 
 
     @Override
@@ -78,7 +79,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
 
         if (savedInstanceState != null) {
             webViewText = savedInstanceState.getString(SAVE_STATED_WEBVIEW_TEXT);
-            webView.loadDataWithBaseURL("http://www.egofm.de/", webViewText, "text/html", "UTF-8", null);
+            displayWebview();
         } else {
             loadPage();
         }
@@ -117,7 +118,6 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         mHeaderImage = (CustomNetworkImageView) rootView.findViewById(R.id.news_item_header_image);
         mHeaderImage.setMinimumHeight(mActionBarHeight);
         mHeaderImage.setDefaultImageResId(R.drawable.default_news_image);
-        mHeaderImage.setImageUrl(mNewsItem.imgUrlBig, mNewsItem.imgUrl, MyVolley.getImageLoader());
         mHeaderImage.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
@@ -131,9 +131,11 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
 
                 mSubheaderHeight = mSubtitleText.getHeight() + rootView.findViewById(R.id.news_item_seperator).getHeight() + mDateText.getHeight();
                 mHeaderActionBarDiff = mActionBarHeight - mHeaderImage.getHeight();
+                mScrollRetardation = 1 + mSubheaderHeight / (-1.0f * mHeaderActionBarDiff);
                 scrollHeader(mScrollView.getScrollY());
             }
         });
+        mHeaderImage.setImageUrl(mNewsItem.imgUrlBig, mNewsItem.imgUrl, MyVolley.getImageLoader());
     }
 
     private void initContent() {
@@ -165,21 +167,15 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
 
     @Override
     public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
-        y = Math.max(0, y - mSubheaderHeight);
-        scrollHeader(y);
+        float interpolation = clamp((-1.0f * y) / mHeaderActionBarDiff / mScrollRetardation, 1.0f, 0f);
+        scrollHeader(interpolation);
     }
 
-    private void scrollHeader(int y) {
-        if (mHeaderActionBarDiff != 0) {
-            mHeader.setTranslationY(Math.max(-y, mHeaderActionBarDiff));
-            mHeader.setScrollY(Math.max(-y, mHeaderActionBarDiff) / 2);
-            mHeaderImage.setColorFilter(clamp((MAX_HEADER_TRANSPARENCY * -y / mHeaderActionBarDiff), MAX_HEADER_TRANSPARENCY, 0) << 24, PorterDuff.Mode.SRC_ATOP);
-            customHeaderView.setAlpha(clamp(((5 * (1.0f * -y / mHeaderActionBarDiff) - 4)), 1, 0)); // I have no idea what I'm doing here.
-            mHeaderText.setVisibility(View.VISIBLE);
-        } else {
-            customHeaderView.setAlpha(1);
-            mHeaderText.setVisibility(View.INVISIBLE);
-        }
+    private void scrollHeader(float interpolation) {
+        mHeader.setTranslationY((int) (interpolation * mHeaderActionBarDiff));
+        mHeader.setScrollY((int) (interpolation * mHeaderActionBarDiff / 2.0f));
+        mHeaderImage.setColorFilter(clamp((int) (interpolation * MAX_HEADER_TRANSPARENCY), MAX_HEADER_TRANSPARENCY, 0) << 24, PorterDuff.Mode.SRC_ATOP);
+        customHeaderView.setAlpha(5 * interpolation - 4);
     }
 
     private void loadPage() {
@@ -201,11 +197,15 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     @Override
     public void onResponse(String response) {
         Log.d(TAG, "onResponse");
+        webViewText = response;
+        displayWebview();
+    }
+
+    private void displayWebview() {
         webView.setVisibility(View.VISIBLE);
         mEmptyView.setVisibility(View.GONE);
         webView.clearView();
-        webView.loadDataWithBaseURL("http://www.egofm.de/", response, "text/html", "UTF-8", null);
-        webViewText = response;
+        webView.loadDataWithBaseURL("http://www.egofm.de/", webViewText, "text/html", "UTF-8", null);
     }
 
     public void onSaveInstanceState(Bundle outState) {
