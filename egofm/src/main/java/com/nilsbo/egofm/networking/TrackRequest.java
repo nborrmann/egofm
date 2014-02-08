@@ -40,7 +40,7 @@ public class TrackRequest extends Request<String[]> {
         String parsed;
         final String[] results = new String[2];
         try {
-            parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            parsed = new String(response.data, "utf-8");
         } catch (UnsupportedEncodingException e) {
             parsed = new String(response.data);
         }

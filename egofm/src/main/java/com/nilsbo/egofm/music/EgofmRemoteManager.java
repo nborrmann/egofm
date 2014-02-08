@@ -8,6 +8,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
@@ -118,10 +120,15 @@ public class EgofmRemoteManager {
         myRemoteControlClient.setPlaybackState(state);
         myRemoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY);
 
+        Bitmap mDummyAlbumArt = BitmapFactory.decodeResource(resources, R.drawable.egofm_icon_large);
+
         myRemoteControlClient.editMetadata(true)
                 .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, title)
                 .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, text)
+                .putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK,
+                        mDummyAlbumArt)
                 .apply();
+
     }
 
     public void displayConnectingNotification() {

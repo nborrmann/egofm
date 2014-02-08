@@ -74,11 +74,11 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
         switch (item.getItemId()) {
             case R.id.action_play:
                 startService(new Intent(MediaService.ACTION_START));
-                invalidateOptionsMenu();
+//                invalidateOptionsMenu();
                 return true;
             case R.id.action_stop:
                 startService(new Intent(MediaService.ACTION_CLOSE));
-                invalidateOptionsMenu();
+//                invalidateOptionsMenu();
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
