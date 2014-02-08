@@ -1,14 +1,12 @@
 package com.nilsbo.egofm.Interfaces;
 
+import com.nilsbo.egofm.MediaService;
+
 /**
  * Created by Nils on 20.01.14.
  */
 public interface MediaServiceInterface {
-    public boolean isStarted();
-
-    public void startMediaPlayer();
-
-    public void stopMediaPlayer();
+    public MediaService.State getPlaybackState();
 
     public void registerActivityCallback(EgofmActivityInterface activityCallback);
 }

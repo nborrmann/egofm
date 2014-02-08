@@ -12,7 +12,17 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.Egofm">
-        <service android:name="com.nilsbo.egofm.MediaService" />
+
+        <service android:name="com.nilsbo.egofm.MediaService">
+            <intent-filter>
+                <action android:name="com.nilsbo.egofm.action.PLAY" />
+                <action android:name="com.nilsbo.egofm.action.STOP" />
+                <action android:name="com.nilsbo.egofm.action.CLOSE" />
+                <action android:name="com.nilsbo.egofm.action.STARTSTOP" />
+                <action android:name="com.nilsbo.egofm.action.PLAYPAUSE" />
+                <action android:name="com.nilsbo.egofm.action.PAUSE" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name="com.nilsbo.egofm.activities.MainActivity"
@@ -24,6 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.nilsbo.egofm.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -32,6 +43,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nilsbo.egofm.MainActivity" />
         </activity>
+
         <activity
             android:name="com.nilsbo.egofm.activities.LicenseActivity"
             android:label="@string/title_activity_license"
@@ -39,10 +51,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nilsbo.egofm.SettingsActivity" />
-
             <intent-filter>
                 <action android:name="com.nilsbo.egofm.LicenseActivity" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -56,6 +66,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nilsbo.egofm.activities.MainActivity" />
         </activity>
-    </application>
 
+        <receiver android:name=".music.MusicIntentReceiver">
+            <intent-filter>
+                <action android:name="com.nilsbo.egofm.control.CLOSE" />
+                <action android:name="com.nilsbo.egofm.control.STARTSTOP" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+    </application>
 </manifest>

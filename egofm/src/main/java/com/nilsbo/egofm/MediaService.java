@@ -2,287 +2,263 @@ package com.nilsbo.egofm;
 
 import android.app.NotificationManager;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.nilsbo.egofm.Interfaces.EgofmActivityInterface;
 import com.nilsbo.egofm.Interfaces.MediaServiceInterface;
-import com.nilsbo.egofm.networking.MyVolley;
-import com.nilsbo.egofm.networking.TrackRequest;
-import com.nilsbo.egofm.util.EgoFmNotificationManager;
+import com.nilsbo.egofm.Interfaces.MetaDataListener;
+import com.nilsbo.egofm.Interfaces.MusicFocusable;
+import com.nilsbo.egofm.music.AudioFocusHelper;
+import com.nilsbo.egofm.music.EgofmMusicNetworking;
+import com.nilsbo.egofm.music.EgofmRemoteManager;
 
 import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 
-public class MediaService extends Service implements MediaServiceInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener, MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
+public class MediaService extends Service implements MediaServiceInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
+        MediaPlayer.OnCompletionListener, MusicFocusable, MetaDataListener {
     private static final String TAG = "com.nilsbo.egofm.MediaService";
 
-    public static final String BROADCAST_ID_CLOSE = "com.nilsbo.egofm.control.close";
-    public static final String BROADCAST_ID_STARTSTOP = "com.nilsbo.egofm.control.stop";
+    public static final String ACTION_START = "com.nilsbo.egofm.action.PLAY";
+    public static final String ACTION_STOP = "com.nilsbo.egofm.action.STOP";
+    public static final String ACTION_CLOSE = "com.nilsbo.egofm.action.CLOSE";
+    public static final String ACTION_STARTSTOP = "com.nilsbo.egofm.action.STARTSTOP";
+    public static final String ACTION_PLAYPAUSE = "com.nilsbo.egofm.action.PLAYPAUSE";
+    public static final String ACTION_PAUSE = "com.nilsbo.egofm.action.PAUSE";
 
     private final IBinder mBinder = new MediaServiceBinder();
     private MediaPlayer mMediaPlayer;
-    private WifiManager.WifiLock wifiLock;
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    private ScheduledFuture metaDataHandler;
-    final RequestQueue requestQueue = MyVolley.getRequestQueue();
-    private EgoFmNotificationManager notificationManager;
+    private WifiManager.WifiLock mWifiLock;
+    private EgofmRemoteManager mRemoteManager;
     private EgofmActivityInterface activityCallback;
-    private MediaService.IntentReceiver receiver = new IntentReceiver();
-    private AudioManager audioManager;
+    private AudioFocusHelper mAudioFocusHelper;
 
+    private AudioManager mAudioManager;
     private boolean isBound = false;
-    private boolean started = false;
     private int connectionTries = 0;
+    private EgofmMusicNetworking mMusicNetworkingHelper;
+
+    public enum State {
+        Stopped,    // media player is stopped and not prepared to play
+        Preparing,  // media player is preparing...
+        Playing    // playback active (media player ready!). (but the media player may actually be
+        // paused in this state if we don't have audio focus. But we stay in this state
+        // so that we know we have to resume playback once we get focus back)
+    }
+
+    ;
+
+    State mState = State.Stopped;
+
+    @Override
+    public void onCreate() {
+        Log.i(TAG, "debug: Creating service");
+
+        // Create the Wifi lock (this does not acquire the lock, this just creates it)
+        mWifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
+
+        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        mRemoteManager = new EgofmRemoteManager(this,
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
+                mAudioManager);
+
+        mAudioFocusHelper = new AudioFocusHelper(getApplicationContext(), this);
+
+        mMusicNetworkingHelper = new EgofmMusicNetworking(this, this);
+    }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        notificationManager = new EgoFmNotificationManager(this, (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
-
-        IntentFilter intentFilter = new IntentFilter(BROADCAST_ID_STARTSTOP);
-        intentFilter.addAction(BROADCAST_ID_CLOSE);
-        intentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-        this.registerReceiver(receiver, intentFilter);
-
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        String action = intent.getAction();
+        Log.d(TAG, "onStartCommand " + action);
+        if (action.equals(ACTION_START)) processStartRequest();
+        else if (action.equals(ACTION_STOP)) processStopRequest();
+        else if (action.equals(ACTION_CLOSE)) processCloseRequest();
+        else if (action.equals(ACTION_STARTSTOP)) processStartStopRequest();
+        else if (action.equals(ACTION_PLAYPAUSE)) processPlayPauseRequest();
+        else if (action.equals(ACTION_PAUSE)) processPauseRequest();
 
         return START_STICKY;
     }
 
-    @Override
-    public void onAudioFocusChange(int focusChange) {
-        switch (focusChange) {
-            case AudioManager.AUDIOFOCUS_GAIN:
-                // resume playback
-                if (started) mMediaPlayer.setVolume(1.0f, 1.0f);
-                else startMediaPlayer();
-                break;
-
-            case AudioManager.AUDIOFOCUS_LOSS:
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                cleanup();
-                notificationManager.displayDefaultNotification(started);
-                break;
-
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                if (mMediaPlayer.isPlaying()) mMediaPlayer.setVolume(0.1f, 0.1f);
-                break;
-        }
+    // PlayPause is coming from the lockscreen, hence we don't want to give up AudioFocus, so the widget doesn't disappear
+    private void processPlayPauseRequest() {
+        if (mState == State.Stopped) processStartRequest();
+        else processPauseRequest();
 
     }
 
-    public class IntentReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context arg0, Intent intent) {
-            String action = intent.getAction();
-
-            if (action.equals(BROADCAST_ID_CLOSE)) {
-                cleanup();
-                if (isBound) stopForeground(true);
-                else stopSelf();
-
-            } else if (action.equals(BROADCAST_ID_STARTSTOP)) {
-                if (started) {
-                    cleanup();
-                    notificationManager.displayDefaultNotification(started);
-                } else {
-                    startMediaPlayer();
-                }
-
-            } else if (action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
-                cleanup();
-                notificationManager.displayDisconnectedNotification();
-            }
-        }
+    // StartStop is coming from the notification. Start and Stop as usual, but don't close the service.
+    private void processStartStopRequest() {
+        if (mState == State.Stopped) processStartRequest();
+        else processStopRequest();
     }
 
+    private void processCloseRequest() {
+        cleanup();
+        giveUpAudioFocus();
+        stopForeground(true);
+        stopSelf();
+    }
 
-    public void startMediaPlayer() {
+    private void processPauseRequest() {
+        cleanup();
+        mRemoteManager.displayDisconnectedNotification(mState);
+    }
+
+    private void processStopRequest() {
+        cleanup();
+        giveUpAudioFocus();
+        mRemoteManager.displayDisconnectedNotification(mState);
+    }
+
+    private void processStartRequest() {
         connectionTries = 0;
-        notificationManager.startService(this);
+        mRemoteManager.startService(this);
         tryConnect();
     }
 
-    public void stopMediaPlayer() {
-        stopForeground(true);
-        cleanup();
+    @Override
+    public void onGainedAudioFocus() {
+        if (mState == State.Preparing || mState == State.Playing)
+            mMediaPlayer.setVolume(1.0f, 1.0f);
+        else
+            processStartRequest();
+    }
+
+    @Override
+    public void onLostAudioFocus(boolean canDuck) {
+        if (!canDuck) {
+            cleanup();
+            mRemoteManager.displayDefaultNotification(mState);
+        } else {
+            if (mMediaPlayer.isPlaying()) mMediaPlayer.setVolume(0.1f, 0.1f);
+        }
     }
 
     private void tryConnect() {
-        started = true;
-        notificationManager.displayConnectingNotification();
+        activityCallback.playbackStateChanged();
+        mRemoteManager.displayConnectingNotification();
         try {
             if (connectionTries < 3) {
                 connect();
             }
         } catch (IOException e) {
+            connectionTries++;
             tryConnect();
         }
         if (connectionTries >= 3) {
-            displayError();
+            connectFailed();
         }
         connectionTries++;
     }
 
-    private void displayError() {
+    private void connectFailed() {
         cleanup();
         if (isBound) {
             Toast toast = Toast.makeText(this, getString(R.string.notification_connection_error), Toast.LENGTH_SHORT);
             toast.show();
             stopForeground(true);
+            stopSelf();
         } else { // keep the notification in case the user wants to retry manually later on.
-            notificationManager.displayDisconnectedNotification();
+            mRemoteManager.displayErrorNotification();
+        }
+    }
+
+    void createMediaPlayerIfNeeded() {
+        if (mMediaPlayer == null) {
+            mMediaPlayer = new MediaPlayer();
+
+            mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+
+            mMediaPlayer.setOnPreparedListener(this);
+            mMediaPlayer.setOnCompletionListener(this);
+            mMediaPlayer.setOnErrorListener(this);
+        } else {
+            mMediaPlayer.reset();
         }
     }
 
     private void connect() throws IOException {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.reset();
-        } else {
-            mMediaPlayer = new MediaPlayer();
-        }
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mMediaPlayer.setDataSource(getUrl());
-        Log.d(TAG, "connecting to " + getUrl());
+        createMediaPlayerIfNeeded();
 
-        mMediaPlayer.setOnPreparedListener(this);
-        mMediaPlayer.setOnErrorListener(this);
-        mMediaPlayer.setOnInfoListener(this);
-        mMediaPlayer.setOnCompletionListener(this);
+        Log.d(TAG, "connecting to " + mMusicNetworkingHelper.getUrl());
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mMediaPlayer.setDataSource(mMusicNetworkingHelper.getUrl());
         mMediaPlayer.prepareAsync();
 
-        mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-        wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
-                .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
-        wifiLock.acquire();
+        mWifiLock.acquire();
+
+        mState = State.Preparing;
+    }
+
+    private void handleError() {
+        mMusicNetworkingHelper.stopMetadataDownload();
+        tryConnect();
     }
 
     /**
-     * you have to stop the service manually.
+     * The service needs to be stopped manually.
+     * AudioFocus needs to be abandoned manually.
      */
     private void cleanup() {
-        if (metaDataHandler != null) metaDataHandler.cancel(true);
+        mMusicNetworkingHelper.stopMetadataDownload();
         if (mMediaPlayer != null) mMediaPlayer.release();
         mMediaPlayer = null;
-        started = false;
-        if (wifiLock != null && wifiLock.isHeld()) wifiLock.release();
-        if (activityCallback != null) activityCallback.playbackStopped();
-        if (audioManager != null) audioManager.abandonAudioFocus(this);
+        mState = State.Stopped;
+        if (mWifiLock != null && mWifiLock.isHeld()) mWifiLock.release();
+        if (activityCallback != null) activityCallback.playbackStateChanged();
+    }
+
+    private void giveUpAudioFocus() {
+        if (mAudioFocusHelper != null) mAudioFocusHelper.abandonFocus();
     }
 
     public void onPrepared(MediaPlayer player) {
-        player.start();
         connectionTries = 0;
+        mState = State.Playing;
 
-        notificationManager.displayConnectedNotification();
-        metaDataHandler = scheduler.scheduleAtFixedRate(metaDataDownloader, 0, getUpdateInterval(), SECONDS);
+        mRemoteManager.displayConnectedNotification();
+        mAudioFocusHelper.requestFocus();
+        mMusicNetworkingHelper.startMetaDataDownloader();
 
-        audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
-                AudioManager.AUDIOFOCUS_GAIN);
+        player.start();
     }
 
-    final Runnable metaDataDownloader = new Runnable() {
-        public void run() {
-            TrackRequest metaDataRequest = new TrackRequest("http://www.egofm.de/templates/egofm/get_track.php", new Response.Listener<String[]>() {
-                @Override
-                public void onResponse(String[] response) {
-                    if (started) {
-                        Log.d(TAG, String.format("now playing: %s - %s", response[0], response[1]));
-                        notificationManager.displaySongNotification(response[0], response[1]);
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    if (started) {
-                        notificationManager.displayDefaultNotification(started);
-                    }
-                }
-            }
-            );
-
-            requestQueue.add(metaDataRequest);
+    @Override
+    public void onMetaDataDownloaded(String artist, String title) {
+        if (mState == State.Playing) {
+            Log.d(TAG, String.format("now playing: %s - %s", artist, title));
+            mRemoteManager.displaySongNotification(artist, title);
         }
-    };
-
-    private long getUpdateInterval() {
-        final String intervalStr = PreferenceManager.getDefaultSharedPreferences(this).getString("metadata_interval", "20");
-        int interval = 20;
-        try {
-            interval = Integer.parseInt(intervalStr);
-        } catch (NumberFormatException e) {
-            Log.w(TAG, "error parsing metadata update interval");
-        }
-        return interval;
     }
 
-    private String getUrl() {
-        final String streamQuality = PreferenceManager.getDefaultSharedPreferences(this).getString("streamquality", "wifihigh");
-        if (streamQuality.equals("high")) {
-            return getResources().getString(R.string.url_stream_high);
-        } else if (streamQuality.equals("wifihigh")) {
-            ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-            if (mWifi.isConnected()) {
-                return getResources().getString(R.string.url_stream_high);
-            } else {
-                return getResources().getString(R.string.url_stream_low);
-            }
-        } else {
-            return getResources().getString(R.string.url_stream_low);
+    @Override
+    public void onMetaDataError() {
+        if (mState == State.Playing) {
+            mRemoteManager.displayDefaultNotification(mState);
         }
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Log.d(TAG, "onError. what " + what + "; extra " + extra);
-        handleAllErrors();
+        handleError();
         return true;
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
         Log.d(TAG, "onCompletion");
-        handleAllErrors();
-    }
-
-    private void handleAllErrors() {
-        if (metaDataHandler != null) metaDataHandler.cancel(true);
-        mMediaPlayer.release();
-        mMediaPlayer = null;
-        tryConnect();
-    }
-
-    @Override
-    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-        Log.d(TAG, "onInfo; what: " + what + "; extra: " + extra);
-        return false;
-    }
-
-    public boolean isStarted() {
-        return started;
+        handleError();
     }
 
     public class MediaServiceBinder extends Binder {
@@ -290,6 +266,11 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
         public MediaServiceInterface getServiceInterface() {
             return MediaService.this;
         }
+    }
+
+    @Override
+    public State getPlaybackState() {
+        return mState;
     }
 
     @Override
@@ -316,9 +297,8 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy");
-        unregisterReceiver(receiver);
         cleanup();
+        giveUpAudioFocus();
         super.onDestroy();
     }
 }
