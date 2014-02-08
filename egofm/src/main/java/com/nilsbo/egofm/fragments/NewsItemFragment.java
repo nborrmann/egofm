@@ -196,7 +196,6 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
 
     @Override
     public void onResponse(String response) {
-        Log.d(TAG, "onResponse");
         webViewText = response;
         displayWebview();
     }

@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import com.nilsbo.egofm.MediaService;
@@ -20,7 +19,6 @@ public class MusicIntentReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive");
         String action = intent.getAction();
 
         if (action.equals(NOTIFICATION_CONTROL_CLOSE)) {
@@ -34,7 +32,6 @@ public class MusicIntentReceiver extends BroadcastReceiver {
             if (keyEvent.getAction() != KeyEvent.ACTION_DOWN)
                 return;
 
-            Log.d(TAG, "onReceive " + keyEvent.getKeyCode());
             switch (keyEvent.getKeyCode()) {
                 case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                     context.startService(new Intent(MediaService.ACTION_PLAYPAUSE));

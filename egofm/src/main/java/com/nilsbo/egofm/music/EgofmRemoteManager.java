@@ -25,6 +25,7 @@ import com.nilsbo.egofm.activities.MainActivity;
  * Created by Nils on 21.01.14.
  */
 public class EgofmRemoteManager {
+    private static final String TAG = "com.nilsbo.egofm.music.EgofmRemoteManager";
 
     private static final int NOTIFICATION_ID = 100;
     private final Context context;
@@ -35,6 +36,7 @@ public class EgofmRemoteManager {
 
     private RemoteControlClient myRemoteControlClient;
     private ComponentName myEventReceiver;
+    private final Bitmap mDummyAlbumArt;
 
     /**
      * This class manages the notification and lockscreen widget.
@@ -50,6 +52,7 @@ public class EgofmRemoteManager {
         mBuilder = new NotificationCompat.Builder(context);
         resources = context.getResources();
 
+        mDummyAlbumArt = BitmapFactory.decodeResource(resources, R.drawable.egofm_icon_large);
         myEventReceiver = new ComponentName(context, MusicIntentReceiver.class);
     }
 
@@ -116,21 +119,6 @@ public class EgofmRemoteManager {
         updateRemoteControlClient(title, text, RemoteControlClient.PLAYSTATE_BUFFERING);
     }
 
-    private void updateRemoteControlClient(String title, String text, int state) {
-        myRemoteControlClient.setPlaybackState(state);
-        myRemoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY);
-
-        Bitmap mDummyAlbumArt = BitmapFactory.decodeResource(resources, R.drawable.egofm_icon_large);
-
-        myRemoteControlClient.editMetadata(true)
-                .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, title)
-                .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, text)
-                .putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK,
-                        mDummyAlbumArt)
-                .apply();
-
-    }
-
     public void displayConnectingNotification() {
         final String title = resources.getString(R.string.notification_default_title);
         final String text = resources.getString(R.string.notification_connecting);
@@ -189,5 +177,17 @@ public class EgofmRemoteManager {
             myRemoteControlClient = new RemoteControlClient(mediaPendingetent);
             mAudioManager.registerRemoteControlClient(myRemoteControlClient);
         }
+    }
+
+    private void updateRemoteControlClient(String title, String text, int state) {
+        myRemoteControlClient.setPlaybackState(state);
+        myRemoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY);
+
+        myRemoteControlClient.editMetadata(true)
+                .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, title)
+                .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, text)
+                .putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK,
+                        mDummyAlbumArt)
+                .apply();
     }
 }

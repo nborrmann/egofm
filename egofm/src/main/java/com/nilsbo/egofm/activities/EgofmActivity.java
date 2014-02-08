@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -45,7 +44,6 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
 
     @Override
     protected void onStop() {
-        Log.d(TAG, "onStop");
         super.onStop();
         // Unbind from the service
         if (mBound) {
@@ -74,11 +72,9 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
         switch (item.getItemId()) {
             case R.id.action_play:
                 startService(new Intent(MediaService.ACTION_START));
-//                invalidateOptionsMenu();
                 return true;
             case R.id.action_stop:
                 startService(new Intent(MediaService.ACTION_CLOSE));
-//                invalidateOptionsMenu();
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));

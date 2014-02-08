@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -75,7 +74,6 @@ public class EgofmMusicNetworking {
         try {
             interval = Integer.parseInt(intervalStr);
         } catch (NumberFormatException e) {
-            Log.w(TAG, "error parsing metadata update interval");
         }
         return interval;
     }

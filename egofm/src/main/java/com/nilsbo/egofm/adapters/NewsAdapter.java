@@ -3,7 +3,6 @@ package com.nilsbo.egofm.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -147,7 +146,6 @@ public class NewsAdapter extends BaseAdapter implements View.OnTouchListener, Vi
     @Override
     public void onClick(View v) {
         int position = ((ViewHolder) v.getTag()).position;
-        Log.d(TAG, "onClick " + position);
 
         Intent intent = new Intent(context, NewsItemActivity.class);
         intent.putExtra("news_header", newsItems.get(position));

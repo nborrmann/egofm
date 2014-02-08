@@ -61,8 +61,6 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     @Override
     public void onCreate() {
-        Log.i(TAG, "debug: Creating service");
-
         // Create the Wifi lock (this does not acquire the lock, this just creates it)
         mWifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
 
@@ -201,6 +199,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     }
 
     private void handleError() {
+        Log.d(TAG, "Connection error.");
         mMusicNetworkingHelper.stopMetadataDownload();
         tryConnect();
     }
@@ -250,14 +249,12 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        Log.d(TAG, "onError. what " + what + "; extra " + extra);
         handleError();
         return true;
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        Log.d(TAG, "onCompletion");
         handleError();
     }
 
