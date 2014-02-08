@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
+import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
@@ -36,7 +37,7 @@ public class EgofmRemoteManager {
 
     private RemoteControlClient myRemoteControlClient;
     private ComponentName myEventReceiver;
-    private final Bitmap mDummyAlbumArt;
+    private Bitmap mAlbumArt;
 
     /**
      * This class manages the notification and lockscreen widget.
@@ -52,9 +53,20 @@ public class EgofmRemoteManager {
         mBuilder = new NotificationCompat.Builder(context);
         resources = context.getResources();
 
-        mDummyAlbumArt = BitmapFactory.decodeResource(resources, R.drawable.egofm_icon_large);
         myEventReceiver = new ComponentName(context, MusicIntentReceiver.class);
+        if (mAlbumArt == null) {
+            new BitmapWorkerTask().execute();
+        }
     }
+
+    class BitmapWorkerTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            mAlbumArt = BitmapFactory.decodeResource(resources, R.drawable.egofm_icon_large);
+            return null;
+        }
+    }
+
 
     private void displayMediaNotification(String title, String text, String ticker, MediaService.State started) {
         Notification notif = buildMediaNotification(title, text, ticker, started);
@@ -154,8 +166,8 @@ public class EgofmRemoteManager {
     }
 
     public void displaySongNotification(String artist, String title) {
-        displayMediaNotification(artist, title, String.format("%s - %s", artist, title), MediaService.State.Playing);
-        updateRemoteControlClient(artist, title, RemoteControlClient.PLAYSTATE_BUFFERING);
+        displayMediaNotification(title, artist, String.format("%s - %s", artist, title), MediaService.State.Playing);
+        updateRemoteControlClient(title, artist, RemoteControlClient.PLAYSTATE_BUFFERING);
     }
 
     public void displayDefaultNotification(MediaService.State started) {
@@ -179,15 +191,15 @@ public class EgofmRemoteManager {
         }
     }
 
-    private void updateRemoteControlClient(String title, String text, int state) {
+    private void updateRemoteControlClient(String title, String subtitle, int state) {
         myRemoteControlClient.setPlaybackState(state);
         myRemoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY);
 
         myRemoteControlClient.editMetadata(true)
                 .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, title)
-                .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, text)
+                .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, subtitle)
                 .putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK,
-                        mDummyAlbumArt)
+                        mAlbumArt)
                 .apply();
     }
 }
