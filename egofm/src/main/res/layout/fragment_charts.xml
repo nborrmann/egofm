@@ -49,8 +49,8 @@
             android:drawableStart="@drawable/ic_action_refresh"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp" />
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
 
     </LinearLayout>
 </LinearLayout>
