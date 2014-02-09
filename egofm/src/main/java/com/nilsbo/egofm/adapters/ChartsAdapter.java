@@ -40,6 +40,21 @@ public class ChartsAdapter extends BaseAdapter implements View.OnClickListener, 
         iconNotFav = context.getResources().getDrawable(R.drawable.icon_unfav);
     }
 
+    @Override
+    public int getCount() {
+        return songs.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return songs.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
     public void setItems(ArrayList<ChartItem> items) {
         if (items != null) {
             songs = items;
@@ -123,21 +138,6 @@ public class ChartsAdapter extends BaseAdapter implements View.OnClickListener, 
 
         convertView.setTag(holder);
         return convertView;
-    }
-
-    @Override
-    public int getCount() {
-        return songs.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return songs.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
     }
 
     @Override

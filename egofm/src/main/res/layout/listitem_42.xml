@@ -49,17 +49,16 @@
         <LinearLayout
             android:orientation="vertical"
             android:paddingLeft="8dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="3dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp">
 
             <TextView
                 tools:text="HELP ME LOSE MY MIND "
                 android:ellipsize="marquee"
                 android:id="@+id/charts_title"
-                android:textColor="#96c11f"
                 android:focusable="true"
                 android:fadingEdge="horizontal"
                 android:layout_width="fill_parent"
@@ -68,7 +67,8 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="18sp"
                 android:fontFamily="sans-serif-condensed"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/egofm_green" />
 
             <TextView
                 tools:text="TENSNAKE FEAT. FIORA &amp; NILE"

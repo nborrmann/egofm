@@ -26,13 +26,14 @@ import java.util.ArrayList;
 public class ChartsFragment extends ListFragment implements Response.ErrorListener, Response.Listener<ArrayList<ChartItem>> {
     private static final String TAG = "com.nilsbo.egofm.fragments.ChartsFragment";
 
-    final RequestQueue requestQueue = MyVolley.getRequestQueue();
     private static final String CHARTS_REQUEST = "CHARTS_REQUEST";
     private static final String SAVED_STATE_CHARTS_ARRAY = "SAVED_STATE_CHARTS_ARRAY";
-    private final String SAVED_STATE_LIST_STATE = "listState";
+    private static final String SAVED_STATE_LIST_STATE = "listState";
 
     private ChartsAdapter adapter;
     private ArrayList<ChartItem> songs = new ArrayList<ChartItem>();
+    final RequestQueue requestQueue = MyVolley.getRequestQueue();
+
     private ProgressBar emptyProgress;
     private TextView emptyText;
     private View parentView;
@@ -63,7 +64,6 @@ public class ChartsFragment extends ListFragment implements Response.ErrorListen
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "onActivityCreated");
 
         adapter = new ChartsAdapter(songs, getActivity());
         setListAdapter(adapter);
@@ -76,7 +76,7 @@ public class ChartsFragment extends ListFragment implements Response.ErrorListen
         emptyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reload();
+                loadCharts();
             }
         });
 
@@ -86,7 +86,7 @@ public class ChartsFragment extends ListFragment implements Response.ErrorListen
             songs = savedInstanceState.getParcelableArrayList(SAVED_STATE_CHARTS_ARRAY);
         }
         if (mState == State.Empty || mState == State.Loading) {
-            reload();
+            loadCharts();
         } else if (mState == State.Error) {
             showError();
         } else if (mState == State.ShowingResults) {
@@ -94,7 +94,9 @@ public class ChartsFragment extends ListFragment implements Response.ErrorListen
         }
     }
 
-    private void reload() {
+    private void loadCharts() {
+        Log.d(TAG, "Loading egoFM 42");
+
         emptyProgress.setVisibility(View.VISIBLE);
         emptyText.setVisibility(View.GONE);
         emptyBtn.setVisibility(View.GONE);

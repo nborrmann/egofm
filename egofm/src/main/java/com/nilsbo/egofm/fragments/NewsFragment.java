@@ -207,11 +207,11 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
 
         @Override
         public void onResponse(ArrayList<NewsItem> response) {
-            if (news.size() == 0 || !response.get(0).equals(news.get(0))) {
+            if (news == null || news.size() == 0 || !response.get(0).equals(news.get(0))) {
                 // don't merge the lists. This is too much of a hassle and will yield duplicate news when loading additional pages
-                news.clear();
+                if (news != null) news.clear();
                 news = response;
-                adapter.setItems(response);
+                adapter.setItems(news);
                 adapter.notifyDataSetChanged();
                 page = 1;
             }

@@ -30,15 +30,15 @@ import java.util.Calendar;
 public class PlaylistFragment extends ListFragment implements Response.ErrorListener, Response.Listener<ArrayList<PlaylistItem>>, View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.PlaylistFragment";
 
-    final RequestQueue requestQueue = MyVolley.getRequestQueue();
     private static final String PLAYLIST_REQUEST = "PLAYLIST_REQUEST";
     private static final String SAVED_STATE_PLAYLIST_ARRAY = "SAVED_STATE_PLAYLIST_ARRAY";
-    private final String SAVED_STATE_TIME = "SAVED_STATE_TIME";
-    private final String SAVED_STATE_LIST_STATE = "savedStateListState";
+    private static final String SAVED_STATE_TIME = "SAVED_STATE_TIME";
+    private static final String SAVED_STATE_LIST_STATE = "savedStateListState";
 
+    private State mState;
     private PlaylistAdapter adapter;
     private ArrayList<PlaylistItem> songs = new ArrayList<PlaylistItem>();
-    private State mState;
+    final RequestQueue requestQueue = MyVolley.getRequestQueue();
 
     private int year;
     private int month;
@@ -140,7 +140,6 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
     }
 
     private void showEmptyMessage() {
-        Log.d(TAG, "showEmptyMessage");
         adapter.setItems(null); // just to be sure.
         emptyProgress.setVisibility(View.GONE);
         emptyText.setVisibility(View.VISIBLE);
@@ -148,7 +147,6 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
     }
 
     private void showErrorMessage() {
-        Log.d(TAG, "showErrorMessage");
         adapter.setItems(null); // just to be sure.
         emptyProgress.setVisibility(View.GONE);
         emptyText.setVisibility(View.VISIBLE);
@@ -156,7 +154,7 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
     }
 
     private void reload() {
-        Log.d(TAG, "reload");
+        Log.d(TAG, "Loading Playlist");
         mState = State.Loading;
 
         emptyProgress.setVisibility(View.VISIBLE);
@@ -259,7 +257,6 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(TAG, "onSaveInstanceState");
 
         requestQueue.cancelAll(PLAYLIST_REQUEST);
         if (mState == State.Loading) mState = State.Empty;

@@ -24,7 +24,6 @@ public class ChartsVoteRequester {
     private final ChartVoteListener mCallback;
     private final int mTag;
     private final String voteUrl = "http://www.egofm.de/musik/egofm-42?hitcount=0";
-    private boolean canceled = false;
 
     public ChartsVoteRequester(ChartItem song, ChartVoteListener mCallback, int tag) {
         this.mCallback = mCallback;
