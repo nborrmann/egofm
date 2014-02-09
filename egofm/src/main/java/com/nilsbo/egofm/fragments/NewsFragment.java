@@ -233,6 +233,7 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        gridView.onRefreshComplete(); // just to be sure
         requestQueue.cancelAll(NEWS_LIST_REQUEST);
 
         outState.putParcelableArrayList(SAVED_STATE_NEWS_ARRAY, news);
