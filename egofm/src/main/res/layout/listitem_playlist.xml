@@ -13,6 +13,8 @@
     tools:layout_height="wrap_content"
     android:gravity="center_vertical"
 
+    android:clickable="false"
+
     >
 
     <TextView

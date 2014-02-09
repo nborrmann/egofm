@@ -64,7 +64,7 @@
     <string name="prefs_playstore">Play Store</string>
     <string name="chart_vote_unknown_response">Unknown response</string>
     <string name="chart_vote_connection_error">Connection error</string>
-    <string name="tab_42">egoFM 42</string>
+    <string name="tab_42">42</string>
 
 
 </resources>

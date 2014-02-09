@@ -14,6 +14,6 @@
         android:layout_height="wrap_content"
         android:minHeight="48dip"
         android:text="@string/done_label"
-    android:background="@drawable/date_picker_selector"
+        android:background="@drawable/date_picker_selector"
         style="?android:attr/buttonBarButtonStyle" />
 </LinearLayout>
