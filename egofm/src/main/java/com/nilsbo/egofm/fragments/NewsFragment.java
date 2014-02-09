@@ -201,6 +201,7 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
             showErrorMessage();
             gridView.onRefreshComplete();
 
+            mState = State.Error;
             isLoading = false;
             isError = true;
         }
@@ -210,6 +211,8 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
             if (news == null || news.size() == 0 || !response.get(0).equals(news.get(0))) {
                 // don't merge the lists. This is too much of a hassle and will yield duplicate news when loading additional pages
                 if (news != null) news.clear();
+                mState = State.ShowingResults;
+
                 news = response;
                 adapter.setItems(news);
                 adapter.notifyDataSetChanged();
