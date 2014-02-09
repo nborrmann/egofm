@@ -52,7 +52,7 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
         }
 
         // Kill service if it isn't playing
-        if (serviceCallback.getPlaybackState() == MediaService.State.Stopped) {
+        if (serviceCallback != null && serviceCallback.getPlaybackState() == MediaService.State.Stopped) {
             stopService(mediaServiceIntent);
         }
     }

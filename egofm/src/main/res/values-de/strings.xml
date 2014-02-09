@@ -29,6 +29,7 @@
     <string name="title_activity_news_item_fragment">News</string>
     <string name="prefs_rate_playstore">Die App im Play Store bewerten</string>
     <string name="prefs_playstore">Play Store</string>
+    <string name="chart_vote_unknown_response">Unknown response</string>
 
     <string-array name="quality_entries">
         <item>Hoch (192 kbits)</item>

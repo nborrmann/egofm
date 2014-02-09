@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:background="@color/background_light_grey"
+        android:gravity="center_vertical"
+        android:minHeight="56dp">
+
+        <LinearLayout
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal"
+            android:background="#444444"
+            android:paddingLeft="1dp"
+            android:paddingRight="2dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                tools:text="42"
+                android:id="@+id/charts_position"
+                android:textSize="24dp"
+                android:textColor="@color/egofm_green"
+                android:layout_marginRight="4dp"
+                tools:ignore="SpUsage" />
+
+            <ImageView
+                android:id="@+id/charts_position_delta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_arrow_down"
+
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="3dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                tools:text="HELP ME LOSE MY MIND "
+                android:ellipsize="marquee"
+                android:id="@+id/charts_title"
+                android:textColor="#96c11f"
+                android:focusable="true"
+                android:fadingEdge="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-condensed"
+                android:textStyle="bold" />
+
+            <TextView
+                tools:text="TENSNAKE FEAT. FIORA &amp; NILE"
+                android:ellipsize="marquee"
+                android:layout_gravity="left"
+                android:id="@+id/charts_artist"
+                android:fadingEdge="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:fontFamily="sans-serif-light"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:background="@drawable/egofm_list_selector_holo_light"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_unfav"
+            android:id="@+id/charts_vote_button" />
+
+        <ProgressBar
+            android:id="@+id/charts_vote_progress"
+            android:visibility="gone"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="12dp" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/chart_list_divider" />
+</LinearLayout>

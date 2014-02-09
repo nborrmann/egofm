@@ -34,6 +34,7 @@ public class NewsListRequest extends Request<ArrayList<NewsItem>> {
     public NewsListRequest(String url, Listener<ArrayList<NewsItem>> listener, ErrorListener errorListener) {
         this(Method.GET, url, listener, errorListener);
     }
+
     @Override
     protected void deliverResponse(ArrayList<NewsItem> response) {
         mListener.onResponse(response);
@@ -51,7 +52,6 @@ public class NewsListRequest extends Request<ArrayList<NewsItem>> {
         }
 
         try {
-
             final Document doc = Jsoup.parse(parsed);
             Elements newsElements = doc.select("div.blog-featured div.blog_content");
 

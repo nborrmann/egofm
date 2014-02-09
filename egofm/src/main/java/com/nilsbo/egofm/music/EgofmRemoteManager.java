@@ -54,6 +54,10 @@ public class EgofmRemoteManager {
         resources = context.getResources();
 
         myEventReceiver = new ComponentName(context, MusicIntentReceiver.class);
+        loadAlbumArtIfNeeded();
+    }
+
+    private void loadAlbumArtIfNeeded() {
         if (mAlbumArt == null) {
             new BitmapWorkerTask().execute();
         }
@@ -179,6 +183,7 @@ public class EgofmRemoteManager {
     }
 
     private void createRemoteControlClientIfNeeded() {
+        loadAlbumArtIfNeeded();
         if (myRemoteControlClient == null) {
             // build the Pendingetent for the remote control client
             Intent mediaButtontent = new Intent(Intent.ACTION_MEDIA_BUTTON);
@@ -192,6 +197,8 @@ public class EgofmRemoteManager {
     }
 
     private void updateRemoteControlClient(String title, String subtitle, int state) {
+        createRemoteControlClientIfNeeded();
+
         myRemoteControlClient.setPlaybackState(state);
         myRemoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY);
 

@@ -33,6 +33,7 @@ public class PlaylistRequest extends Request<ArrayList<PlaylistItem>> {
     public PlaylistRequest(String url, Listener<ArrayList<PlaylistItem>> listener, ErrorListener errorListener) {
         this(Method.GET, url, listener, errorListener);
     }
+
     @Override
     protected void deliverResponse(ArrayList<PlaylistItem> response) {
         mListener.onResponse(response);
@@ -61,6 +62,7 @@ public class PlaylistRequest extends Request<ArrayList<PlaylistItem>> {
                 p.title = e.getElementsByClass("name").text().substring(1);
                 p.date = e.getElementsByClass("start-date").text();
                 p.time = e.getElementsByClass("start-time").text();
+
                 playlist.add(p);
             }
 
