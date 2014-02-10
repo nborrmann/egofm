@@ -103,6 +103,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     private void processCloseRequest() {
         cleanup();
         giveUpAudioFocus();
+        mRemoteManager.cancelAll();
         stopForeground(true);
         stopSelf();
     }
@@ -143,7 +144,8 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     }
 
     private void tryConnect() {
-        activityCallback.playbackStateChanged();
+        if (activityCallback != null) activityCallback.playbackStateChanged();
+
         mRemoteManager.displayConnectingNotification();
         try {
             if (connectionTries < 3) {
@@ -294,6 +296,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     @Override
     public void onDestroy() {
+        mRemoteManager.cancelAll();
         cleanup();
         giveUpAudioFocus();
         super.onDestroy();

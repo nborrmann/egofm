@@ -57,6 +57,10 @@ public class EgofmRemoteManager {
         loadAlbumArtIfNeeded();
     }
 
+    public void cancelAll() {
+        mNotificationManager.cancelAll();
+    }
+
     private void loadAlbumArtIfNeeded() {
         if (mAlbumArt == null) {
             new BitmapWorkerTask().execute();
