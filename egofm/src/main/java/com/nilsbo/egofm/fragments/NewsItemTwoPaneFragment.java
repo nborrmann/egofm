@@ -32,7 +32,7 @@ import com.nilsbo.egofm.widgets.ObservableScrollView;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class NewsItemFragment extends Fragment implements Response.ErrorListener, Response.Listener<String>, ObservableScrollView.ScrollViewListener {
+public class NewsItemTwoPaneFragment extends Fragment implements Response.ErrorListener, Response.Listener<String>, ObservableScrollView.ScrollViewListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.NewsItemFragment";
 
     private static final String SAVE_STATED_WEBVIEW_TEXT = "SAVE_STATE_WEBVIEW_TEXT";
@@ -90,16 +90,16 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         mActionBar = getActivity().getActionBar();
         mActionBarHeight = getActionBarHeight();
 
-        customHeaderView = (TextView) mInflater.inflate(R.layout.fragment_news_item_title, null, false);
-        customHeaderView.setText(mNewsItem.title);
+//        customHeaderView = (TextView) mInflater.inflate(R.layout.fragment_news_item_title, null, false);
+//        customHeaderView.setText(mNewsItem.title);
 
-        mActionBar.setCustomView(customHeaderView);
-        mActionBar.setDisplayShowCustomEnabled(true);
-        mActionBar.setDisplayHomeAsUpEnabled(false);
-        mActionBar.setDisplayShowHomeEnabled(false);
-        mActionBar.setDisplayShowTitleEnabled(false);
+//        mActionBar.setCustomView(customHeaderView);
+//        mActionBar.setDisplayShowCustomEnabled(true);
+//        mActionBar.setDisplayHomeAsUpEnabled(false);
+//        mActionBar.setDisplayShowHomeEnabled(false);
+//        mActionBar.setDisplayShowTitleEnabled(false);
 
-        mHeader = (RelativeLayout) rootView.findViewById(R.id.news_item_header);
+//        mHeader = (RelativeLayout) rootView.findViewById(R.id.news_item_header);
         mHeaderText = (TextView) rootView.findViewById(R.id.news_item_header_text);
         mHeaderText.setText(mNewsItem.title);
         mHeaderText.setSelected(true);
@@ -108,8 +108,8 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         if (TextUtils.isEmpty(mNewsItem.subtitle)) mSubtitleText.setVisibility(View.GONE);
         mDateText = (TextView) rootView.findViewById(R.id.news_item_date);
         mDateText.setText(mNewsItem.date);
-        mScrollView = (ObservableScrollView) rootView.findViewById(R.id.news_item_scrollcontainer);
-        mScrollView.setScrollViewListener(this);
+//        mScrollView = (ObservableScrollView) rootView.findViewById(R.id.news_item_scrollcontainer);
+//        mScrollView.setScrollViewListener(this);
 
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.news_item_empty);
         mErrorText = (TextView) rootView.findViewById(R.id.news_item_empty_text);
@@ -118,23 +118,23 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         mHeaderImage = (CustomNetworkImageView) rootView.findViewById(R.id.news_item_header_image);
         mHeaderImage.setMinimumHeight(mActionBarHeight);
         mHeaderImage.setDefaultImageResId(R.drawable.default_news_image);
-        mHeaderImage.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                final int offset = Math.max(mHeaderImage.getHeight(), mActionBarHeight);
-                mScrollView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mScrollView.setPadding(mScrollView.getPaddingLeft(), offset, mScrollView.getPaddingRight(), mScrollView.getPaddingBottom());
-                    }
-                });
-
-                mSubheaderHeight = mSubtitleText.getHeight() + rootView.findViewById(R.id.news_item_seperator).getHeight() + mDateText.getHeight();
-                mHeaderActionBarDiff = mActionBarHeight - mHeaderImage.getHeight();
-                mScrollRetardation = 1 + mSubheaderHeight / (-1.0f * mHeaderActionBarDiff);
-                scrollHeader(mScrollView.getScrollY());
-            }
-        });
+//        mHeaderImage.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+//            @Override
+//            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+//                final int offset = Math.max(mHeaderImage.getHeight(), mActionBarHeight);
+//                mScrollView.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mScrollView.setPadding(mScrollView.getPaddingLeft(), offset, mScrollView.getPaddingRight(), mScrollView.getPaddingBottom());
+//                    }
+//                });
+//
+//                mSubheaderHeight = mSubtitleText.getHeight() + rootView.findViewById(R.id.news_item_seperator).getHeight() + mDateText.getHeight();
+//                mHeaderActionBarDiff = mActionBarHeight - mHeaderImage.getHeight();
+//                mScrollRetardation = 1 + mSubheaderHeight / (-1.0f * mHeaderActionBarDiff);
+//                scrollHeader(mScrollView.getScrollY());
+//            }
+//        });
         mHeaderImage.setImageUrl(mNewsItem.imgUrlBig, mNewsItem.imgUrl, MyVolley.getImageLoader());
     }
 

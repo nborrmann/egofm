@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- news_list_side_padding is actually doubled due to some weird bug in pullToRefresh GridView -->
+    <dimen name="news_list_side_padding">8dp</dimen>
+    <dimen name="news_list_spacing">8dp</dimen>
+    <dimen name="news_list_top_padding">8dp</dimen>
+    <dimen name="news_twopane_left_padding">0dp</dimen>
+    <dimen name="news_twopane_right_padding">16dp</dimen>
+    <dimen name="news_twopane_list_width">282dp</dimen>
+    <dimen name="news_twopane_item_width">360dp</dimen>
+    <dimen name="news_twopane_item_top_padding">8dp</dimen>
+
+</resources>

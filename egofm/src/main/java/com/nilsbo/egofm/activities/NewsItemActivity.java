@@ -13,12 +13,7 @@ public class NewsItemActivity extends EgofmActivity {
         setContentView(R.layout.activity_news_item);
 
         if (savedInstanceState == null) {
-//            NewsItemFragment details = new NewsItemFragment();
-//            details.setArguments(getIntent().getExtras());
-//            getFragmentManager().beginTransaction().add(
-//                    R.id.container, details).commit();
-
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new NewsItemFragment())
                     .commit();
         }
