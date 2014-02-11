@@ -83,11 +83,18 @@ public class NewsContainer extends Fragment implements NewsListListener {
     @Override
     public void onItemClicked(NewsItem item) {
         if (isTwoPane) {
-            newsItemFragment.setContent(item);
+            newsItemFragment.setContent(item, false);
         } else {
             Intent intent = new Intent(getActivity(), NewsItemActivity.class);
             intent.putExtra("news_header", item);
             getActivity().startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onDefault(NewsItem newsItem) {
+        if (isTwoPane) {
+            newsItemFragment.setContent(newsItem, false);
         }
     }
 }

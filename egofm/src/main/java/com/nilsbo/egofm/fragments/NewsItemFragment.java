@@ -55,6 +55,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     protected TextView mErrorText;
     protected ProgressBar mProgressBar;
     protected ObservableScrollView mScrollView;
+    protected View mSubtitleDivider;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,19 +72,29 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         initUI();
 
         if (savedInstanceState != null) {
+            preLoadUISetup();
             mNewsItem = savedInstanceState.getParcelable(SAVED_STATE_NEWS_ITEM);
             setInitialData();
             webViewText = savedInstanceState.getString(SAVED_STATED_WEBVIEW_TEXT);
             showWebView();
+        } else {
+            // TODO use bundle to get initial data
+            if (mNewsItem != null) {
+                loadPage();
+                setInitialData();
+                preLoadUISetup();
+            }
         }
     }
 
     protected void initUI() {
         mActionBar = getActivity().getActionBar();
 
+        mHeader = (RelativeLayout) rootView.findViewById(R.id.news_item_header);
         mHeaderText = (TextView) rootView.findViewById(R.id.news_item_header_text);
         mHeaderText.setSelected(true);
         mSubtitleText = (TextView) rootView.findViewById(R.id.news_item_subtitle);
+        mSubtitleDivider = rootView.findViewById(R.id.news_item_seperator);
         mDateText = (TextView) rootView.findViewById(R.id.news_item_date);
 
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.news_item_empty);
@@ -93,6 +104,10 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
 
         mHeaderImage = (CustomNetworkImageView) rootView.findViewById(R.id.news_item_header_image);
         mHeaderImage.setDefaultImageResId(R.drawable.default_news_image);
+
+        mSubtitleDivider.setVisibility(View.GONE);
+        mEmptyView.setVisibility(View.GONE);
+        mHeader.setVisibility(View.GONE);
     }
 
     protected void setInitialData() {
@@ -101,15 +116,20 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         mHeaderText.setText(mNewsItem.title);
         mSubtitleText.setText(mNewsItem.subtitle);
         if (TextUtils.isEmpty(mNewsItem.subtitle)) mSubtitleText.setVisibility(View.GONE);
+        else mSubtitleText.setVisibility(View.VISIBLE);
         mDateText.setText(mNewsItem.date);
         mHeaderImage.setImageUrl(mNewsItem.imgUrlBig, mNewsItem.imgUrl, MyVolley.getImageLoader());
     }
 
-    private void hideWebView() {
+    private void preLoadUISetup() {
         webView.setVisibility(View.GONE);
         mEmptyView.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.VISIBLE);
         mErrorText.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
+
+        mSubtitleDivider.setVisibility(View.VISIBLE);
+        mHeader.setVisibility(View.VISIBLE);
+
         mScrollView.fullScroll(ScrollView.FOCUS_UP);
         mScrollView.computeScroll();
     }
@@ -168,11 +188,12 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         outState.putParcelable(SAVED_STATE_NEWS_ITEM, mNewsItem);
     }
 
-    public void setContent(NewsItem item) {
+    public void setContent(NewsItem item, boolean initial) {
         mNewsItem = item;
-        hideWebView();
+        if (!initial) {
+            preLoadUISetup();
+            setInitialData();
+        }
         loadPage();
-        setInitialData();
     }
-
 }

@@ -6,7 +6,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -48,7 +47,6 @@ public class NewsItemFancyFragment extends NewsItemFragment implements Response.
         mActionBar.setDisplayShowHomeEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
 
-        mHeader = (RelativeLayout) rootView.findViewById(R.id.news_item_header);
         mScrollView.setScrollViewListener(this);
 
         mHeaderImage.setMinimumHeight(mActionBarHeight);
@@ -63,7 +61,7 @@ public class NewsItemFancyFragment extends NewsItemFragment implements Response.
                     }
                 });
 
-                mSubheaderHeight = mSubtitleText.getHeight() + rootView.findViewById(R.id.news_item_seperator).getHeight() + mDateText.getHeight();
+                mSubheaderHeight = mSubtitleText.getHeight() + mSubtitleDivider.getHeight() + mDateText.getHeight();
                 mHeaderActionBarDiff = mActionBarHeight - mHeaderImage.getHeight();
                 mScrollRetardation = 1 + mSubheaderHeight / (-1.0f * mHeaderActionBarDiff);
                 scrollHeader(mScrollView.getScrollY());

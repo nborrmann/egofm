@@ -186,6 +186,10 @@ public class NewsListFragment extends Fragment implements AbsListView.OnScrollLi
                 news.addAll(response);
                 adapter.setItems(news);
                 adapter.notifyDataSetChanged();
+
+                if (page == 0 && mCallback != null) {
+                    mCallback.onDefault(news.get(0));
+                }
                 page++;
             }
             isLoading = false;

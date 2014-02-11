@@ -18,7 +18,7 @@ public class NewsItemActivity extends EgofmActivity {
         if (savedInstanceState == null) {
             final NewsItemFancyFragment newsItemFancyFragment = new NewsItemFancyFragment();
             Log.d(TAG, "set Content");
-            newsItemFancyFragment.setContent((NewsItem) getIntent().getParcelableExtra("news_header"));
+            newsItemFancyFragment.setContent((NewsItem) getIntent().getParcelableExtra("news_header"), true);
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, newsItemFancyFragment)

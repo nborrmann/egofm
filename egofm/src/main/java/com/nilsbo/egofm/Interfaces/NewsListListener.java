@@ -7,4 +7,6 @@ import com.nilsbo.egofm.util.NewsItem;
  */
 public interface NewsListListener {
     public void onItemClicked(NewsItem item);
+
+    void onDefault(NewsItem newsItem);
 }
