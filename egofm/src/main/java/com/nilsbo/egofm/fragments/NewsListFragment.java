@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
+import com.nilsbo.egofm.Interfaces.NewsListListener;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.adapters.NewsAdapter;
 import com.nilsbo.egofm.networking.MyVolley;
@@ -27,8 +28,8 @@ import com.nilsbo.egofm.util.NewsItem;
 import java.util.ArrayList;
 
 
-public class NewsFragment extends Fragment implements AbsListView.OnScrollListener {
-    private static final String TAG = "com.nilsbo.egofm.fragments.NewsFragment";
+public class NewsListFragment extends Fragment implements AbsListView.OnScrollListener {
+    private static final String TAG = "com.nilsbo.egofm.fragments.NewsListFragment";
 
     private static final String NEWS_LIST_REQUEST = "NEWS_LIST_REQUEST";
     private static final String SAVED_STATE_PAGE = "savedStatePage";
@@ -38,6 +39,7 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
     private static final String url_pattern = "http://egofm.de.ps-server.net/app-news?tmpl=app&start=%d";
 
     final RequestQueue requestQueue = MyVolley.getRequestQueue();
+    private NewsListListener mCallback;
     private ArrayList<NewsItem> news = new ArrayList<NewsItem>();
 
     private State mState;
@@ -57,20 +59,18 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
         ShowingResults // Any number of news are displayed.
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment PlaylistFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static NewsFragment newInstance() {
-        NewsFragment fragment = new NewsFragment();
+    public static NewsListFragment newInstance() {
+        NewsListFragment fragment = new NewsListFragment();
         return fragment;
     }
 
-    public NewsFragment() {
+    public NewsListFragment() {
         // Required empty public constructor
+        mCallback = null;
+    }
+
+    public void registerCallback(NewsListListener mCallback) {
+        this.mCallback = mCallback;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new NewsAdapter(news, getActivity());
+        adapter = new NewsAdapter(news, getActivity(), mCallback);
         parentView = getView();
 
         gridView = (PullToRefreshGridView) getView().findViewById(R.id.newslist);
@@ -175,6 +175,7 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
             isLoading = false;
             isError = true;
         }
+
         @Override
         public void onResponse(ArrayList<NewsItem> response) {
             if (response.size() == 0) {

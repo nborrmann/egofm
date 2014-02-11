@@ -6,10 +6,10 @@
     <dimen name="news_list_side_padding">2.5dp</dimen>
     <dimen name="news_list_spacing">5dp</dimen>
     <dimen name="news_list_top_padding">5dp</dimen>
+
     <dimen name="news_twopane_left_padding">96dp</dimen>
     <dimen name="news_twopane_right_padding">96dp</dimen>
     <dimen name="news_twopane_list_width">336dp</dimen>
-    <dimen name="news_twopane_item_width">560dp</dimen>
     <dimen name="news_twopane_item_top_padding">16dp</dimen>
 
 </resources>

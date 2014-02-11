@@ -1,7 +1,6 @@
 package com.nilsbo.egofm.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,8 +52,8 @@ public class PlaylistAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.title.setText(song.title);
-        holder.artist.setText(song.artist);
+        holder.title.setText(song.artist);
+        holder.artist.setText(song.title);
         holder.time.setText(song.time);
         holder.date.setText(song.date);
 

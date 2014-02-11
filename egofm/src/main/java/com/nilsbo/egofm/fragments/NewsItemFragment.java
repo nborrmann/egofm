@@ -1,12 +1,10 @@
 package com.nilsbo.egofm.fragments;
 
 import android.app.ActionBar;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,7 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -32,36 +31,30 @@ import com.nilsbo.egofm.widgets.ObservableScrollView;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class NewsItemFragment extends Fragment implements Response.ErrorListener, Response.Listener<String>, ObservableScrollView.ScrollViewListener {
-    private static final String TAG = "com.nilsbo.egofm.fragments.NewsItemFragment";
+public class NewsItemFragment extends Fragment implements Response.ErrorListener, Response.Listener<String> {
+    private static final String TAG = "com.nilsbo.egofm.fragments.NewsItemFancyFragment";
 
-    private static final String SAVE_STATED_WEBVIEW_TEXT = "SAVE_STATE_WEBVIEW_TEXT";
-    private static final int MAX_HEADER_TRANSPARENCY = 170;
+    protected static final String SAVED_STATED_WEBVIEW_TEXT = "SAVE_STATE_WEBVIEW_TEXT";
+    protected static final String SAVED_STATE_NEWS_ITEM = "SAVED_STATE_NEWS_ITEM";
 
-    final RequestQueue requestQueue = MyVolley.getRequestQueue();
+    protected final RequestQueue requestQueue = MyVolley.getRequestQueue();
 
-    private String webViewText;
-    private int mActionBarHeight;
-    private int mHeaderActionBarDiff;
-    private int mSubheaderHeight;
-    private float mScrollRetardation;
+    protected String webViewText;
 
-    private ActionBar mActionBar;
-    private View rootView;
-    private WebView webView;
-    private ObservableScrollView mScrollView;
-    private CustomNetworkImageView mHeaderImage;
-    private RelativeLayout mHeader;
-    private LayoutInflater mInflater;
-    private TextView customHeaderView;
-    private NewsItem mNewsItem;
-    private TextView mHeaderText;
-    private TextView mSubtitleText;
-    private TextView mDateText;
-    private LinearLayout mEmptyView;
-    private TextView mErrorText;
-    private ProgressBar mProgressBar;
-
+    protected ActionBar mActionBar;
+    protected LayoutInflater mInflater;
+    protected View rootView;
+    protected WebView webView;
+    protected CustomNetworkImageView mHeaderImage;
+    protected RelativeLayout mHeader;
+    protected NewsItem mNewsItem;
+    protected TextView mHeaderText;
+    protected TextView mSubtitleText;
+    protected TextView mDateText;
+    protected LinearLayout mEmptyView;
+    protected TextView mErrorText;
+    protected ProgressBar mProgressBar;
+    protected ObservableScrollView mScrollView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,83 +67,58 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initContent();
         initWebView();
-        initActionBar();
+        initUI();
 
         if (savedInstanceState != null) {
-            webViewText = savedInstanceState.getString(SAVE_STATED_WEBVIEW_TEXT);
-            displayWebview();
-        } else {
-            loadPage();
+            mNewsItem = savedInstanceState.getParcelable(SAVED_STATE_NEWS_ITEM);
+            setInitialData();
+            webViewText = savedInstanceState.getString(SAVED_STATED_WEBVIEW_TEXT);
+            showWebView();
         }
     }
 
-    private void initActionBar() {
+    protected void initUI() {
         mActionBar = getActivity().getActionBar();
-        mActionBarHeight = getActionBarHeight();
 
-        customHeaderView = (TextView) mInflater.inflate(R.layout.fragment_news_item_title, null, false);
-        customHeaderView.setText(mNewsItem.title);
-
-        mActionBar.setCustomView(customHeaderView);
-        mActionBar.setDisplayShowCustomEnabled(true);
-        mActionBar.setDisplayHomeAsUpEnabled(false);
-        mActionBar.setDisplayShowHomeEnabled(false);
-        mActionBar.setDisplayShowTitleEnabled(false);
-
-        mHeader = (RelativeLayout) rootView.findViewById(R.id.news_item_header);
         mHeaderText = (TextView) rootView.findViewById(R.id.news_item_header_text);
-        mHeaderText.setText(mNewsItem.title);
         mHeaderText.setSelected(true);
         mSubtitleText = (TextView) rootView.findViewById(R.id.news_item_subtitle);
-        mSubtitleText.setText(mNewsItem.subtitle);
-        if (TextUtils.isEmpty(mNewsItem.subtitle)) mSubtitleText.setVisibility(View.GONE);
         mDateText = (TextView) rootView.findViewById(R.id.news_item_date);
-        mDateText.setText(mNewsItem.date);
-        mScrollView = (ObservableScrollView) rootView.findViewById(R.id.news_item_scrollcontainer);
-        mScrollView.setScrollViewListener(this);
 
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.news_item_empty);
         mErrorText = (TextView) rootView.findViewById(R.id.news_item_empty_text);
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.news_item_empty_progress);
+        mScrollView = (ObservableScrollView) rootView.findViewById(R.id.news_item_scrollcontainer);
 
         mHeaderImage = (CustomNetworkImageView) rootView.findViewById(R.id.news_item_header_image);
-        mHeaderImage.setMinimumHeight(mActionBarHeight);
         mHeaderImage.setDefaultImageResId(R.drawable.default_news_image);
-        mHeaderImage.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                final int offset = Math.max(mHeaderImage.getHeight(), mActionBarHeight);
-                mScrollView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mScrollView.setPadding(mScrollView.getPaddingLeft(), offset, mScrollView.getPaddingRight(), mScrollView.getPaddingBottom());
-                    }
-                });
+    }
 
-                mSubheaderHeight = mSubtitleText.getHeight() + rootView.findViewById(R.id.news_item_seperator).getHeight() + mDateText.getHeight();
-                mHeaderActionBarDiff = mActionBarHeight - mHeaderImage.getHeight();
-                mScrollRetardation = 1 + mSubheaderHeight / (-1.0f * mHeaderActionBarDiff);
-                scrollHeader(mScrollView.getScrollY());
-            }
-        });
+    protected void setInitialData() {
+        if (mNewsItem == null) return;
+
+        mHeaderText.setText(mNewsItem.title);
+        mSubtitleText.setText(mNewsItem.subtitle);
+        if (TextUtils.isEmpty(mNewsItem.subtitle)) mSubtitleText.setVisibility(View.GONE);
+        mDateText.setText(mNewsItem.date);
         mHeaderImage.setImageUrl(mNewsItem.imgUrlBig, mNewsItem.imgUrl, MyVolley.getImageLoader());
     }
 
-    private void initContent() {
-        if (getActivity() != null && getActivity().getIntent().getParcelableExtra("news_header") != null) {
-            mNewsItem = getActivity().getIntent().getParcelableExtra("news_header");
-        } else {
-            mNewsItem = new NewsItem();
-            mNewsItem.imgUrl = "http://www.egofm.de/images/content/2408/_thumb4/kygo_fb.jpg";
-            mNewsItem.imgUrlBig = "http://www.egofm.de/images/content/2408/_thumb2/kygo_fb.jpg";
-            mNewsItem.link = "http://www.egofm.de/musik/download-des-tages/2408-freedownload-seinabo-sey-younger-kygo-remix?tmpl=app";
-            mNewsItem.title = "SEINABO SEY - YOUNGER (KYGO REMIX)";
-            mNewsItem.subtitle = "DER FREE - DOWNLOAD DES TAGES";
-            mNewsItem.date = "10.02.2014";
-//            getActivity().finish();
-        }
+    private void hideWebView() {
+        webView.setVisibility(View.GONE);
+        mEmptyView.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mErrorText.setVisibility(View.GONE);
+        mScrollView.fullScroll(ScrollView.FOCUS_UP);
+        mScrollView.computeScroll();
+    }
+
+    private void showWebView() {
+        webView.setVisibility(View.VISIBLE);
+        mEmptyView.setVisibility(View.GONE);
+        webView.clearView();
+        webView.loadDataWithBaseURL("http://www.egofm.de/", webViewText, "text/html", "UTF-8", null);
     }
 
     private void initWebView() {
@@ -172,20 +140,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         webView.getSettings().setAppCacheMaxSize(2 * 1024 * 1024);
     }
 
-    @Override
-    public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
-        float interpolation = clamp((-1.0f * y) / mHeaderActionBarDiff / mScrollRetardation, 1.0f, 0f);
-        scrollHeader(interpolation);
-    }
-
-    private void scrollHeader(float interpolation) {
-        mHeader.setTranslationY((int) (interpolation * mHeaderActionBarDiff));
-        mHeader.setScrollY((int) (interpolation * mHeaderActionBarDiff / 2.0f));
-        mHeaderImage.setColorFilter(clamp((int) (interpolation * MAX_HEADER_TRANSPARENCY), MAX_HEADER_TRANSPARENCY, 0) << 24, PorterDuff.Mode.SRC_ATOP);
-        customHeaderView.setAlpha(5 * interpolation - 4);
-    }
-
-    private void loadPage() {
+    protected void loadPage() {
         NewsItemRequest playlistRequest = new NewsItemRequest(mNewsItem.link, this, this);
         playlistRequest.setRetryPolicy(new DefaultRetryPolicy(20000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(playlistRequest);
@@ -204,39 +159,20 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     @Override
     public void onResponse(String response) {
         webViewText = response;
-        displayWebview();
-    }
-
-    private void displayWebview() {
-        webView.setVisibility(View.VISIBLE);
-        mEmptyView.setVisibility(View.GONE);
-        webView.clearView();
-        webView.loadDataWithBaseURL("http://www.egofm.de/", webViewText, "text/html", "UTF-8", null);
+        showWebView();
     }
 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(SAVE_STATED_WEBVIEW_TEXT, webViewText);
+        outState.putString(SAVED_STATED_WEBVIEW_TEXT, webViewText);
+        outState.putParcelable(SAVED_STATE_NEWS_ITEM, mNewsItem);
     }
 
-    public int getActionBarHeight() {
-        TypedValue typedValue = new TypedValue();
-        getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true);
-        int actionBarHeight = TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics());
-
-        if (android.os.Build.VERSION.SDK_INT >= 19) {
-            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-            if (resourceId > 0)
-                actionBarHeight += getResources().getDimensionPixelSize(resourceId);
-        }
-        return actionBarHeight;
+    public void setContent(NewsItem item) {
+        mNewsItem = item;
+        hideWebView();
+        loadPage();
+        setInitialData();
     }
 
-    public static int clamp(int value, int max, int min) {
-        return Math.min(Math.max(value, min), max);
-    }
-
-    public static float clamp(float value, float max, float min) {
-        return Math.min(Math.max(value, min), max);
-    }
 }
