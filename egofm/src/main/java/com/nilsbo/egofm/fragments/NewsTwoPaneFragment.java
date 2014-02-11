@@ -3,8 +3,6 @@ package com.nilsbo.egofm.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +16,8 @@ public class NewsTwoPaneFragment extends Fragment {
     private ViewGroup rootView;
     private NewsFragment newsFragment;
     private NewsItemTwoPaneFragment newsItemFragment;
+    private static final String SAVED_STATE_NEWS_FRAGMENT = "savedStateNewsFragment";
+    private static final String SAVED_STATE_NEWS_ITEM_FRAGMENT = "savedStateNewsItemFragment";
 
     public static NewsTwoPaneFragment newInstance() {
         NewsTwoPaneFragment fragment = new NewsTwoPaneFragment();
@@ -42,22 +42,20 @@ public class NewsTwoPaneFragment extends Fragment {
         SavedState newsFragState = null;
         SavedState newsItemFragState = null;
         if (savedInstanceState != null) {
-            newsFragState = savedInstanceState.getParcelable("bla");
-            newsItemFragState = savedInstanceState.getParcelable("bla2");
+            newsFragState = savedInstanceState.getParcelable(SAVED_STATE_NEWS_FRAGMENT);
+            newsItemFragState = savedInstanceState.getParcelable(SAVED_STATE_NEWS_ITEM_FRAGMENT);
         }
 
         newsFragment = new NewsFragment();
         if (newsFragState != null)
             newsFragment.setInitialSavedState(newsFragState);
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.news_list_container, newsFragment).commit();
+        childFragmentManager.beginTransaction().add(R.id.news_list_container, newsFragment).commit();
 
         if (rootView.findViewById(R.id.news_item_container) != null) {
             newsItemFragment = new NewsItemTwoPaneFragment();
             if (newsItemFragState != null)
                 newsItemFragment.setInitialSavedState(newsItemFragState);
-            FragmentTransaction newsItemTransaction = getChildFragmentManager().beginTransaction();
-            newsItemTransaction.add(R.id.news_item_container, newsItemFragment).commit();
+            childFragmentManager.beginTransaction().add(R.id.news_item_container, newsItemFragment).commit();
         }
     }
 
@@ -70,10 +68,12 @@ public class NewsTwoPaneFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(TAG, "onSaveInstanceState");
-        outState.putParcelable("bla", childFragmentManager.saveFragmentInstanceState(newsFragment));
+
+        outState.putParcelable(SAVED_STATE_NEWS_FRAGMENT, childFragmentManager.saveFragmentInstanceState(newsFragment));
+        childFragmentManager.beginTransaction().remove(newsFragment).commit();
         if (newsItemFragment != null) {
-            outState.putParcelable("bla2", childFragmentManager.saveFragmentInstanceState(newsFragment));
+            outState.putParcelable(SAVED_STATE_NEWS_ITEM_FRAGMENT, childFragmentManager.saveFragmentInstanceState(newsItemFragment));
+            childFragmentManager.beginTransaction().remove(newsItemFragment).commit();
         }
     }
 }
