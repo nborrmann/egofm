@@ -83,7 +83,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
-        Log.d(TAG, "onStartCommand " + action);
+        Log.d(TAG, "onStartCommand with action " + action);
         if (action.equals(ACTION_START)) processStartRequest();
         else if (action.equals(ACTION_STOP)) processStopRequest();
         else if (action.equals(ACTION_CLOSE)) processCloseRequest();

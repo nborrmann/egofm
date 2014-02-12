@@ -29,6 +29,14 @@
                 android:data="market://details?id=com.nilsbo.egofm" />
         </Preference>
 
+        <Preference
+            android:title="@string/preferences_feedback"
+            android:summary="@string/preferences_feedback_detail">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="mailto:n.borrmann@googlemail.com" />
+        </Preference>
+
         <Preference android:title="@string/licenses_title" >
             <intent android:action="com.nilsbo.egofm.LicenseActivity"/>
         </Preference>
