@@ -1,5 +1,6 @@
 package com.nilsbo.egofm.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.adapters.NewsAdapter;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.networking.NewsListRequest;
+import com.nilsbo.egofm.util.FragmentUtils;
 import com.nilsbo.egofm.util.NewsItem;
 
 import java.util.ArrayList;
@@ -65,13 +67,17 @@ public class NewsListFragment extends Fragment implements AbsListView.OnScrollLi
     }
 
     public NewsListFragment() {
-        // Required empty public constructor
-        mCallback = null;
     }
 
-    public void registerCallback(NewsListListener mCallback) {
-        this.mCallback = mCallback;
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallback = FragmentUtils.getParent(this, NewsListListener.class);
     }
+
+//    public void registerCallback(NewsListListener mCallback) {
+//        this.mCallback = mCallback;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,6 +126,11 @@ public class NewsListFragment extends Fragment implements AbsListView.OnScrollLi
         gridView.setAdapter(adapter);
         gridView.setOnScrollListener(this);
         gridView.setEmptyView(emptyView);
+
+        View internalGridView = getView().findViewById(R.id.gridview);
+        int sidePadding = (int) getResources().getDimension(R.dimen.news_list_side_padding);
+        int topPadding = (int) getResources().getDimension(R.dimen.news_list_top_padding);
+        internalGridView.setPadding(sidePadding, topPadding, sidePadding, topPadding);
     }
 
     private void loadNews(int page, VolleyListener listener) {

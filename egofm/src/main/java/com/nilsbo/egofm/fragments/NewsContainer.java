@@ -48,7 +48,7 @@ public class NewsContainer extends Fragment implements NewsListListener {
 
         if (savedInstanceState == null) {
             newsListFragment = new NewsListFragment();
-            newsListFragment.registerCallback(this);
+//            newsListFragment.registerCallback(this);
             childFragmentManager.beginTransaction().add(R.id.news_list_container, newsListFragment, "bla").commit();
 
             if (rootView.findViewById(R.id.news_item_container) != null) {
@@ -61,7 +61,7 @@ public class NewsContainer extends Fragment implements NewsListListener {
             // this is necessary because the Fragment gets instantiated with empty constructor, if
             // it is recreated after onSaveInstanceState
             newsListFragment = ((NewsListFragment) childFragmentManager.findFragmentById(R.id.news_list_container));
-            newsListFragment.registerCallback(this);
+//            newsListFragment.registerCallback(this);
             newsItemFragment = (NewsItemFragment) childFragmentManager.findFragmentById(R.id.news_item_container);
 
             isTwoPane = savedInstanceState.getBoolean(SAVED_STATE_TWO_PANE);
@@ -83,10 +83,10 @@ public class NewsContainer extends Fragment implements NewsListListener {
     @Override
     public void onItemClicked(NewsItem item) {
         if (isTwoPane) {
-            newsItemFragment.setContent(item, false);
+            newsItemFragment.setContent(item);
         } else {
             Intent intent = new Intent(getActivity(), NewsItemActivity.class);
-            intent.putExtra("news_header", item);
+            intent.putExtra(NewsItemFragment.ARG_NEWS_ITEM, item);
             getActivity().startActivity(intent);
         }
     }
@@ -94,7 +94,7 @@ public class NewsContainer extends Fragment implements NewsListListener {
     @Override
     public void onDefault(NewsItem newsItem) {
         if (isTwoPane) {
-            newsItemFragment.setContent(newsItem, false);
+            newsItemFragment.setContent(newsItem);
         }
     }
 }

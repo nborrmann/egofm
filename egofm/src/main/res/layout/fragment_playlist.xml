@@ -8,12 +8,12 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         tools:context="com.nilsbo.egofm.fragments.PlaylistFragment"
         android:paddingBottom="2dp"
         android:paddingTop="2dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
+        android:paddingLeft="@dimen/songlist_side_padding"
+        android:paddingRight="@dimen/songlist_side_padding"
 
         android:dividerPadding="2dp"
         android:background="@drawable/playlist_timepicker_bg"
@@ -25,10 +25,11 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:textSize="16sp"
-            android:layout_height="42dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:singleLine="true"
             android:textColor="#444444"
+            android:layout_marginLeft="2dp"
             style="@style/Spinneregofm"
             />
 
@@ -36,7 +37,7 @@
             android:id="@+id/btn_time"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="42dp"
+            android:layout_height="match_parent"
             android:textColor="#444444"
             android:textSize="16sp"
             android:layout_weight="1"
@@ -45,11 +46,11 @@
             />
 
         <Button
-            android:layout_margin="0dp"
+            android:layout_marginRight="2dp"
             android:id="@+id/btn_now"
             android:layout_width="match_parent"
             android:textSize="16sp"
-            android:layout_height="42dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:singleLine="true"
             android:text="@string/datetimepicker_now"
@@ -62,7 +63,10 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:listSelector="@android:color/transparent" />
+        android:paddingLeft="@dimen/songlist_side_padding"
+        android:paddingRight="@dimen/songlist_side_padding"
+        android:listSelector="@android:color/transparent"
+        android:scrollbarStyle="outsideOverlay" />
 
     <LinearLayout
         android:id="@android:id/empty"

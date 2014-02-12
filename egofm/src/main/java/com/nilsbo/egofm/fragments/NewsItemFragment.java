@@ -36,6 +36,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
 
     protected static final String SAVED_STATED_WEBVIEW_TEXT = "SAVE_STATE_WEBVIEW_TEXT";
     protected static final String SAVED_STATE_NEWS_ITEM = "SAVED_STATE_NEWS_ITEM";
+    public static final String ARG_NEWS_ITEM = "ARGUMENT_NEWS_ITEM";
 
     protected final RequestQueue requestQueue = MyVolley.getRequestQueue();
 
@@ -78,11 +79,11 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
             webViewText = savedInstanceState.getString(SAVED_STATED_WEBVIEW_TEXT);
             showWebView();
         } else {
-            // TODO use bundle to get initial data
-            if (mNewsItem != null) {
+            if (getArguments() != null && getArguments().containsKey(ARG_NEWS_ITEM)) {
+                mNewsItem = getArguments().getParcelable(ARG_NEWS_ITEM);
+
                 loadPage();
                 setInitialData();
-                preLoadUISetup();
             }
         }
     }
@@ -161,6 +162,8 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     }
 
     protected void loadPage() {
+        preLoadUISetup();
+
         NewsItemRequest playlistRequest = new NewsItemRequest(mNewsItem.link, this, this);
         playlistRequest.setRetryPolicy(new DefaultRetryPolicy(20000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(playlistRequest);
@@ -188,12 +191,12 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         outState.putParcelable(SAVED_STATE_NEWS_ITEM, mNewsItem);
     }
 
-    public void setContent(NewsItem item, boolean initial) {
+    public void setContent(NewsItem item) {
         mNewsItem = item;
-        if (!initial) {
-            preLoadUISetup();
+
+        if (getActivity() != null) {
             setInitialData();
+            loadPage();
         }
-        loadPage();
     }
 }

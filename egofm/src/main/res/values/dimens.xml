@@ -3,13 +3,15 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="newslist_item_padding">5dp</dimen>
-    <dimen name="news_list_side_padding">2.5dp</dimen>
+    <dimen name="news_list_side_padding">5dp</dimen>
     <dimen name="news_list_spacing">5dp</dimen>
     <dimen name="news_list_top_padding">5dp</dimen>
+    <dimen name="news_item_two_pane_content_image_diff">16dp</dimen>
 
     <dimen name="news_twopane_left_padding">96dp</dimen>
     <dimen name="news_twopane_right_padding">96dp</dimen>
     <dimen name="news_twopane_list_width">336dp</dimen>
     <dimen name="news_twopane_item_top_padding">16dp</dimen>
+    <dimen name="songlist_side_padding">0dp</dimen>
 
 </resources>

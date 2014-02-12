@@ -6,14 +6,32 @@
     android:background="@color/background_light_grey"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@drawable/playlist_timepicker_bg"
+        android:text="Platzierungen der Woche"
+        android:paddingLeft="@dimen/songlist_side_padding"
+        android:paddingRight="@dimen/songlist_side_padding"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+        android:textColor="@color/egofm_green"
+
+        />
+
 
     <ListView
         tools:listitem="@layout/listitem_42"
         android:id="@android:id/list"
         android:divider="@null"
         android:dividerHeight="0dp"
+        android:paddingLeft="@dimen/songlist_side_padding"
+        android:paddingRight="@dimen/songlist_side_padding"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scrollbarStyle="outsideOverlay" />
 
     <LinearLayout
         android:id="@android:id/empty"

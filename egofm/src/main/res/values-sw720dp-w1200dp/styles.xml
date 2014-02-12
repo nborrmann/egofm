@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="news_twopane_item">
+        <!-- 560 + 2*header_content_diff -->
+        <item name="android:layout_width">592dp</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+    </style>
+</resources>
