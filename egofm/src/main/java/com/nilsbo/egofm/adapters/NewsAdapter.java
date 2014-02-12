@@ -3,7 +3,6 @@ package com.nilsbo.egofm.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -128,7 +127,6 @@ public class NewsAdapter extends BaseAdapter implements View.OnTouchListener, Vi
         holder.imageView.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         holder.imageView.invalidate();
         holder.title.setTextColor(context.getResources().getColor(R.color.white));
-//        holder.subtitle.setTextColor(context.getResources().getColor(R.color.egofm_green));
     }
 
     private void clearItemPressedOverlay(View v) {
@@ -136,7 +134,6 @@ public class NewsAdapter extends BaseAdapter implements View.OnTouchListener, Vi
         holder.imageView.getDrawable().clearColorFilter();
         holder.imageView.invalidate();
         holder.title.setTextColor(context.getResources().getColor(R.color.egofm_green));
-//        holder.subtitle.setTextColor(context.getResources().getColor(R.color.white));
     }
 
     private boolean isInsideViewBounds(View v, MotionEvent event) {
@@ -147,7 +144,6 @@ public class NewsAdapter extends BaseAdapter implements View.OnTouchListener, Vi
     @Override
     public void onClick(View v) {
         int position = ((ViewHolder) v.getTag()).position;
-        Log.d(TAG, "onClick " + position);
 
         Intent intent = new Intent(context, NewsItemActivity.class);
         intent.putExtra("news_header", newsItems.get(position));

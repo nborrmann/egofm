@@ -15,7 +15,6 @@
     <string name="datetimepicker_now">Jetzt</string>
     <string name="playlist_no_results">Für den eingegebenen Zeitraum wurden keine Titel gefunden!</string>
     <string name="list_connection_error">Es ist ein Verbindungsfehler aufgetreten.</string>
-
     <string name="title_activity_settings">Einstellungen</string>
     <string name="prefs_streamquality_title">Stream Qualität</string>
     <string name="prefs_streamquality_summary">Sound-Qualität des Musikstreams</string>
@@ -29,6 +28,9 @@
     <string name="title_activity_news_item_fragment">News</string>
     <string name="prefs_rate_playstore">Die App im Play Store bewerten</string>
     <string name="prefs_playstore">Play Store</string>
+    <string name="chart_vote_unknown_response">Unbekannte Antwort</string>
+    <string name="chart_vote_connection_error">Verbindungsfehler</string>
+    <string name="tab_42">42</string>
 
     <string-array name="quality_entries">
         <item>Hoch (192 kbits)</item>

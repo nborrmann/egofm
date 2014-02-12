@@ -3,9 +3,10 @@ package com.nilsbo.egofm.adapters;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.nilsbo.egofm.R;
+import com.nilsbo.egofm.fragments.ChartsFragment;
 import com.nilsbo.egofm.fragments.NewsFragment;
 import com.nilsbo.egofm.fragments.PlaylistFragment;
 
@@ -14,7 +15,9 @@ import java.util.Locale;
 /**
  * Created by Nils on 22.01.14.
  */
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
+public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+    private static final String TAG = "com.nilsbo.egofm.adapters.SectionsPagerAdapter";
+
     private final Context context;
 
     public SectionsPagerAdapter(FragmentManager fm, Context context) {
@@ -29,13 +32,15 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return NewsFragment.newInstance();
             case 1:
                 return PlaylistFragment.newInstance();
+            case 2:
+                return ChartsFragment.newInstance();
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -46,6 +51,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return context.getString(R.string.tab_news).toUpperCase(l);
             case 1:
                 return context.getString(R.string.tab_playlist).toUpperCase(l);
+            case 2:
+                return context.getString(R.string.tab_42).toUpperCase(l);
         }
         return null;
     }

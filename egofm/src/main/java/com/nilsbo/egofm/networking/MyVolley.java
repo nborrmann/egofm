@@ -2,18 +2,13 @@ package com.nilsbo.egofm.networking;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
-import org.apache.http.client.utils.URIUtils;
-
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URLEncoder;
 
 public class MyVolley {
     private static final String TAG = "com.nilsbo.egofm.networking.MyVolley";
@@ -26,7 +21,7 @@ public class MyVolley {
         // no instances
     }
 
-    public static class MyUrlRewriter implements HurlStack.UrlRewriter     {
+    public static class MyUrlRewriter implements HurlStack.UrlRewriter {
         @Override
         public String rewriteUrl(String originalUrl) {
             originalUrl = originalUrl.replaceAll(" ", "%20");
@@ -53,7 +48,6 @@ public class MyVolley {
             throw new IllegalStateException("RequestQueue not initialized");
         }
     }
-
 
     /**
      * Returns instance of ImageLoader initialized with {@see FakeImageCache} which effectively means

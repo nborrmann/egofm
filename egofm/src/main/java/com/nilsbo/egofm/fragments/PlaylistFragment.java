@@ -30,12 +30,22 @@ import java.util.Calendar;
 public class PlaylistFragment extends ListFragment implements Response.ErrorListener, Response.Listener<ArrayList<PlaylistItem>>, View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.PlaylistFragment";
 
-    final RequestQueue requestQueue = MyVolley.getRequestQueue();
     private static final String PLAYLIST_REQUEST = "PLAYLIST_REQUEST";
     private static final String SAVED_STATE_PLAYLIST_ARRAY = "SAVED_STATE_PLAYLIST_ARRAY";
-    private final String SAVED_STATE_TIME = "SAVED_STATE_TIME";
+    private static final String SAVED_STATE_TIME = "SAVED_STATE_TIME";
+    private static final String SAVED_STATE_LIST_STATE = "savedStateListState";
+
+    private State mState;
     private PlaylistAdapter adapter;
     private ArrayList<PlaylistItem> songs = new ArrayList<PlaylistItem>();
+    final RequestQueue requestQueue = MyVolley.getRequestQueue();
+
+    private int year;
+    private int month;
+    private int day;
+    private int minute;
+    private int hour;
+
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
     private Button dateBtn;
@@ -43,15 +53,18 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
     private Button timeBtn;
     private String time;
     private String date;
-    private int year;
-    private int month;
-    private int day;
-    private int minute;
-    private int hour;
     private Button nowBtn;
     private ProgressBar emptyProgress;
     private TextView emptyText;
     private View parentView;
+
+    private enum State {
+        Loading,
+        Error,
+        Empty,
+        NoResults, // loading was successful, but no songs were found.
+        ShowingResults
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -93,21 +106,70 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
         emptyProgress = (ProgressBar) parentView.findViewById(R.id.empty_playlist_progress);
         emptyText = (TextView) parentView.findViewById(R.id.empty_playlist_text);
 
+        mState = State.Empty;
         if (savedInstanceState != null) {
             songs = savedInstanceState.getParcelableArrayList(SAVED_STATE_PLAYLIST_ARRAY);
+            mState = (State) savedInstanceState.getSerializable(SAVED_STATE_LIST_STATE);
+
             int[] savedTime = savedInstanceState.getIntArray(SAVED_STATE_TIME);
             year = savedTime[0];
             month = savedTime[1];
             day = savedTime[2];
             hour = savedTime[3];
             minute = savedTime[4];
-            adapter.setItems(songs);
         } else {
             initDateTimeNow();
-            reload();
         }
-
         setBtnText();
+
+        switch (mState) {
+            case Error:
+                showErrorMessage();
+                break;
+            case Loading:
+            case Empty:
+                reload();
+                break;
+            case NoResults:
+                showEmptyMessage();
+                break;
+            case ShowingResults:
+                adapter.setItems(songs);
+                break;
+        }
+    }
+
+    private void showEmptyMessage() {
+        adapter.setItems(null); // just to be sure.
+        emptyProgress.setVisibility(View.GONE);
+        emptyText.setVisibility(View.VISIBLE);
+        emptyText.setText(getResources().getString(R.string.playlist_no_results));
+    }
+
+    private void showErrorMessage() {
+        adapter.setItems(null); // just to be sure.
+        emptyProgress.setVisibility(View.GONE);
+        emptyText.setVisibility(View.VISIBLE);
+        emptyText.setText(getResources().getString(R.string.list_connection_error));
+    }
+
+    private void reload() {
+        Log.d(TAG, "Loading Playlist");
+        mState = State.Loading;
+
+        emptyProgress.setVisibility(View.VISIBLE);
+        emptyText.setVisibility(View.GONE);
+
+        requestQueue.cancelAll(PLAYLIST_REQUEST);
+        PlaylistRequest playlistRequest = new PlaylistRequest(getUrl(), this, this);
+        playlistRequest.setTag(PLAYLIST_REQUEST);
+        playlistRequest.setRetryPolicy(new DefaultRetryPolicy(
+                20000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(playlistRequest);
+
+        adapter.setItems(null);
     }
 
     private void initDateTimeNow() {
@@ -124,22 +186,6 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
         }
     }
 
-    private void reload() {
-        emptyProgress.setVisibility(View.VISIBLE);
-        emptyText.setVisibility(View.GONE);
-
-        requestQueue.cancelAll(PLAYLIST_REQUEST);
-        PlaylistRequest playlistRequest = new PlaylistRequest(getUrl(), this, this);
-        playlistRequest.setTag(PLAYLIST_REQUEST);
-        playlistRequest.setRetryPolicy(new DefaultRetryPolicy(
-                20000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(playlistRequest);
-
-        adapter.setItems(null);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_playlist, container, false);
@@ -148,11 +194,10 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
     @Override
     public void onResponse(ArrayList<PlaylistItem> response) {
         if (response.size() == 0) {
-            adapter.setItems(null);
-            emptyProgress.setVisibility(View.GONE);
-            emptyText.setVisibility(View.VISIBLE);
-            emptyText.setText(getResources().getString(R.string.playlist_no_results));
+            mState = State.NoResults;
+            showEmptyMessage();
         } else {
+            mState = State.ShowingResults;
             songs = response;
             adapter.setItems(response);
         }
@@ -161,9 +206,8 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.d(TAG, "onErrorResponse " + error.getLocalizedMessage());
-        emptyProgress.setVisibility(View.GONE);
-        emptyText.setVisibility(View.VISIBLE);
-        emptyText.setText(getResources().getString(R.string.list_connection_error));
+        mState = State.Error;
+        showErrorMessage();
     }
 
     @Override
@@ -213,7 +257,18 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        requestQueue.cancelAll(PLAYLIST_REQUEST);
+        if (mState == State.Loading) mState = State.Empty;
+
         outState.putParcelableArrayList(SAVED_STATE_PLAYLIST_ARRAY, songs);
         outState.putIntArray(SAVED_STATE_TIME, new int[]{year, month, day, hour, minute});
+        outState.putSerializable(SAVED_STATE_LIST_STATE, mState);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        requestQueue.cancelAll(PLAYLIST_REQUEST);
     }
 }

@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -21,7 +20,6 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
 
     public MediaServiceInterface serviceCallback;
     private Intent mediaServiceIntent;
-    boolean mStarted = false;
     boolean mBound = false;
 
     @Override
@@ -34,7 +32,7 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
     protected void onStart() {
         super.onStart();
 
-        startService(mediaServiceIntent);
+//        startService(mediaServiceIntent);
         bindService(mediaServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -46,22 +44,22 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
 
     @Override
     protected void onStop() {
-        Log.d(TAG, "onStop");
         super.onStop();
         // Unbind from the service
         if (mBound) {
             unbindService(mConnection);
             mBound = false;
         }
+
         // Kill service if it isn't playing
-        if (!serviceCallback.isStarted()) {
+        if (serviceCallback != null && serviceCallback.getPlaybackState() == MediaService.State.Stopped) {
             stopService(mediaServiceIntent);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (serviceCallback != null && serviceCallback.isStarted()) {
+        if (serviceCallback != null && (serviceCallback.getPlaybackState() == MediaService.State.Playing || serviceCallback.getPlaybackState() == MediaService.State.Preparing)) {
             getMenuInflater().inflate(R.menu.main_playing, menu);
         } else {
             getMenuInflater().inflate(R.menu.main_stopped, menu);
@@ -73,30 +71,16 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_play:
-                startServiceAndPlayback();
+                startService(new Intent(MediaService.ACTION_START));
                 return true;
             case R.id.action_stop:
-                stopServiceAndPlayback();
+                startService(new Intent(MediaService.ACTION_CLOSE));
                 return true;
             case R.id.action_settings:
-                Intent mIntent = new Intent(this, SettingsActivity.class);
-                startActivity(mIntent);
+                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void startServiceAndPlayback() {
-        serviceCallback.startMediaPlayer();
-        mStarted = true;
-        invalidateOptionsMenu();
-    }
-
-
-    private void stopServiceAndPlayback() {
-        serviceCallback.stopMediaPlayer();
-        mStarted = false;
-        invalidateOptionsMenu();
     }
 
     /**
@@ -119,7 +103,7 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
     };
 
     @Override
-    public void playbackStopped() {
+    public void playbackStateChanged() {
         invalidateOptionsMenu();
     }
 }

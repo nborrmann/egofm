@@ -39,10 +39,12 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     private static final int MAX_HEADER_TRANSPARENCY = 170;
 
     final RequestQueue requestQueue = MyVolley.getRequestQueue();
+
     private String webViewText;
     private int mActionBarHeight;
     private int mHeaderActionBarDiff;
     private int mSubheaderHeight;
+    private float mScrollRetardation;
 
     private ActionBar mActionBar;
     private View rootView;
@@ -59,7 +61,6 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     private LinearLayout mEmptyView;
     private TextView mErrorText;
     private ProgressBar mProgressBar;
-    private float mScrollRetardation;
 
 
     @Override
@@ -196,7 +197,6 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
 
     @Override
     public void onResponse(String response) {
-        Log.d(TAG, "onResponse");
         webViewText = response;
         displayWebview();
     }

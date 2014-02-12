@@ -5,5 +5,5 @@ package com.nilsbo.egofm.Interfaces;
  */
 public interface EgofmActivityInterface {
 
-    public void playbackStopped();
+    public void playbackStateChanged();
 }
