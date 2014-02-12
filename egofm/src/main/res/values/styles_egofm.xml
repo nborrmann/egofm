@@ -42,7 +42,7 @@
         <item name="android:listChoiceIndicatorSingle">@drawable/egofm_btn_radio_holo_light</item>
         <item name="android:listViewStyle">@style/ListView</item>
 
-        <item name="android:windowBackground">@null</item>
+        <item name="android:windowBackground">@color/background_light_grey</item>
 
         <item name="android:textSelectHandleLeft">@drawable/apptheme_text_select_handle_left</item>
         <item name="android:textSelectHandleRight">@drawable/apptheme_text_select_handle_right

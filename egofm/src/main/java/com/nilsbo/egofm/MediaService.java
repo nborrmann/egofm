@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
@@ -20,6 +21,7 @@ import com.nilsbo.egofm.Interfaces.MusicFocusable;
 import com.nilsbo.egofm.music.AudioFocusHelper;
 import com.nilsbo.egofm.music.EgofmMusicNetworking;
 import com.nilsbo.egofm.music.EgofmRemoteManager;
+import com.nilsbo.egofm.music.MusicIntentReceiver;
 
 import java.io.IOException;
 
@@ -46,6 +48,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     private boolean isBound = false;
     private int connectionTries = 0;
     private EgofmMusicNetworking mMusicNetworkingHelper;
+    private MusicIntentReceiver mAudioBecomingNoisyReceiver;
 
     public enum State {
         Stopped,    // media player is stopped and not prepared to play
@@ -72,6 +75,10 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
         mAudioFocusHelper = new AudioFocusHelper(getApplicationContext(), this);
 
         mMusicNetworkingHelper = new EgofmMusicNetworking(this, this);
+
+        IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        mAudioBecomingNoisyReceiver = new MusicIntentReceiver();
+        registerReceiver(mAudioBecomingNoisyReceiver, intentFilter);
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -296,6 +303,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     @Override
     public void onDestroy() {
+        unregisterReceiver(mAudioBecomingNoisyReceiver);
         mRemoteManager.cancelAll();
         cleanup();
         giveUpAudioFocus();

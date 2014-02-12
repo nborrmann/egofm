@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="news_list_side_padding">100dp</dimen>
+    <dimen name="news_list_spacing">16dp</dimen>
+    <dimen name="news_list_top_padding">16dp</dimen>
+
+    <dimen name="news_twopane_left_padding">0dp</dimen>
+    <dimen name="news_twopane_right_padding">16dp</dimen>
+    <dimen name="news_twopane_list_width">320dp</dimen>
+    <dimen name="news_twopane_item_top_padding">8dp</dimen>
+    <dimen name="songlist_side_padding">272dp</dimen>
+</resources>

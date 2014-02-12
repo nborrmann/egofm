@@ -60,18 +60,17 @@
         <activity
             android:name=".activities.NewsItemActivity"
             android:label="@string/title_activity_news_item_fragment"
-            android:theme="@style/Theme.Egofm.TransparentActionBar"
             android:parentActivityName="com.nilsbo.egofm.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nilsbo.egofm.activities.MainActivity" />
         </activity>
+        <!--android:theme="@style/Theme.Egofm.TransparentActionBar"-->
 
         <receiver android:name=".music.MusicIntentReceiver">
             <intent-filter>
                 <action android:name="com.nilsbo.egofm.control.CLOSE" />
                 <action android:name="com.nilsbo.egofm.control.STARTSTOP" />
-                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>

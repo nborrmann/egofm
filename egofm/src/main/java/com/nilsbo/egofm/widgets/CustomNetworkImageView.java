@@ -180,7 +180,13 @@ public class CustomNetworkImageView extends ImageView {
         if (mDefaultUrl != null && mImageLoader.isCached(mDefaultUrl, 0, 0)) {
             // if there was an old request in this view, check if it needs to be canceled.
             if (mDefaultImageContainer != null && mDefaultImageContainer.getRequestUrl() != null) {
-                return;
+                if (mDefaultImageContainer.getRequestUrl().equals(mUrl)) {
+                    // if the request is from the same URL, return.
+                    return;
+                } else {
+                    // if there is a pre-existing request, cancel it if it's fetching a different URL.
+                    mDefaultImageContainer.cancelRequest();
+                }
             }
 
             ImageContainer newDefaultContainer = mImageLoader.get(mDefaultUrl, new ImageListener() {

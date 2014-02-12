@@ -1,7 +1,6 @@
 package com.nilsbo.egofm.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -11,8 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.nilsbo.egofm.Interfaces.NewsListListener;
 import com.nilsbo.egofm.R;
-import com.nilsbo.egofm.activities.NewsItemActivity;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.util.NewsItem;
 import com.nilsbo.egofm.widgets.ResizableNetworkImageView;
@@ -27,12 +26,14 @@ public class NewsAdapter extends BaseAdapter implements View.OnTouchListener, Vi
 
     private ArrayList<NewsItem> newsItems = new ArrayList<NewsItem>();
     private final Context context;
+    private final NewsListListener mCallback;
     private final LayoutInflater mflater;
     final ImageLoader imageLoader = MyVolley.getImageLoader();
 
-    public NewsAdapter(ArrayList<NewsItem> newsItems, Context context) {
+    public NewsAdapter(ArrayList<NewsItem> newsItems, Context context, NewsListListener mCallback) {
         this.newsItems = newsItems;
         this.context = context;
+        this.mCallback = mCallback;
         mflater = LayoutInflater.from(context);
     }
 
@@ -144,10 +145,11 @@ public class NewsAdapter extends BaseAdapter implements View.OnTouchListener, Vi
     @Override
     public void onClick(View v) {
         int position = ((ViewHolder) v.getTag()).position;
+        mCallback.onItemClicked(newsItems.get(position));
 
-        Intent intent = new Intent(context, NewsItemActivity.class);
-        intent.putExtra("news_header", newsItems.get(position));
-        context.startActivity(intent);
+//        Intent intent = new Intent(context, NewsItemActivity.class);
+//        intent.putExtra("news_header", newsItems.get(position));
+//        context.startActivity(intent);
     }
 
     private class ViewHolder {
