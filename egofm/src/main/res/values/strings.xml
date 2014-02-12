@@ -65,6 +65,9 @@
     <string name="chart_vote_unknown_response">Unknown response</string>
     <string name="chart_vote_connection_error">Connection error</string>
     <string name="tab_42">42</string>
+    <string name="egofm_42_headline">This week\'s standings</string>
+    <string name="preferences_feedback">Feedback</string>
+    <string name="preferences_feedback_detail">Questions? Feature-Requests?</string>
 
 
 </resources>
