@@ -1,15 +1,19 @@
 package com.nilsbo.egofm.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
+import android.view.ViewGroup;
 
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.fragments.ChartsFragment;
 import com.nilsbo.egofm.fragments.NewsContainer;
 import com.nilsbo.egofm.fragments.PlaylistFragment;
 
+import java.lang.reflect.Field;
 import java.util.Locale;
 
 /**
@@ -57,4 +61,39 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         }
         return null;
     }
+
+//    @Override
+//    public Object instantiateItem(ViewGroup container, int position) {
+//        Fragment f = (Fragment)super.instantiateItem(container, position);
+//        Bundle savedFragmentState = f.mSavedFragmentState;
+//        if (savedFragmentState != null) {
+//            savedFragmentState.setClassLoader(f.getClass().getClassLoader());
+//        }
+//        return f;
+//    }
+
+    /**
+     * See http://stackoverflow.com/questions/11381470/classnotfoundexception-when-unmarshalling-android-support-v4-view-viewpagersav
+     *
+     * @param container
+     * @param position
+     * @return
+     */
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        final Object fragment = super.instantiateItem(container, position);
+        try {
+            final Field saveFragmentStateField = Fragment.class.getDeclaredField("mSavedFragmentState");
+            saveFragmentStateField.setAccessible(true);
+            final Bundle savedFragmentState = (Bundle) saveFragmentStateField.get(fragment);
+            if (savedFragmentState != null) {
+                savedFragmentState.setClassLoader(fragment.getClass().getClassLoader());
+//                savedFragmentState.setClassLoader(Fragment.class.getClassLoader());
+            }
+        } catch (Exception e) {
+            Log.w("CustomFragmentStatePagerAdapter", "Could not get mSavedFragmentState field: " + e);
+        }
+        return fragment;
+    }
+
 }
