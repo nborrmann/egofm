@@ -13,7 +13,6 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -131,9 +130,16 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         mSubtitleDivider.setVisibility(View.VISIBLE);
         mHeader.setVisibility(View.VISIBLE);
 
-        mScrollView.fullScroll(ScrollView.FOCUS_UP);
-        mScrollView.computeScroll();
+//        mScrollView.fullScroll(ScrollView.FOCUS_UP);
+//        mScrollView.computeScroll();
+        mScrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                mScrollView.scrollTo(0, 0);
+            }
+        });
     }
+
 
     private void showWebView() {
         webView.setVisibility(View.VISIBLE);
