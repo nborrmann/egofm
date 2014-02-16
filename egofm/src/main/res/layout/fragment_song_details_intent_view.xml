@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+
+    >
+
+    <ImageButton
+        android:id="@+id/song_details_intent_button1"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="8dp"
+        android:layout_weight="1"
+        android:scaleType="fitCenter"
+        style="@android:style/Widget.Holo.Button.Borderless"
+        android:background="@drawable/selectable_background_egofm"
+
+        />
+
+    <ImageButton
+        android:id="@+id/song_details_intent_button2"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="8dp"
+        android:layout_weight="1"
+        android:scaleType="fitCenter"
+        style="@android:style/Widget.Holo.Button.Borderless"
+        android:background="@drawable/selectable_background_egofm" />
+
+    <ImageButton
+        android:id="@+id/song_details_intent_button3"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="8dp"
+        android:layout_weight="1"
+        android:scaleType="fitCenter"
+        style="@android:style/Widget.Holo.Button.Borderless"
+        android:background="@drawable/selectable_background_egofm" />
+
+    <ImageButton
+        android:id="@+id/song_details_intent_overflow"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
+        style="@android:style/Widget.Holo.Button.Borderless"
+        android:background="@drawable/selectable_background_egofm" />
+</merge>
