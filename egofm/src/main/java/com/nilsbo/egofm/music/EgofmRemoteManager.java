@@ -16,6 +16,7 @@ import android.media.RemoteControlClient;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.nilsbo.egofm.MediaService;
@@ -70,7 +71,18 @@ public class EgofmRemoteManager {
     class BitmapWorkerTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            mAlbumArt = BitmapFactory.decodeResource(resources, R.drawable.egofm_icon_large);
+            try {
+                if (android.os.Build.VERSION.SDK_INT >= 19) {
+                    mAlbumArt = BitmapFactory.decodeResource(resources, R.drawable.egofm_icon_large);
+                } else {
+                    BitmapFactory.Options opts = new BitmapFactory.Options();
+                    opts.inSampleSize = 4;
+                    mAlbumArt = BitmapFactory.decodeResource(resources, R.drawable.egofm_icon_large, opts);
+                }
+            } catch (OutOfMemoryError error) {
+                Log.w(TAG, "OutOfMemoryError using empty bitmap for RemoteManager", error);
+            }
+
             return null;
         }
     }
