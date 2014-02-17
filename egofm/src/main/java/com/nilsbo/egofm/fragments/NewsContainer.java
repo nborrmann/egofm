@@ -48,7 +48,6 @@ public class NewsContainer extends Fragment implements NewsListListener {
 
         if (savedInstanceState == null) {
             newsListFragment = new NewsListFragment();
-//            newsListFragment.registerCallback(this);
             childFragmentManager.beginTransaction().add(R.id.news_list_container, newsListFragment, "bla").commit();
 
             if (rootView.findViewById(R.id.news_item_container) != null) {
@@ -61,7 +60,6 @@ public class NewsContainer extends Fragment implements NewsListListener {
             // this is necessary because the Fragment gets instantiated with empty constructor, if
             // it is recreated after onSaveInstanceState
             newsListFragment = ((NewsListFragment) childFragmentManager.findFragmentById(R.id.news_list_container));
-//            newsListFragment.registerCallback(this);
             newsItemFragment = (NewsItemFragment) childFragmentManager.findFragmentById(R.id.news_item_container);
 
             isTwoPane = savedInstanceState.getBoolean(SAVED_STATE_TWO_PANE);

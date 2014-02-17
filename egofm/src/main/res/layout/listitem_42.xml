@@ -47,15 +47,17 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/charts_title_container"
             android:orientation="vertical"
             android:paddingLeft="8dp"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:paddingTop="4dp"
-            android:paddingBottom="4dp">
+            android:paddingBottom="4dp"
+            android:gravity="center_vertical">
 
-            <TextView
+        <TextView
                 tools:text="HELP ME LOSE MY MIND "
                 android:ellipsize="marquee"
                 android:id="@+id/charts_title"

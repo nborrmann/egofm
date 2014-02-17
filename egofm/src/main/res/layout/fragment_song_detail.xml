@@ -20,23 +20,4 @@
         android:orientation="horizontal"
         android:background="#e6e6e6" />
 
-    <Button
-        android:id="@+id/song_details_debug"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Media play from search" />
-
-    <Button
-        android:id="@+id/song_details_debug2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Media search" />
-
-    <Button
-        android:id="@+id/song_details_debug3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Web Search" />
-
-
 </LinearLayout>

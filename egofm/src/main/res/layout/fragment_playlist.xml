@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:background="@color/background_light_grey"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -16,8 +16,7 @@
         android:paddingRight="@dimen/songlist_side_padding"
 
         android:dividerPadding="2dp"
-        android:background="@drawable/playlist_timepicker_bg"
-        >
+        android:background="@drawable/playlist_timepicker_bg">
 
 
         <Button
@@ -30,8 +29,7 @@
             android:singleLine="true"
             android:textColor="#444444"
             android:layout_marginLeft="2dp"
-            style="@style/Spinneregofm"
-            />
+            style="@style/Spinneregofm" />
 
         <Button
             android:id="@+id/btn_time"
@@ -42,8 +40,7 @@
             android:textSize="16sp"
             android:layout_weight="1"
             android:singleLine="true"
-            style="@style/Spinneregofm"
-            />
+            style="@style/Spinneregofm" />
 
         <Button
             android:layout_marginRight="2dp"
@@ -53,8 +50,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:singleLine="true"
-            android:text="@string/datetimepicker_now"
-            />
+            android:text="@string/datetimepicker_now" />
 
     </LinearLayout>
 
@@ -65,7 +61,6 @@
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/songlist_side_padding"
         android:paddingRight="@dimen/songlist_side_padding"
-        android:listSelector="@android:color/transparent"
         android:scrollbarStyle="outsideOverlay" />
 
     <LinearLayout
@@ -73,11 +68,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal|center_vertical">
+
         <ProgressBar
             android:id="@+id/empty_playlist_progress"
             android:layout_width="64dp"
-            android:layout_height="64dp"
-            />
+            android:layout_height="64dp" />
+
         <TextView
             android:visibility="gone"
             android:gravity="center_horizontal"

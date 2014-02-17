@@ -38,7 +38,7 @@
 
     <ImageButton
         android:id="@+id/song_details_intent_overflow"
-        android:layout_width="48dp"
+        android:layout_width="56dp"
         android:layout_height="48dp"
         android:padding="8dp"
         android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"

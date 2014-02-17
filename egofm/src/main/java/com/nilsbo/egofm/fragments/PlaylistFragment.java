@@ -1,11 +1,13 @@
 package com.nilsbo.egofm.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.nilsbo.egofm.R;
+import com.nilsbo.egofm.activities.SongDetailActivity;
 import com.nilsbo.egofm.adapters.PlaylistAdapter;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.networking.PlaylistRequest;
@@ -27,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class PlaylistFragment extends ListFragment implements Response.ErrorListener, Response.Listener<ArrayList<PlaylistItem>>, View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class PlaylistFragment extends ListFragment implements Response.ErrorListener, Response.Listener<ArrayList<PlaylistItem>>, View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, AdapterView.OnItemClickListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.PlaylistFragment";
 
     private static final String PLAYLIST_REQUEST = "PLAYLIST_REQUEST";
@@ -93,6 +96,7 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
 
         adapter = new PlaylistAdapter(songs, getActivity());
         setListAdapter(adapter);
+        getListView().setOnItemClickListener(this);
 
         calendar = Calendar.getInstance();
         parentView = getView();
@@ -224,6 +228,20 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
             setBtnText();
             reload();
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d(TAG, "onItemClick");
+        final String title = songs.get(position).title;
+        final String artist = songs.get(position).artist;
+
+        //TODO use callback to parent fragment
+        Intent intent = new Intent(getActivity(), SongDetailActivity.class);
+        intent.putExtra(SongDetailFragment.ARG_SONG_TITLE, title);
+        intent.putExtra(SongDetailFragment.ARG_SONG_ARTIST, artist);
+        getActivity().startActivity(intent);
+
     }
 
     @Override
