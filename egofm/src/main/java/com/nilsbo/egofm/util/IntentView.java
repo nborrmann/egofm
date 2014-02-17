@@ -6,13 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -45,8 +43,6 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
     private final ImageButton[] intentButtons;
     private String query = "";
     private PopupWindow popupWindow;
-    private PopupTouchInterceptor mPopupTouchInterceptor = new PopupTouchInterceptor();
-    private boolean justDismissed;
 
     public IntentView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -91,6 +87,7 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
                 final Field popupWindowField = ListPopupWindow.class.getDeclaredField("mPopup");
                 popupWindowField.setAccessible(true);
                 popupWindow = (PopupWindow) popupWindowField.get(intentOverflowList);
+                popupWindow.setFocusable(true);
             } catch (Exception e) {
                 Log.d(TAG, "Error instantiating ListPopupWindow", e);
             }
@@ -99,25 +96,9 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
                 @Override
                 public void onClick(View v) {
                     intentOverflowList.show();
-                    if (popupWindow != null) {
-                        popupWindow.setTouchInterceptor(mPopupTouchInterceptor);
-                    }
                 }
             });
 
-            intentButtons[3].setOnTouchListener(new OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    // Don't show the touch feedback if the overflow was just closed. Returning true will also
-                    // prevent onClick from firing.
-                    if (event.getAction() == MotionEvent.ACTION_DOWN && justDismissed) {
-                        return true;
-                    } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-                        justDismissed = false;
-                    }
-                    return false;
-                }
-            });
         }
     }
 
@@ -188,29 +169,6 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
         private class ViewHolder {
             public TextView title;
             public ImageView icon;
-        }
-    }
-
-    /**
-     * This listener is added to intentOverflowList.mPopup (private field accessed through reflection).
-     * It is intended to keep track of whether the popup was dismissed by a click on the OverflowButton.
-     * If true, the button's onClick will not show the Popup the next time.
-     */
-    private class PopupTouchInterceptor implements OnTouchListener {
-        public boolean onTouch(View v, MotionEvent event) {
-            final int x = (int) event.getX();
-            final int y = (int) event.getY();
-
-            int[] l = new int[2];
-            v.getLocationOnScreen(l);
-
-            Rect r = new Rect();
-            intentButtons[3].getGlobalVisibleRect(r);
-
-            if (r.contains(x + l[0], y + l[1]) && intentOverflowList.isShowing()) {
-                justDismissed = true;
-            }
-            return false;
         }
     }
 
