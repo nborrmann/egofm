@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.fragments.ChartsFragment;
 import com.nilsbo.egofm.fragments.NewsContainer;
-import com.nilsbo.egofm.fragments.PlaylistFragment;
+import com.nilsbo.egofm.fragments.PlaylistContainer;
 
 import java.lang.reflect.Field;
 import java.util.Locale;
@@ -33,10 +33,10 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return NewsContainer.newInstance();
+                return PlaylistContainer.newInstance();
 //                return NewsListFragment.newInstance();
             case 1:
-                return PlaylistFragment.newInstance();
+                return NewsContainer.newInstance();
             case 2:
                 return ChartsFragment.newInstance();
         }

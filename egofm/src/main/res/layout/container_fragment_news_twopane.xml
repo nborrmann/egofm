@@ -7,16 +7,15 @@
     android:paddingLeft="@dimen/news_twopane_left_padding"
     android:paddingRight="@dimen/news_twopane_right_padding">
 
-<FrameLayout
+    <FrameLayout
         android:id="@+id/news_list_container"
         android:layout_width="@dimen/news_twopane_list_width"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" />
 
-    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/news_item_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

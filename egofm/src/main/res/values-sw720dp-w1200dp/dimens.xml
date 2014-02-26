@@ -9,5 +9,12 @@
     <dimen name="news_twopane_item_top_padding">16dp</dimen>
 
     <dimen name="news_item_two_pane_content_image_diff">16dp</dimen>
-    <dimen name="songlist_side_padding">420dp</dimen>
+
+    <dimen name="songlist_side_padding">16dp</dimen>
+    <dimen name="song_details_image_width">400dp</dimen>
+    <dimen name="song_twopane_right_margin">36dp</dimen>
+    <dimen name="song_twopane_left_padding">24dp</dimen>
+    <dimen name="song_twopane_right_padding">8dp</dimen>
+    <dimen name="songlist_twopane_width">430dp</dimen>
+
 </resources>

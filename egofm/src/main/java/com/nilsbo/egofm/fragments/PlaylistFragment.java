@@ -1,6 +1,6 @@
 package com.nilsbo.egofm.fragments;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -17,11 +17,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
+import com.nilsbo.egofm.Interfaces.SongListListener;
 import com.nilsbo.egofm.R;
-import com.nilsbo.egofm.activities.SongDetailActivity;
 import com.nilsbo.egofm.adapters.PlaylistAdapter;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.networking.PlaylistRequest;
+import com.nilsbo.egofm.util.FragmentUtils;
 import com.nilsbo.egofm.util.PlaylistItem;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
@@ -60,6 +61,7 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
     private ProgressBar emptyProgress;
     private TextView emptyText;
     private View parentView;
+    private SongListListener mCallback;
 
     private enum State {
         Loading,
@@ -85,9 +87,9 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
         // Required empty public constructor
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallback = FragmentUtils.getParent(this, SongListListener.class);
     }
 
     @Override
@@ -237,10 +239,11 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
         final String artist = songs.get(position).artist;
 
         //TODO use callback to parent fragment
-        Intent intent = new Intent(getActivity(), SongDetailActivity.class);
-        intent.putExtra(SongDetailFragment.ARG_SONG_TITLE, title);
-        intent.putExtra(SongDetailFragment.ARG_SONG_ARTIST, artist);
-        getActivity().startActivity(intent);
+//        Intent intent = new Intent(getActivity(), SongDetailActivity.class);
+//        intent.putExtra(SongDetailFragment.ARG_SONG_TITLE, title);
+//        intent.putExtra(SongDetailFragment.ARG_SONG_ARTIST, artist);
+//        getActivity().startActivity(intent);
+        mCallback.onSongClicked(artist, title);
 
     }
 

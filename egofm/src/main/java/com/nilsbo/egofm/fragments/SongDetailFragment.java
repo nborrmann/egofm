@@ -1,14 +1,11 @@
 package com.nilsbo.egofm.fragments;
 
 import android.content.Context;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,13 +34,10 @@ import org.jsoup.helper.StringUtil;
 
 import java.util.ArrayList;
 
-import static com.nilsbo.egofm.util.FragmentUtils.clamp;
-import static com.nilsbo.egofm.util.FragmentUtils.getActionBarHeight;
-
 /**
  * Created by Nils on 15.02.14.
  */
-public class SongDetailFragment extends Fragment implements Response.ErrorListener, ObservableScrollView.ScrollViewListener {
+public class SongDetailFragment extends Fragment implements Response.ErrorListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.SongDetailFragment";
 
     private static final String SAVED_STATE_SONG_ARTIST = "com.nilsb.egofm.SAVED_STATE_SONG_ARTIST";
@@ -54,32 +48,27 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
     private Context mContext;
     private RequestQueue mRequestQueue = MyVolley.getRequestQueue();
 
-    private View rootView;
+    protected View rootView;
 
-    private String mTitle;
-    private String mArtist;
-    private ResizableImageView artistImage;
-    private NetworkImageView albumImage;
-    private TextView titleText;
-    private TextView artistText;
-    private TextView albumTitleText;
-    private TextView albumSubtitleText;
-    private TextView artistDescText;
-    private RelativeLayout headerContainer;
-    private ObservableScrollView scrollView;
-    private TextView artistDescLabel;
-    private LinearLayout albumContainer;
-    private TextView albumLabel;
+    protected String mTitle;
+    protected String mArtist;
+    protected ResizableImageView artistImage;
+    protected NetworkImageView albumImage;
+    protected TextView titleText;
+    protected TextView artistText;
+    protected TextView albumTitleText;
+    protected TextView albumSubtitleText;
+    protected TextView artistDescText;
+    protected RelativeLayout headerContainer;
+    protected ObservableScrollView scrollView;
+    protected TextView artistDescLabel;
+    protected LinearLayout albumContainer;
+    protected TextView albumLabel;
+    protected TextView tagsText;
+    protected TextView tagsLabel;
+    protected View actionbarBg;
+    protected LinearLayout titleContainer;
 
-    private int mWidth;
-    private int mHeight;
-    private int placeholderImageHeight;
-    private TextView tagsText;
-    private TextView tagsLabel;
-    private View actionbarBg;
-    private LinearLayout titleContainer;
-    private int mCurrentHeaderHeight;
-    private int mMinHeaderHeight;
 
     public SongDetailFragment() {
     }
@@ -87,7 +76,7 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_song_detail, container, false);
+        rootView = inflater.inflate(R.layout.fragment_song_detail_fancy, container, false);
         mContext = getActivity();
         return rootView;
     }
@@ -95,33 +84,6 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        mWidth = size.x;
-        mHeight = size.y;
-
-        artistImage = (ResizableImageView) rootView.findViewById(R.id.song_details_artist_image);
-        albumImage = (NetworkImageView) rootView.findViewById(R.id.song_details_album_image);
-        titleText = (TextView) rootView.findViewById(R.id.song_details_title);
-        artistText = (TextView) rootView.findViewById(R.id.song_details_artist);
-        albumTitleText = (TextView) rootView.findViewById(R.id.song_details_album_title);
-        albumSubtitleText = (TextView) rootView.findViewById(R.id.song_details_album_subtitle);
-        artistDescText = (TextView) rootView.findViewById(R.id.song_details_artist_desc);
-        artistDescLabel = (TextView) rootView.findViewById(R.id.song_details_artist_label);
-        albumContainer = (LinearLayout) rootView.findViewById(R.id.song_details_album_container);
-        albumLabel = (TextView) rootView.findViewById(R.id.song_details_album_label);
-        tagsText = (TextView) rootView.findViewById(R.id.song_details_tags);
-        tagsLabel = (TextView) rootView.findViewById(R.id.song_details_tags_label);
-        actionbarBg = rootView.findViewById(R.id.song_details_actionbar_bg);
-        titleContainer = (LinearLayout) rootView.findViewById(R.id.song_details_title_container);
-
-        scrollView = (ObservableScrollView) rootView.findViewById(R.id.song_details_scrollview);
-        scrollView.setScrollViewListener(this);
-        scrollView.setFocusable(false);
-
-        headerContainer = (RelativeLayout) rootView.findViewById(R.id.song_details_header_container);
 
         if (savedInstanceState != null) {
             mTitle = savedInstanceState.getString(SAVED_STATE_SONG_TITLE);
@@ -137,52 +99,11 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
             }
         }
 
-        titleText.setText(mTitle);
-        artistText.setText(mArtist);
-        artistImage.setImageResource(R.drawable.artist_placeholder);
-        artistDescLabel.setText(String.format(mContext.getString(R.string.song_details_about_label), mArtist));
-        albumContainer.setVisibility(View.GONE);
-        albumLabel.setVisibility(View.GONE);
-        tagsLabel.setVisibility(View.GONE);
-        tagsText.setVisibility(View.GONE);
-        artistDescText.setText(mContext.getString(R.string.song_details_loading));
+        initUI();
+        loadLastfmData();
+    }
 
-        final ViewGroup.LayoutParams layoutParams = actionbarBg.getLayoutParams();
-        layoutParams.height = getActionBarHeight(getActivity());
-        actionbarBg.setLayoutParams(layoutParams);
-
-        titleContainer.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                mMinHeaderHeight = bottom - top + getActionBarHeight(getActivity());
-            }
-        });
-
-        artistImage.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                // if the manual measuring failed (for example in landscape mode), correct it by posting a runnable.
-                if (mCurrentHeaderHeight != bottom - top) {
-                    Log.d(TAG, "oldHeaderHeight " + mCurrentHeaderHeight + "; new height: " + (bottom - top));
-                    mCurrentHeaderHeight = bottom - top;
-                    scrollView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            scrollView.setPadding(scrollView.getPaddingLeft(), mCurrentHeaderHeight, scrollView.getPaddingRight(), scrollView.getPaddingBottom());
-
-                        }
-                    });
-                }
-            }
-        });
-
-        IntentView intentView = (IntentView) rootView.findViewById(R.id.song_details_intent_container);
-        intentView.setQuery(String.format("%s - %s", mArtist, mTitle));
-
-        Drawable artistPlaceholder = getResources().getDrawable(R.drawable.artist_placeholder);
-        mCurrentHeaderHeight = Math.min((int) (1.0f * mWidth / artistPlaceholder.getIntrinsicWidth() * artistPlaceholder.getIntrinsicHeight()), mHeight);
-        scrollView.setPadding(scrollView.getPaddingLeft(), mCurrentHeaderHeight, scrollView.getPaddingRight(), scrollView.getPaddingBottom());
-
+    private void loadLastfmData() {
         String trackUrl = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=63e6e4b1a4db2dda7585d9e82b2f723e&artist=" + mArtist + "&track=" + mTitle + "&format=json";
         JsonObjectRequest trackRequest = new JsonObjectRequest(Request.Method.GET, trackUrl, null, new VolleyTrackRequestListener(), this);
         mRequestQueue.add(trackRequest);
@@ -196,20 +117,36 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
             }
         });
         mRequestQueue.add(artistRequest);
-
     }
 
-    @Override
-    public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
-        float interpolation = clamp((1.0f * y) / (mCurrentHeaderHeight - mMinHeaderHeight), 1.0f, 0f);
-        scrollHeader(interpolation, y);
-    }
+    protected void initUI() {
+        artistImage = (ResizableImageView) rootView.findViewById(R.id.song_details_artist_image);
+        albumImage = (NetworkImageView) rootView.findViewById(R.id.song_details_album_image);
+        titleText = (TextView) rootView.findViewById(R.id.song_details_title);
+        artistText = (TextView) rootView.findViewById(R.id.song_details_artist);
+        albumTitleText = (TextView) rootView.findViewById(R.id.song_details_album_title);
+        albumSubtitleText = (TextView) rootView.findViewById(R.id.song_details_album_subtitle);
+        artistDescText = (TextView) rootView.findViewById(R.id.song_details_artist_desc);
+        artistDescLabel = (TextView) rootView.findViewById(R.id.song_details_artist_label);
+        albumContainer = (LinearLayout) rootView.findViewById(R.id.song_details_album_container);
+        albumLabel = (TextView) rootView.findViewById(R.id.song_details_album_label);
+        tagsText = (TextView) rootView.findViewById(R.id.song_details_tags);
+        tagsLabel = (TextView) rootView.findViewById(R.id.song_details_tags_label);
+        titleContainer = (LinearLayout) rootView.findViewById(R.id.song_details_title_container);
+        headerContainer = (RelativeLayout) rootView.findViewById(R.id.song_details_header_container);
 
-    private void scrollHeader(float interpolation, int y) {
-        artistImage.setTranslationY(-1.0f * interpolation * (mCurrentHeaderHeight - mMinHeaderHeight));
-        artistImage.setScrollY((int) (interpolation * (mCurrentHeaderHeight - mMinHeaderHeight) / -2.0f));
-        titleContainer.setTranslationY(-1.0f * interpolation * (mCurrentHeaderHeight - mMinHeaderHeight));
-        actionbarBg.setAlpha(1 - 20 * clamp(-1.0f * (y - mCurrentHeaderHeight + mMinHeaderHeight) / mWidth, 0.05f, 0f));
+        titleText.setText(mTitle);
+        artistText.setText(mArtist);
+        artistImage.setImageResource(R.drawable.artist_placeholder);
+        artistDescLabel.setText(String.format(mContext.getString(R.string.song_details_about_label), mArtist));
+        albumContainer.setVisibility(View.GONE);
+        albumLabel.setVisibility(View.GONE);
+        tagsLabel.setVisibility(View.GONE);
+        tagsText.setVisibility(View.GONE);
+        artistDescText.setText(mContext.getString(R.string.song_details_loading));
+
+        IntentView intentView = (IntentView) rootView.findViewById(R.id.song_details_intent_container);
+        intentView.setQuery(String.format("%s - %s", mArtist, mTitle));
     }
 
     public void onSaveInstanceState(Bundle outState) {
@@ -221,6 +158,12 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.w(TAG, "onErrorResponse");
+    }
+
+    public void setContent(String artist, String title) {
+        mTitle = title;
+        mArtist = artist;
+        loadLastfmData();
     }
 
     private class VolleyArtistRequestListener implements Response.Listener<JSONObject> {
@@ -262,16 +205,14 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
                     @Override
                     public void onResponse(final ImageLoader.ImageContainer response, boolean isImmediate) {
                         if (response.getBitmap() != null) {
-                            artistImage.setImageBitmap(response.getBitmap());
-                            int imageHeight = Math.min((int) (1.0f * mWidth / response.getBitmap().getWidth() * response.getBitmap().getHeight()), mHeight);
-
-                            final int oldHeight = mCurrentHeaderHeight;
-                            mCurrentHeaderHeight = imageHeight; // we need this updated for the scrolling interpolation to work properly
-                            scrollView.setPadding(scrollView.getPaddingLeft(), mCurrentHeaderHeight, scrollView.getPaddingRight(), scrollView.getPaddingBottom());
-                            scrollView.scrollBy(0, imageHeight - oldHeight);
+                            setArtistImage(response);
                         }
                     }
                 });
+    }
+
+    protected void setArtistImage(ImageLoader.ImageContainer response) {
+        artistImage.setImageBitmap(response.getBitmap());
     }
 
     private class VolleyTrackRequestListener implements Response.Listener<JSONObject> {

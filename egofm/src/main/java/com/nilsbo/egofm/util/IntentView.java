@@ -69,7 +69,7 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
         mResolveInfos = new ArrayList<ResolveInfo>();
         mDisplayResolveInfos = new ArrayList<DisplayResolveInfo>();
 
-        LayoutInflater.from(context).inflate(R.layout.fragment_song_details_intent_view, this, true);
+        LayoutInflater.from(context).inflate(R.layout.intent_view, this, true);
 
         intentButtons = new ImageButton[NUMBER_OF_BUTTONS + 1];
         intentButtons[0] = (ImageButton) findViewById(R.id.song_details_intent_button1);

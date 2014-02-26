@@ -9,4 +9,6 @@
     <dimen name="news_twopane_list_width">320dp</dimen>
     <dimen name="news_twopane_item_top_padding">8dp</dimen>
     <dimen name="songlist_side_padding">100dp</dimen>
+
+
 </resources>

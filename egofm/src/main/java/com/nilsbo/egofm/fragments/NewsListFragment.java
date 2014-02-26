@@ -92,7 +92,7 @@ public class NewsListFragment extends Fragment implements AbsListView.OnScrollLi
         parentView = getView();
 
         gridView = (PullToRefreshGridView) getView().findViewById(R.id.newslist);
-        LinearLayout emptyView = (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_news_empty, null, false);
+        LinearLayout emptyView = (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.news_item_empty_view, null, false);
         emptyProgress = (ProgressBar) emptyView.findViewById(R.id.empty_news_progress);
         emptyText = (TextView) emptyView.findViewById(R.id.empty_news_text);
 
@@ -243,7 +243,7 @@ public class NewsListFragment extends Fragment implements AbsListView.OnScrollLi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_news, container, false);
+        return inflater.inflate(R.layout.fragment_news_list, container, false);
     }
 
     public void onSaveInstanceState(Bundle outState) {

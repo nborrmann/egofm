@@ -41,7 +41,7 @@ public class NewsItemFancyFragment extends NewsItemFragment implements Response.
         super.initUI();
 
         mActionBarHeight = getActionBarHeight(getActivity());
-        customHeaderView = (TextView) mInflater.inflate(R.layout.fragment_news_item_title, null, false);
+        customHeaderView = (TextView) mInflater.inflate(R.layout.news_item_fancy_custom_actionbar, null, false);
 
         mActionBar.setCustomView(customHeaderView);
         mActionBar.setDisplayShowCustomEnabled(true);

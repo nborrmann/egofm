@@ -6,4 +6,6 @@
     For more on layout aliases, see:
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
+    <item type="layout" name="fragment_song_detail_fancy">@layout/fragment_song_detail_twocolumn
+    </item>
 </resources>
