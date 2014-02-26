@@ -6,10 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +30,8 @@ import com.nilsbo.egofm.R;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import hugo.weaving.DebugLog;
 
 public class IntentView extends LinearLayout implements View.OnClickListener, AdapterView.OnItemClickListener {
     private static final String TAG = "com.nilsbo.egofm.util.IntentView";
@@ -49,10 +54,20 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
 
+
+        setShowDividers(SHOW_DIVIDER_MIDDLE);
+        setDividerPadding(context.getResources().getDimensionPixelSize(R.dimen.intent_view_divider_padding));
+        setOrientation(HORIZONTAL);
+        if (!isInEditMode()) {
+            int[] attribute = new int[]{android.R.attr.dividerVertical};
+            TypedValue typedValue = new TypedValue();
+            TypedArray array = context.obtainStyledAttributes(typedValue.resourceId, attribute);
+            setDividerDrawable(array != null ? array.getDrawable(0) : null);
+        }
+
         mPackageManager = context.getPackageManager();
         mResolveInfos = new ArrayList<ResolveInfo>();
         mDisplayResolveInfos = new ArrayList<DisplayResolveInfo>();
-        loadIntentList();
 
         LayoutInflater.from(context).inflate(R.layout.fragment_song_details_intent_view, this, true);
 
@@ -62,7 +77,12 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
         intentButtons[2] = (ImageButton) findViewById(R.id.song_details_intent_button3);
         intentButtons[3] = (ImageButton) findViewById(R.id.song_details_intent_overflow);
 
-        // TODO test for values < 4
+        if (isInEditMode()) {
+            return;
+        }
+
+        loadIntentList();
+
         int i = 0;
         for (; i < mDisplayResolveInfos.size() && i < NUMBER_OF_BUTTONS; i++) {
             intentButtons[i].setVisibility(View.VISIBLE);
@@ -73,15 +93,21 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
             intentButtons[i].setVisibility(View.GONE);
         }
 
-        if (mDisplayResolveInfos.size() < NUMBER_OF_BUTTONS) {
-            intentButtons[3].setVisibility(View.GONE);
+        if (mDisplayResolveInfos.size() < NUMBER_OF_BUTTONS + 1) {
+            intentButtons[NUMBER_OF_BUTTONS].setVisibility(View.GONE);
         } else {
             intentOverflowList = new ListPopupWindow(context);
-            intentOverflowList.setAnchorView(intentButtons[3]);
+            intentOverflowList.setAnchorView(intentButtons[NUMBER_OF_BUTTONS]);
             intentOverflowList.setWidth((int) context.getResources().getDimension(R.dimen.song_details_popup_width));
             SongIntentPopupAdapter adapter = new SongIntentPopupAdapter(mDisplayResolveInfos);
             intentOverflowList.setAdapter(adapter);
             intentOverflowList.setOnItemClickListener(this);
+            intentOverflowList.setDropDownGravity(Gravity.END);
+
+            if (android.os.Build.VERSION.SDK_INT >= 19) {
+                OnTouchListener dragListener = intentOverflowList.createDragToOpenListener(intentButtons[3]);
+                intentButtons[NUMBER_OF_BUTTONS].setOnTouchListener(dragListener);
+            }
 
             try {
                 final Field popupWindowField = ListPopupWindow.class.getDeclaredField("mPopup");
@@ -89,10 +115,10 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
                 popupWindow = (PopupWindow) popupWindowField.get(intentOverflowList);
                 popupWindow.setFocusable(true);
             } catch (Exception e) {
-                Log.d(TAG, "Error instantiating ListPopupWindow", e);
+                Log.w(TAG, "Error setting up ListPopupWindow", e);
             }
 
-            intentButtons[3].setOnClickListener(new OnClickListener() {
+            intentButtons[NUMBER_OF_BUTTONS].setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     intentOverflowList.show();
@@ -131,7 +157,6 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
 
         @Override
         public int getCount() {
-            //TODO
             return mDisplayResolveInfos.size() - NUMBER_OF_BUTTONS;
         }
 
@@ -172,6 +197,7 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
         }
     }
 
+    @DebugLog
     private void loadIntentList() {
         Intent mediaSearchAndPlayIntent = new Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
         Intent mediaSearchIntent = new Intent(MediaStore.INTENT_ACTION_MEDIA_SEARCH);
@@ -204,7 +230,7 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
     }
 
     private boolean isFilteredApplication(String packageName) {
-        return "com.android.chrome".equals(packageName) || "com.google.android.youtube".equals(packageName);
+        return "com.android.chrome".equals(packageName); // || "com.google.android.youtube".equals(packageName)
     }
 
     private boolean isApplicationAlreadyAdded(String packageName) {
@@ -228,12 +254,16 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
         }
 
         public void startActivity() {
-            Intent intent = new Intent();
-            intent.setComponent(new ComponentName(packageName, activityName));
-            intent.setAction(action);
-            intent.putExtra(SearchManager.QUERY, query);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            try {
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName(packageName, activityName));
+                intent.setAction(action);
+                intent.putExtra(SearchManager.QUERY, query);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            } catch (Exception e) {
+                Log.d(TAG, "error starting activity " + activityName, e);
+            }
         }
     }
 }

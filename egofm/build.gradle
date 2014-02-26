@@ -4,9 +4,11 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.jakewharton.hugo:hugo-plugin:1.0.1'
     }
 }
 apply plugin: 'android'
+apply plugin: 'hugo'
 
 repositories {
     mavenCentral()
@@ -39,6 +41,7 @@ dependencies {
     compile 'com.android.support:support-v4:19.0.1'
     compile 'org.jsoup:jsoup:1.7.3'
     compile 'com.readystatesoftware.systembartint:systembartint:+'
+
     compile project('libs:pullToRefresh-library')
     compile project('libs:datetimepicker-library')
     compile project('libs:volley')

@@ -4,7 +4,6 @@
     android:fitsSystemWindows="true">
 
     <fragment
-        android:background="@color/background_light_grey"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.nilsbo.egofm.fragments.SettingsFragment"

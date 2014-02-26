@@ -1,9 +1,7 @@
 package com.nilsbo.egofm.activities;
 
-import android.content.Intent;
+import android.app.ActionBar;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.fragments.SongDetailFragment;
@@ -11,19 +9,41 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class SongDetailActivity extends EgofmActivity {
 
+    private ActionBar mActionBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (getResources().getBoolean(R.bool.use_fancy_news_item)) {
+            setTheme(R.style.Theme_Egofm_TransparentActionBar);
+
+            mActionBar = getActionBar();
+            mActionBar.setDisplayShowCustomEnabled(true);
+            mActionBar.setDisplayHomeAsUpEnabled(false);
+            mActionBar.setDisplayShowHomeEnabled(false);
+            mActionBar.setDisplayShowTitleEnabled(false);
+        } else {
+            SystemBarTintManager tintManager = new SystemBarTintManager(this);
+            tintManager.setStatusBarTintEnabled(true);
+            tintManager.setStatusBarTintResource(R.color.egofm_grey);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song_detail);
 
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        tintManager.setStatusBarTintResource(R.color.egofm_grey);
+//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+//        tintManager.setStatusBarTintEnabled(true);
+//        tintManager.setStatusBarTintResource(R.color.egofm_grey);
 
         if (savedInstanceState == null) {
             Bundle arguments = new Bundle();
-            arguments.putString(SongDetailFragment.ARG_SONG_TITLE, getIntent().getStringExtra(SongDetailFragment.ARG_SONG_TITLE));
-            arguments.putString(SongDetailFragment.ARG_SONG_ARTIST, getIntent().getStringExtra(SongDetailFragment.ARG_SONG_ARTIST));
+            if (getIntent() != null && getIntent().getStringExtra(SongDetailFragment.ARG_SONG_TITLE) != null) {
+                arguments.putString(SongDetailFragment.ARG_SONG_TITLE, getIntent().getStringExtra(SongDetailFragment.ARG_SONG_TITLE));
+                arguments.putString(SongDetailFragment.ARG_SONG_ARTIST, getIntent().getStringExtra(SongDetailFragment.ARG_SONG_ARTIST));
+            } else {
+                // TODO sample debug data
+                arguments.putString(SongDetailFragment.ARG_SONG_TITLE, "Fancy Footwork");
+                arguments.putString(SongDetailFragment.ARG_SONG_ARTIST, "Chromeo");
+            }
 
             SongDetailFragment songDetailFragment = new SongDetailFragment();
             songDetailFragment.setArguments(arguments);
@@ -34,21 +54,4 @@ public class SongDetailActivity extends EgofmActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                Intent mIntent = new Intent(this, SettingsActivity.class);
-                startActivity(mIntent);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.settings, menu);
-        return true;
-    }
 }

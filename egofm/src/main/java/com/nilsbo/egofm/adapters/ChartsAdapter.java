@@ -161,7 +161,6 @@ public class ChartsAdapter extends BaseAdapter implements View.OnClickListener, 
                 intent.putExtra(SongDetailFragment.ARG_SONG_TITLE, title);
                 intent.putExtra(SongDetailFragment.ARG_SONG_ARTIST, artist);
                 context.startActivity(intent);
-
                 break;
 
             case R.id.charts_vote_button:

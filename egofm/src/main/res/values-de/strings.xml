@@ -34,6 +34,13 @@
     <string name="egofm_42_headline">Platzierungen der Woche</string>
     <string name="preferences_feedback">Feedback</string>
     <string name="preferences_feedback_detail">Verbesserungsvorschläge? Feature-Requests?</string>
+    <string name="artist_description_not_found">No artist description available.</string>
+    <string name="song_details_loading">Loading artist information …</string>
+    <string name="song_details_album_subtitle_full">track #%1$d - duration %2$dm%3$ds</string>
+    <string name="song_details_album_subtitle_duration">duration %1$dm%2$ds</string>
+    <string name="song_details_album_subtitle_track">track #%1$d</string>
+    <string name="song_details_about_label">About %1$s</string>
+    <string name="song_details_about_label_default">ABOUT</string>
 
     <string-array name="quality_entries">
         <item>Hoch (192 kbits)</item>

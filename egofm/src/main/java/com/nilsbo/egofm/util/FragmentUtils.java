@@ -1,7 +1,9 @@
 package com.nilsbo.egofm.util;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.TypedValue;
 
 public class FragmentUtils {
     /**
@@ -24,4 +26,26 @@ public class FragmentUtils {
         }
         return null;
     }
+
+    public static int getActionBarHeight(Context context) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true);
+        int actionBarHeight = TypedValue.complexToDimensionPixelSize(typedValue.data, context.getResources().getDisplayMetrics());
+
+        if (android.os.Build.VERSION.SDK_INT >= 19) {
+            int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0)
+                actionBarHeight += context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return actionBarHeight;
+    }
+
+    public static int clamp(int value, int max, int min) {
+        return Math.min(Math.max(value, min), max);
+    }
+
+    public static float clamp(float value, float max, float min) {
+        return Math.min(Math.max(value, min), max);
+    }
+
 }

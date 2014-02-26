@@ -11,7 +11,6 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:background="@color/background_light_grey"
         android:gravity="center_vertical"
         android:minHeight="56dp">
 
@@ -55,6 +54,7 @@
             android:layout_weight="1"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
+            android:background="@drawable/egofm_list_selector_holo_light"
             android:gravity="center_vertical">
 
         <TextView
