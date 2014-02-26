@@ -123,6 +123,9 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     }
 
     private void preLoadUISetup() {
+        mScrollView.fullScroll(ScrollView.FOCUS_UP);
+        mScrollView.computeScroll();
+
         webView.setVisibility(View.GONE);
         mEmptyView.setVisibility(View.VISIBLE);
         mErrorText.setVisibility(View.GONE);
@@ -130,10 +133,8 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
 
         mSubtitleDivider.setVisibility(View.VISIBLE);
         mHeader.setVisibility(View.VISIBLE);
-
-        mScrollView.fullScroll(ScrollView.FOCUS_UP);
-        mScrollView.computeScroll();
     }
+
 
     private void showWebView() {
         webView.setVisibility(View.VISIBLE);
@@ -144,6 +145,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
 
     private void initWebView() {
         webView = (WebView) rootView.findViewById(R.id.news_item_webview);
+        webView.setFocusable(false);
 
         if (android.os.Build.VERSION.SDK_INT >= 19) {
             webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
