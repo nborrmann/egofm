@@ -68,6 +68,7 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
     protected TextView tagsLabel;
     protected View actionbarBg;
     protected LinearLayout titleContainer;
+    private IntentView intentView;
 
 
     public SongDetailFragment() {
@@ -85,22 +86,28 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        initUI();
+
         if (savedInstanceState != null) {
             mTitle = savedInstanceState.getString(SAVED_STATE_SONG_TITLE);
             mArtist = savedInstanceState.getString(SAVED_STATE_SONG_ARTIST);
+            setDefaultUI();
+            loadLastfmData();
         } else {
             if (getArguments() != null && getArguments().containsKey(ARG_SONG_TITLE)) {
                 mTitle = getArguments().getString(ARG_SONG_TITLE);
                 mArtist = getArguments().getString(ARG_SONG_ARTIST);
+                setDefaultUI();
+                loadLastfmData();
             } else {
-                // TODO sample debug data
-                mTitle = "Fancy Footwork";
-                mArtist = "Chromeo";
+                setEmptyUI();
             }
         }
+    }
 
-        initUI();
-        loadLastfmData();
+    private void setEmptyUI() {
+//        this.setV
+
     }
 
     private void loadLastfmData() {
@@ -134,7 +141,10 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
         tagsLabel = (TextView) rootView.findViewById(R.id.song_details_tags_label);
         titleContainer = (LinearLayout) rootView.findViewById(R.id.song_details_title_container);
         headerContainer = (RelativeLayout) rootView.findViewById(R.id.song_details_header_container);
+        intentView = (IntentView) rootView.findViewById(R.id.song_details_intent_container);
+    }
 
+    private void setDefaultUI() {
         titleText.setText(mTitle);
         artistText.setText(mArtist);
         artistImage.setImageResource(R.drawable.artist_placeholder);
@@ -144,9 +154,8 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
         tagsLabel.setVisibility(View.GONE);
         tagsText.setVisibility(View.GONE);
         artistDescText.setText(mContext.getString(R.string.song_details_loading));
-
-        IntentView intentView = (IntentView) rootView.findViewById(R.id.song_details_intent_container);
         intentView.setQuery(String.format("%s - %s", mArtist, mTitle));
+
     }
 
     public void onSaveInstanceState(Bundle outState) {
@@ -163,6 +172,7 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
     public void setContent(String artist, String title) {
         mTitle = title;
         mArtist = artist;
+        setDefaultUI();
         loadLastfmData();
     }
 

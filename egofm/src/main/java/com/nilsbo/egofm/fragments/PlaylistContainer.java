@@ -53,7 +53,7 @@ public class PlaylistContainer extends Fragment implements SongListListener {
                 isTwoPane = true;
 
                 songDetailFragment = new SongDetailFragment();
-                childFragmentManager.beginTransaction().add(R.id.song_detail_container, songDetailFragment).commit();
+                childFragmentManager.beginTransaction().add(R.id.song_detail_container, songDetailFragment).hide(songDetailFragment).commit();
             }
         } else {
             // this is necessary because the Fragment gets instantiated with empty constructor, if
@@ -80,12 +80,11 @@ public class PlaylistContainer extends Fragment implements SongListListener {
     @Override
     public void onSongClicked(String artist, String title) {
         if (isTwoPane) {
+            if (songDetailFragment.isHidden()) {
+                childFragmentManager.beginTransaction().show(songDetailFragment).commit();
+            }
             songDetailFragment.setContent(artist, title);
         } else {
-//            Intent intent = new Intent(getActivity(), NewsItemActivity.class);
-//            intent.putExtra(NewsItemFragment.ARG_NEWS_ITEM, item);
-//            getActivity().startActivity(intent);
-
             Intent intent = new Intent(getActivity(), SongDetailActivity.class);
             intent.putExtra(SongDetailFragment.ARG_SONG_TITLE, title);
             intent.putExtra(SongDetailFragment.ARG_SONG_ARTIST, artist);
