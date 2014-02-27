@@ -1,7 +1,6 @@
 package com.nilsbo.egofm.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nilsbo.egofm.Interfaces.ChartVoteListener;
+import com.nilsbo.egofm.Interfaces.SongListListener;
 import com.nilsbo.egofm.R;
-import com.nilsbo.egofm.activities.SongDetailActivity;
-import com.nilsbo.egofm.fragments.SongDetailFragment;
 import com.nilsbo.egofm.networking.ChartsVoteRequester;
 import com.nilsbo.egofm.util.ChartItem;
 
@@ -34,11 +32,13 @@ public class ChartsAdapter extends BaseAdapter implements View.OnClickListener, 
 
     private ArrayList<ChartItem> songs = new ArrayList<ChartItem>();
     private final Context context;
+    private final SongListListener mCallback;
     private final LayoutInflater mflater;
 
-    public ChartsAdapter(ArrayList<ChartItem> songs, Context context) {
+    public ChartsAdapter(ArrayList<ChartItem> songs, Context context, SongListListener mCallback) {
         this.songs = songs;
         this.context = context;
+        this.mCallback = mCallback;
         mflater = LayoutInflater.from(context);
         iconFav = context.getResources().getDrawable(R.drawable.icon_fav);
         iconNotFav = context.getResources().getDrawable(R.drawable.icon_unfav);
@@ -157,10 +157,11 @@ public class ChartsAdapter extends BaseAdapter implements View.OnClickListener, 
                 final String artist = songs.get(pos).artist;
 
                 //TODO use callback to parent fragment
-                Intent intent = new Intent(context, SongDetailActivity.class);
-                intent.putExtra(SongDetailFragment.ARG_SONG_TITLE, title);
-                intent.putExtra(SongDetailFragment.ARG_SONG_ARTIST, artist);
-                context.startActivity(intent);
+//                Intent intent = new Intent(context, SongDetailActivity.class);
+//                intent.putExtra(SongDetailFragment.ARG_SONG_TITLE, title);
+//                intent.putExtra(SongDetailFragment.ARG_SONG_ARTIST, artist);
+//                context.startActivity(intent);
+                mCallback.onSongClicked(artist, title);
                 break;
 
             case R.id.charts_vote_button:

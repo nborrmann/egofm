@@ -1,5 +1,6 @@
 package com.nilsbo.egofm.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -14,11 +15,13 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.nilsbo.egofm.Interfaces.SongListListener;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.adapters.ChartsAdapter;
 import com.nilsbo.egofm.networking.ChartsRequest;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.util.ChartItem;
+import com.nilsbo.egofm.util.FragmentUtils;
 
 import java.util.ArrayList;
 
@@ -39,6 +42,7 @@ public class ChartsFragment extends ListFragment implements Response.ErrorListen
     private View parentView;
     private State mState;
     private Button emptyBtn;
+    private SongListListener mCallback;
 
     private enum State {
         Loading,
@@ -56,16 +60,16 @@ public class ChartsFragment extends ListFragment implements Response.ErrorListen
         // Required empty public constructor
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallback = FragmentUtils.getParent(this, SongListListener.class);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new ChartsAdapter(songs, getActivity());
+        adapter = new ChartsAdapter(songs, getActivity(), mCallback);
         setListAdapter(adapter);
 
         parentView = getView();

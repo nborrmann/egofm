@@ -13,26 +13,26 @@ import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.activities.SongDetailActivity;
 
 
-public class PlaylistContainer extends Fragment implements SongListListener {
+public class ChartsContainer extends Fragment implements SongListListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.NewsContainer";
 
     private static final String SAVED_STATE_TWO_PANE = "savedStateTwoPane";
     private static final String SAVED_STATE_HIDDEN = "savedStateHidden";
 
     private SongDetailFragment songDetailFragment;
-    private PlaylistFragment playlistFragment;
+    private ChartsFragment playlistFragment;
     private FragmentManager childFragmentManager;
     private ViewGroup rootView;
 
     private boolean isTwoPane;
     private boolean isHidden;
 
-    public static PlaylistContainer newInstance() {
-        PlaylistContainer fragment = new PlaylistContainer();
+    public static ChartsContainer newInstance() {
+        ChartsContainer fragment = new ChartsContainer();
         return fragment;
     }
 
-    public PlaylistContainer() {
+    public ChartsContainer() {
         // Required empty public constructor
     }
 
@@ -48,7 +48,7 @@ public class PlaylistContainer extends Fragment implements SongListListener {
         childFragmentManager = getChildFragmentManager();
 
         if (savedInstanceState == null) {
-            playlistFragment = new PlaylistFragment();
+            playlistFragment = new ChartsFragment();
             childFragmentManager.beginTransaction().add(R.id.song_list_container, playlistFragment, "bla").commit();
 
             if (rootView.findViewById(R.id.song_detail_container) != null) {
@@ -63,7 +63,7 @@ public class PlaylistContainer extends Fragment implements SongListListener {
             isHidden = savedInstanceState.getBoolean(SAVED_STATE_HIDDEN);
             // this is necessary because the Fragment gets instantiated with empty constructor, if
             // it is recreated after onSaveInstanceState
-            playlistFragment = (PlaylistFragment) childFragmentManager.findFragmentById(R.id.song_list_container);
+            playlistFragment = (ChartsFragment) childFragmentManager.findFragmentById(R.id.song_list_container);
             songDetailFragment = (SongDetailFragment) childFragmentManager.findFragmentById(R.id.song_detail_container);
 
             if (isHidden && isTwoPane)

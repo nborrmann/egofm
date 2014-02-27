@@ -17,5 +17,7 @@
     <dimen name="song_twopane_right_padding">0dp</dimen>
     <dimen name="songlist_twopane_width">340dp</dimen>
 
+    <dimen name="chartlist_left_padding">0dp</dimen>
+
 
 </resources>
