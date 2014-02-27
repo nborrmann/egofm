@@ -21,6 +21,8 @@ import com.nilsbo.egofm.util.ChartItem;
 
 import java.util.ArrayList;
 
+import static com.nilsbo.egofm.util.FragmentUtils.logUIAction;
+
 /**
  * Created by Nils on 23.01.14.
  */
@@ -156,11 +158,6 @@ public class ChartsAdapter extends BaseAdapter implements View.OnClickListener, 
                 final String title = songs.get(pos).title;
                 final String artist = songs.get(pos).artist;
 
-                //TODO use callback to parent fragment
-//                Intent intent = new Intent(context, SongDetailActivity.class);
-//                intent.putExtra(SongDetailFragment.ARG_SONG_TITLE, title);
-//                intent.putExtra(SongDetailFragment.ARG_SONG_ARTIST, artist);
-//                context.startActivity(intent);
                 mCallback.onSongClicked(artist, title);
                 break;
 
@@ -170,6 +167,8 @@ public class ChartsAdapter extends BaseAdapter implements View.OnClickListener, 
                 song.votingState = ChartItem.State.InProgress;
                 notifyDataSetChanged();
                 new ChartsVoteRequester(song, this, pos);
+
+                logUIAction(context, "Chart Vote", String.format("%s - %s", song.artist, song.title));
                 break;
         }
     }

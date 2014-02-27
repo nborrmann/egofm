@@ -37,6 +37,8 @@ import org.jsoup.helper.StringUtil;
 
 import java.util.ArrayList;
 
+import static com.nilsbo.egofm.util.FragmentUtils.logUIAction;
+
 /**
  * Created by Nils on 15.02.14.
  */
@@ -154,6 +156,7 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
                 i.setData(Uri.parse(String.format(mContext.getString(R.string.lastfm_btn_url), mArtist)));
                 startActivity(i);
 
+                logUIAction(getActivity(), "Open Last.fm", mArtist + " - " + mTitle);
             }
         });
     }

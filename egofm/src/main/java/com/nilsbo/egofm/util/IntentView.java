@@ -33,6 +33,8 @@ import java.util.List;
 
 import hugo.weaving.DebugLog;
 
+import static com.nilsbo.egofm.util.FragmentUtils.logUIAction;
+
 public class IntentView extends LinearLayout implements View.OnClickListener, AdapterView.OnItemClickListener {
     private static final String TAG = "com.nilsbo.egofm.util.IntentView";
 
@@ -260,6 +262,8 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
                 intent.putExtra(SearchManager.QUERY, query);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
+
+                logUIAction(context, "Launch Intent", String.format("%s : %s", activityName, query));
             } catch (Exception e) {
                 Log.d(TAG, "error starting activity " + activityName, e);
             }

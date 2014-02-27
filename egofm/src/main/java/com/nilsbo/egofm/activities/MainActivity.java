@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -61,7 +60,6 @@ public class MainActivity extends EgofmActivity {
     }
 
     private void trackFragmentSelected(int position) {
-        Log.d(TAG, "fragment selected " + SCREEN_NAMES[position]);
         Tracker easyTracker = EasyTracker.getInstance(this);
 
         easyTracker.set(Fields.SCREEN_NAME, SCREEN_NAMES[position]);

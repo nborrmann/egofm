@@ -9,7 +9,8 @@
     <!--Enable automatic exception tracking-->
     <bool name="ga_reportUncaughtExceptions">true</bool>
 
-    <bool name="ga_debug">true</bool>
+    <!--<bool name="ga_debug">true</bool>-->
+    <!--<string name="ga_logLevel">verbose</string>-->
 
     <string name="com.nilsbo.egofm.activities.MainActivity">Main</string>
     <string name="com.nilsbo.egofm.activities.SettingsActivity">Settings</string>

@@ -5,6 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.TypedValue;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
+
 public class FragmentUtils {
     /**
      * @param frag              The Fragment whose parent is to be found
@@ -47,5 +50,13 @@ public class FragmentUtils {
     public static float clamp(float value, float max, float min) {
         return Math.min(Math.max(value, min), max);
     }
+
+    public static void logUIAction(Context context, String action, String label) {
+        EasyTracker easyTracker = EasyTracker.getInstance(context);
+        easyTracker.send(MapBuilder
+                .createEvent("UI Action", action, label, null)
+                .build());
+    }
+
 
 }

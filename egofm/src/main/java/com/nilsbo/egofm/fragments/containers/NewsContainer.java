@@ -15,6 +15,8 @@ import com.nilsbo.egofm.fragments.NewsItemFragment;
 import com.nilsbo.egofm.fragments.NewsListFragment;
 import com.nilsbo.egofm.util.NewsItem;
 
+import static com.nilsbo.egofm.util.FragmentUtils.logUIAction;
+
 
 public class NewsContainer extends Fragment implements NewsListListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.containers.NewsContainer";
@@ -82,6 +84,8 @@ public class NewsContainer extends Fragment implements NewsListListener {
 
     @Override
     public void onItemClicked(NewsItem item) {
+        logUIAction(getActivity(), "News clicked", item.link);
+
         if (isTwoPane) {
             newsItemFragment.setContent(item);
         } else {

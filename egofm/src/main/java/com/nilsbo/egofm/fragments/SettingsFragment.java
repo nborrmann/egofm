@@ -1,27 +1,21 @@
 package com.nilsbo.egofm.fragments;
 
 
-
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.nilsbo.egofm.R;
+
+import static com.nilsbo.egofm.util.FragmentUtils.logUIAction;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
-
+    private static final String TAG = "com.nilsbo.egofm.fragments.SettingsFragment";
 
     private ListPreference streamquality;
     private SharedPreferences sharedPreferences;
@@ -48,6 +42,12 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         displaySummaries();
+
+        if (s.equals("streamquality")) {
+            logUIAction(getActivity(), "Preference Streamquality set", sharedPreferences.getString(s, ""));
+        } else if (s.equals("metadata_interval")) {
+            logUIAction(getActivity(), "Preference Metadata Interval set", sharedPreferences.getString(s, ""));
+        }
     }
 
     private void displaySummaries() {

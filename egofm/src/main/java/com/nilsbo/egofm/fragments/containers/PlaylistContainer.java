@@ -14,6 +14,8 @@ import com.nilsbo.egofm.activities.SongDetailActivity;
 import com.nilsbo.egofm.fragments.PlaylistFragment;
 import com.nilsbo.egofm.fragments.SongDetailFragment;
 
+import static com.nilsbo.egofm.util.FragmentUtils.logUIAction;
+
 
 public class PlaylistContainer extends Fragment implements SongListListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.containers.PlaylistContainer";
@@ -89,6 +91,8 @@ public class PlaylistContainer extends Fragment implements SongListListener {
 
     @Override
     public void onSongClicked(String artist, String title) {
+        logUIAction(getActivity(), "Playlist clicked", String.format("%s - %s", artist, title));
+
         if (isTwoPane) {
             if (songDetailFragment.isHidden()) {
                 childFragmentManager.beginTransaction().show(songDetailFragment).commit();

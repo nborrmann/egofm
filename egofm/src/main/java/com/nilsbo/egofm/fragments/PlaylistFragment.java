@@ -30,6 +30,8 @@ import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static com.nilsbo.egofm.util.FragmentUtils.logUIAction;
+
 
 public class PlaylistFragment extends ListFragment implements Response.ErrorListener, Response.Listener<ArrayList<PlaylistItem>>, View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, AdapterView.OnItemClickListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.PlaylistFragment";
@@ -229,6 +231,8 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
             initDateTimeNow();
             setBtnText();
             reload();
+
+            logUIAction(getActivity(), "Playlist Now", String.format("%s %s", date, time));
         }
     }
 
@@ -246,6 +250,8 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
         this.minute = minute;
         setBtnText();
         reload();
+
+        logUIAction(getActivity(), "Playlist time set", String.format("%s %s", date, time));
     }
 
     @Override
@@ -255,6 +261,8 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
         this.day = day;
         setBtnText();
         reload();
+
+        logUIAction(getActivity(), "Playlist date set", String.format("%s %s", date, time));
     }
 
     private void setBtnText() {
@@ -272,7 +280,6 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-//        requestQueue.cancelAll(PLAYLIST_REQUEST);
         if (mState == State.Loading) mState = State.Empty;
 
         outState.putParcelableArrayList(SAVED_STATE_PLAYLIST_ARRAY, songs);

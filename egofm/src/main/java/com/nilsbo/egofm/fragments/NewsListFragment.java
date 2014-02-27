@@ -29,6 +29,8 @@ import com.nilsbo.egofm.util.NewsItem;
 
 import java.util.ArrayList;
 
+import static com.nilsbo.egofm.util.FragmentUtils.logUIAction;
+
 
 public class NewsListFragment extends Fragment implements AbsListView.OnScrollListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.NewsListFragment";
@@ -120,6 +122,7 @@ public class NewsListFragment extends Fragment implements AbsListView.OnScrollLi
             @Override
             public void onRefresh(PullToRefreshBase<GridView> refreshView) {
                 loadNews(0, new RefreshListener());
+                logUIAction(getActivity(), "Refresh News", null);
             }
         });
 
@@ -135,6 +138,8 @@ public class NewsListFragment extends Fragment implements AbsListView.OnScrollLi
 
     private void loadNews(int page, VolleyListener listener) {
         Log.d(TAG, "Loading news page " + page);
+        if (page != 0)
+            logUIAction(getActivity(), "Load news page", String.valueOf(page));
 
         showProgressBar();
         isLoading = true;
