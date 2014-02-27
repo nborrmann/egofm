@@ -9,9 +9,9 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.nilsbo.egofm.R;
-import com.nilsbo.egofm.fragments.ChartsContainer;
-import com.nilsbo.egofm.fragments.NewsContainer;
-import com.nilsbo.egofm.fragments.PlaylistContainer;
+import com.nilsbo.egofm.fragments.containers.ChartsContainer;
+import com.nilsbo.egofm.fragments.containers.NewsContainer;
+import com.nilsbo.egofm.fragments.containers.PlaylistContainer;
 
 import java.lang.reflect.Field;
 import java.util.Locale;

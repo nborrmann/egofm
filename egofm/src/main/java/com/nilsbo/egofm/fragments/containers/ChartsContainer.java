@@ -1,4 +1,4 @@
-package com.nilsbo.egofm.fragments;
+package com.nilsbo.egofm.fragments.containers;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,10 +11,12 @@ import android.view.ViewGroup;
 import com.nilsbo.egofm.Interfaces.SongListListener;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.activities.SongDetailActivity;
+import com.nilsbo.egofm.fragments.ChartsFragment;
+import com.nilsbo.egofm.fragments.SongDetailFragment;
 
 
 public class ChartsContainer extends Fragment implements SongListListener {
-    private static final String TAG = "com.nilsbo.egofm.fragments.NewsContainer";
+    private static final String TAG = "com.nilsbo.egofm.fragments.containers.ChartsContainer";
 
     private static final String SAVED_STATE_TWO_PANE = "savedStateTwoPane";
     private static final String SAVED_STATE_HIDDEN = "savedStateHidden";
