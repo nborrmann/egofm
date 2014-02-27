@@ -41,8 +41,7 @@ dependencies {
     compile 'com.android.support:support-v4:19.0.1'
     compile 'org.jsoup:jsoup:1.7.3'
     compile 'com.readystatesoftware.systembartint:systembartint:+'
-
     compile project('libs:pullToRefresh-library')
     compile project('libs:datetimepicker-library')
-    compile project('libs:volley')
+//    compile project('libs:volley')
 }
