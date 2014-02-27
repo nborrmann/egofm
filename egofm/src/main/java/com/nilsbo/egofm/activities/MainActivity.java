@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.nilsbo.egofm.Interfaces.MediaServiceInterface;
-import com.nilsbo.egofm.MediaService;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.adapters.SectionsPagerAdapter;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -17,11 +20,8 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 public class MainActivity extends EgofmActivity {
     private static final String TAG = "com.nilsbo.egofm.activities.MainActivity";
 
-    private MediaServiceInterface serviceCallback;
-    boolean mBound = false;
+    private static final String[] SCREEN_NAMES = {"NewsList", "Playlist", "egoFM 42"};
 
-    boolean mStarted = false;
-    private Intent mediaServiceIntent;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
@@ -31,12 +31,24 @@ public class MainActivity extends EgofmActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mediaServiceIntent = new Intent(this, MediaService.class);
-
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                trackFragmentSelected(position);
+            }
+        });
 
         PagerTitleStrip pagerTabStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
         pagerTabStrip.setTextSpacing(10);
@@ -48,6 +60,23 @@ public class MainActivity extends EgofmActivity {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
 
+    private void trackFragmentSelected(int position) {
+        Log.d(TAG, "fragment selected " + SCREEN_NAMES[position]);
+        Tracker easyTracker = EasyTracker.getInstance(this);
+
+        easyTracker.set(Fields.SCREEN_NAME, SCREEN_NAMES[position]);
+
+        easyTracker.send(MapBuilder
+                .createAppView()
+                .build()
+        );
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        trackFragmentSelected(mViewPager.getCurrentItem());
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

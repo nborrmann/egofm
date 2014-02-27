@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.nilsbo.egofm.Interfaces.EgofmActivityInterface;
 import com.nilsbo.egofm.Interfaces.MediaServiceInterface;
 import com.nilsbo.egofm.MediaService;
@@ -39,7 +40,9 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
 
 //        startService(mediaServiceIntent);
         bindService(mediaServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
+        EasyTracker.getInstance(this).activityStart(this);
     }
+
 
     @Override
     protected void onResume() {
@@ -60,6 +63,8 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
         if (serviceCallback != null && serviceCallback.getPlaybackState() == MediaService.State.Stopped) {
             stopService(mediaServiceIntent);
         }
+
+        EasyTracker.getInstance(this).activityStop(this);  // Add this method.
     }
 
     @Override

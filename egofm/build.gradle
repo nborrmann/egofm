@@ -44,4 +44,5 @@ dependencies {
     compile project('libs:pullToRefresh-library')
     compile project('libs:datetimepicker-library')
     compile project('libs:volley')
+    compile files('libs/GoogleAnalyticsServicesAndroid/libGoogleAnalyticsServices.jar')
 }
