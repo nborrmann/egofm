@@ -8,11 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nilsbo.egofm.Interfaces.ChartVoteListener;
+import com.nilsbo.egofm.Interfaces.SongListListener;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.networking.ChartsVoteRequester;
 import com.nilsbo.egofm.util.ChartItem;
@@ -30,11 +32,13 @@ public class ChartsAdapter extends BaseAdapter implements View.OnClickListener, 
 
     private ArrayList<ChartItem> songs = new ArrayList<ChartItem>();
     private final Context context;
+    private final SongListListener mCallback;
     private final LayoutInflater mflater;
 
-    public ChartsAdapter(ArrayList<ChartItem> songs, Context context) {
+    public ChartsAdapter(ArrayList<ChartItem> songs, Context context, SongListListener mCallback) {
         this.songs = songs;
         this.context = context;
+        this.mCallback = mCallback;
         mflater = LayoutInflater.from(context);
         iconFav = context.getResources().getDrawable(R.drawable.icon_fav);
         iconNotFav = context.getResources().getDrawable(R.drawable.icon_unfav);
@@ -78,6 +82,8 @@ public class ChartsAdapter extends BaseAdapter implements View.OnClickListener, 
             holder.title = (TextView) convertView.findViewById(R.id.charts_title);
             holder.progressBar = (ProgressBar) convertView.findViewById(R.id.charts_vote_progress);
             holder.positionDelta = (ImageView) convertView.findViewById(R.id.charts_position_delta);
+            holder.chartsContainer = (LinearLayout) convertView.findViewById(R.id.charts_title_container);
+            holder.chartsContainer.setOnClickListener(this);
 
             holder.voteButton = (ImageButton) convertView.findViewById(R.id.charts_vote_button);
             holder.voteButton.setOnClickListener(this);
@@ -88,7 +94,9 @@ public class ChartsAdapter extends BaseAdapter implements View.OnClickListener, 
         holder.position.setText(song.position);
         holder.artist.setText(song.artist);
         holder.title.setText(song.title);
+
         holder.voteButton.setTag(position);
+        holder.chartsContainer.setTag(position);
 
         switch (song.positionDelta) {
             case Up:
@@ -143,11 +151,27 @@ public class ChartsAdapter extends BaseAdapter implements View.OnClickListener, 
     @Override
     public void onClick(View v) {
         int pos = (Integer) v.getTag();
-        ChartItem song = songs.get(pos);
+        switch (v.getId()) {
+            case R.id.charts_title_container:
+                final String title = songs.get(pos).title;
+                final String artist = songs.get(pos).artist;
 
-        song.votingState = ChartItem.State.InProgress;
-        notifyDataSetChanged();
-        new ChartsVoteRequester(song, this, pos);
+                //TODO use callback to parent fragment
+//                Intent intent = new Intent(context, SongDetailActivity.class);
+//                intent.putExtra(SongDetailFragment.ARG_SONG_TITLE, title);
+//                intent.putExtra(SongDetailFragment.ARG_SONG_ARTIST, artist);
+//                context.startActivity(intent);
+                mCallback.onSongClicked(artist, title);
+                break;
+
+            case R.id.charts_vote_button:
+                ChartItem song = songs.get(pos);
+
+                song.votingState = ChartItem.State.InProgress;
+                notifyDataSetChanged();
+                new ChartsVoteRequester(song, this, pos);
+                break;
+        }
     }
 
     @Override
@@ -177,5 +201,6 @@ public class ChartsAdapter extends BaseAdapter implements View.OnClickListener, 
         public ImageButton voteButton;
         public ProgressBar progressBar;
         public ImageView positionDelta;
+        public LinearLayout chartsContainer;
     }
 }

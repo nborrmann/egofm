@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/news_twopane_left_padding"
+    android:paddingRight="@dimen/song_twopane_right_margin">
+
+    <FrameLayout
+        android:id="@+id/song_list_container"
+        android:layout_width="@dimen/songlist_twopane_width"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/song_detail_container"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>

@@ -24,9 +24,6 @@ public class NewsItemActivity extends EgofmActivity {
         setContentView(R.layout.activity_news_item);
 
         if (savedInstanceState == null) {
-            Bundle arguments = new Bundle();
-            arguments.putParcelable(NewsItemFragment.ARG_NEWS_ITEM, getIntent().getParcelableExtra(NewsItemFragment.ARG_NEWS_ITEM));
-
             NewsItemFragment newsItemFragment;
             if (getResources().getBoolean(R.bool.use_fancy_news_item)) {
                 newsItemFragment = new NewsItemFancyFragment();
@@ -34,7 +31,11 @@ public class NewsItemActivity extends EgofmActivity {
                 newsItemFragment = new NewsItemFragment();
             }
 
-            newsItemFragment.setArguments(arguments);
+            if (getIntent() != null && getIntent().getParcelableExtra(NewsItemFragment.ARG_NEWS_ITEM) != null) {
+                Bundle arguments = new Bundle();
+                arguments.putParcelable(NewsItemFragment.ARG_NEWS_ITEM, getIntent().getParcelableExtra(NewsItemFragment.ARG_NEWS_ITEM));
+                newsItemFragment.setArguments(arguments);
+            }
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, newsItemFragment)

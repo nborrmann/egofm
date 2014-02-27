@@ -1,4 +1,4 @@
-package com.nilsbo.egofm.fragments;
+package com.nilsbo.egofm.fragments.containers;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 import com.nilsbo.egofm.Interfaces.NewsListListener;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.activities.NewsItemActivity;
+import com.nilsbo.egofm.fragments.NewsItemFragment;
+import com.nilsbo.egofm.fragments.NewsListFragment;
 import com.nilsbo.egofm.util.NewsItem;
 
 
 public class NewsContainer extends Fragment implements NewsListListener {
-    private static final String TAG = "com.nilsbo.egofm.fragments.NewsContainer";
+    private static final String TAG = "com.nilsbo.egofm.fragments.containers.NewsContainer";
 
     private static final String SAVED_STATE_TWO_PANE = "savedStateTwoPane";
 
@@ -48,7 +50,6 @@ public class NewsContainer extends Fragment implements NewsListListener {
 
         if (savedInstanceState == null) {
             newsListFragment = new NewsListFragment();
-//            newsListFragment.registerCallback(this);
             childFragmentManager.beginTransaction().add(R.id.news_list_container, newsListFragment, "bla").commit();
 
             if (rootView.findViewById(R.id.news_item_container) != null) {
@@ -61,7 +62,6 @@ public class NewsContainer extends Fragment implements NewsListListener {
             // this is necessary because the Fragment gets instantiated with empty constructor, if
             // it is recreated after onSaveInstanceState
             newsListFragment = ((NewsListFragment) childFragmentManager.findFragmentById(R.id.news_list_container));
-//            newsListFragment.registerCallback(this);
             newsItemFragment = (NewsItemFragment) childFragmentManager.findFragmentById(R.id.news_item_container);
 
             isTwoPane = savedInstanceState.getBoolean(SAVED_STATE_TWO_PANE);
@@ -71,7 +71,7 @@ public class NewsContainer extends Fragment implements NewsListListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = container;
-        return inflater.inflate(R.layout.fragment_news_container, container, false);
+        return inflater.inflate(R.layout.container_fragment_news, container, false);
     }
 
     @Override

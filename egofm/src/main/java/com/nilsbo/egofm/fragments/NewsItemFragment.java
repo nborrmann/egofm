@@ -61,7 +61,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mInflater = inflater;
-        rootView = inflater.inflate(R.layout.fragment_news_item, container, false);
+        rootView = inflater.inflate(R.layout.fragment_news_item_fancy, container, false);
         return rootView;
     }
 

@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nilsbo.egofm.activities.SongDetailActivity$PlaceholderFragment"
+    android:orientation="horizontal"
+    android:fitsSystemWindows="true"
+    android:layout_marginLeft="@dimen/song_twopane_left_padding"
+    android:layout_marginRight="@dimen/song_twopane_right_padding"
+
+    >
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:clipToPadding="false"
+        android:scrollbars="none"
+
+        >
+
+        <LinearLayout
+            android:id="@+id/song_details_header_container"
+            android:layout_width="@dimen/song_details_image_width"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/song_detail_artist_image" />
+
+            <com.nilsbo.egofm.util.IntentView
+                android:id="@+id/song_details_intent_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="#e6e6e6" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:clipToPadding="false"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/song_detail_info" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

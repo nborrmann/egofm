@@ -1,25 +1,25 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/background_light_grey"
-    >
+    android:background="@color/background_light_grey">
 
-    <com.nilsbo.egofm.widgets.CustomListPreference
-        android:title="@string/prefs_streamquality_title"
-        android:summary="@string/prefs_streamquality_summary"
-        android:key="streamquality"
-        android:defaultValue="wifihigh"
-        android:entries="@array/quality_entries"
-        android:entryValues="@array/quality_values" />
+    <PreferenceCategory android:title="@string/prefs_general_category">
 
-    <com.nilsbo.egofm.widgets.CustomListPreference
-        android:title="@string/prefs_metadata"
-        android:key="metadata_interval"
-        android:defaultValue="20"
-        android:entries="@array/metadata_entries"
-        android:entryValues="@array/metadata_values" />
+        <com.nilsbo.egofm.widgets.CustomListPreference
+            android:title="@string/prefs_streamquality_title"
+            android:summary="@string/prefs_streamquality_summary"
+            android:key="streamquality"
+            android:defaultValue="wifihigh"
+            android:entries="@array/quality_entries"
+            android:entryValues="@array/quality_values" />
 
-    <PreferenceCategory
-        android:title="@string/prefs_about"
-        android:key="pref_key_storage_settings">
+        <com.nilsbo.egofm.widgets.CustomListPreference
+            android:title="@string/prefs_metadata"
+            android:key="metadata_interval"
+            android:defaultValue="20"
+            android:entries="@array/metadata_entries"
+            android:entryValues="@array/metadata_values" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/prefs_about">
 
         <Preference
             android:title="@string/prefs_playstore"
@@ -37,8 +37,8 @@
                 android:data="mailto:n.borrmann@googlemail.com" />
         </Preference>
 
-        <Preference android:title="@string/licenses_title" >
-            <intent android:action="com.nilsbo.egofm.LicenseActivity"/>
+        <Preference android:title="@string/licenses_title">
+            <intent android:action="com.nilsbo.egofm.LicenseActivity" />
         </Preference>
 
         <com.nilsbo.egofm.widgets.CustomTextPreference

@@ -39,23 +39,15 @@ public class MainActivity extends EgofmActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         PagerTitleStrip pagerTabStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
-        pagerTabStrip.setTextSpacing(200);
+        pagerTabStrip.setTextSpacing(10);
 
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setStatusBarTintResource(R.color.egofm_grey);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
-//        new Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH, Uri.parse("com.google.android.music.VoiceActionsActivity"));
-//        Intent intent = new Intent();
-//        intent.setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
-//        intent.putExtra(SearchManager.QUERY, "It's my life");
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-////        intent.setPackage("com.google.android.music.VoiceActionsActivity");
-//        startActivity(intent);
-
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

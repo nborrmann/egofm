@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import com.nilsbo.egofm.Interfaces.EgofmActivityInterface;
 import com.nilsbo.egofm.Interfaces.MediaServiceInterface;
@@ -24,6 +25,10 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (android.os.Build.VERSION.SDK_INT >= 19)
+            // set this programmatically so the statusbar in the loading screen isn't white
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
         super.onCreate(savedInstanceState);
         mediaServiceIntent = new Intent(this, MediaService.class);
     }

@@ -2,7 +2,6 @@ package com.nilsbo.egofm.fragments;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,9 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.widgets.ObservableScrollView;
+
+import static com.nilsbo.egofm.util.FragmentUtils.clamp;
+import static com.nilsbo.egofm.util.FragmentUtils.getActionBarHeight;
 
 
 /**
@@ -38,8 +40,8 @@ public class NewsItemFancyFragment extends NewsItemFragment implements Response.
     protected void initUI() {
         super.initUI();
 
-        mActionBarHeight = getActionBarHeight();
-        customHeaderView = (TextView) mInflater.inflate(R.layout.fragment_news_item_title, null, false);
+        mActionBarHeight = getActionBarHeight(getActivity());
+        customHeaderView = (TextView) mInflater.inflate(R.layout.news_item_fancy_custom_actionbar, null, false);
 
         mActionBar.setCustomView(customHeaderView);
         mActionBar.setDisplayShowCustomEnabled(true);
@@ -85,26 +87,5 @@ public class NewsItemFancyFragment extends NewsItemFragment implements Response.
         mHeader.setScrollY((int) (interpolation * mHeaderActionBarDiff / 2.0f));
         mHeaderImage.setColorFilter(clamp((int) (interpolation * MAX_HEADER_TRANSPARENCY), MAX_HEADER_TRANSPARENCY, 0) << 24, PorterDuff.Mode.SRC_ATOP);
         customHeaderView.setAlpha(5 * interpolation - 4);
-    }
-
-    public int getActionBarHeight() {
-        TypedValue typedValue = new TypedValue();
-        getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true);
-        int actionBarHeight = TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics());
-
-        if (android.os.Build.VERSION.SDK_INT >= 19) {
-            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-            if (resourceId > 0)
-                actionBarHeight += getResources().getDimensionPixelSize(resourceId);
-        }
-        return actionBarHeight;
-    }
-
-    public static int clamp(int value, int max, int min) {
-        return Math.min(Math.max(value, min), max);
-    }
-
-    public static float clamp(float value, float max, float min) {
-        return Math.min(Math.max(value, min), max);
     }
 }

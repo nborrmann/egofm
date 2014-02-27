@@ -65,6 +65,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nilsbo.egofm.activities.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".activities.SongDetailActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="com.nilsbo.egofm.activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.nilsbo.egofm.activities.MainActivity" />
+        </activity>
         <!--android:theme="@style/Theme.Egofm.TransparentActionBar"-->
 
         <receiver android:name=".music.MusicIntentReceiver">

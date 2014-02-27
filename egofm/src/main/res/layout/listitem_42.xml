@@ -11,7 +11,6 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:background="@color/background_light_grey"
         android:gravity="center_vertical"
         android:minHeight="56dp">
 
@@ -47,15 +46,18 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/charts_title_container"
             android:orientation="vertical"
             android:paddingLeft="8dp"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:paddingTop="4dp"
-            android:paddingBottom="4dp">
+            android:paddingBottom="4dp"
+            android:background="@drawable/egofm_list_selector_holo_light"
+            android:gravity="center_vertical">
 
-            <TextView
+        <TextView
                 tools:text="HELP ME LOSE MY MIND "
                 android:ellipsize="marquee"
                 android:id="@+id/charts_title"

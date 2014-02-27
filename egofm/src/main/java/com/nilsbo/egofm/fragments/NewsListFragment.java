@@ -92,7 +92,7 @@ public class NewsListFragment extends Fragment implements AbsListView.OnScrollLi
         parentView = getView();
 
         gridView = (PullToRefreshGridView) getView().findViewById(R.id.newslist);
-        LinearLayout emptyView = (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_news_empty, null, false);
+        LinearLayout emptyView = (LinearLayout) getLayoutInflater(savedInstanceState).inflate(R.layout.news_item_empty_view, null, false);
         emptyProgress = (ProgressBar) emptyView.findViewById(R.id.empty_news_progress);
         emptyText = (TextView) emptyView.findViewById(R.id.empty_news_text);
 
@@ -243,14 +243,14 @@ public class NewsListFragment extends Fragment implements AbsListView.OnScrollLi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_news, container, false);
+        return inflater.inflate(R.layout.fragment_news_list, container, false);
     }
 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
         gridView.onRefreshComplete(); // just to be sure
-        requestQueue.cancelAll(NEWS_LIST_REQUEST);
+//        requestQueue.cancelAll(NEWS_LIST_REQUEST);
 
         outState.putParcelableArrayList(SAVED_STATE_NEWS_ARRAY, news);
         outState.putInt(SAVED_STATE_PAGE, page);
@@ -258,8 +258,8 @@ public class NewsListFragment extends Fragment implements AbsListView.OnScrollLi
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroyView() {
+        super.onDestroyView();
         requestQueue.cancelAll(NEWS_LIST_REQUEST);
     }
 }

@@ -6,7 +6,9 @@
     For more on layout aliases, see:
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
-    <item type="layout" name="fragment_news_item">@layout/fragment_news_item_twopane</item>
-    <item type="layout" name="fragment_news_container">@layout/fragment_news_container_twopane
+    <item type="layout" name="container_fragment_news">@layout/container_fragment_news_twopane
     </item>
+    <item type="layout" name="container_fragment_song">@layout/container_fragment_song_twopane
+    </item>
+    <item type="layout" name="fragment_song_detail_fancy">@layout/fragment_song_detail</item>
 </resources>
