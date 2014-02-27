@@ -24,6 +24,10 @@ import com.nilsbo.egofm.music.EgofmRemoteManager;
 import com.nilsbo.egofm.music.MusicIntentReceiver;
 
 import java.io.IOException;
+import java.util.Date;
+
+import static com.nilsbo.egofm.util.FragmentUtils.logStreamStart;
+import static com.nilsbo.egofm.util.FragmentUtils.logStreamStop;
 
 
 public class MediaService extends Service implements MediaServiceInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
@@ -49,6 +53,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     private int connectionTries = 0;
     private EgofmMusicNetworking mMusicNetworkingHelper;
     private MusicIntentReceiver mAudioBecomingNoisyReceiver;
+    private Date startTime;
 
     public enum State {
         Stopped,    // media player is stopped and not prepared to play
@@ -94,20 +99,46 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
         return START_STICKY;
     }
 
+    private void processStartRequest() {
+        logStreamStart(getApplicationContext(), "Actionbar");
+        startPlayback();
+    }
+
+    private void processStopRequest() {
+        logStop("Actionbar");
+        stopPlayback();
+    }
+
+    private void processPauseRequest() {
+        logStop("AudioBecomingNoisy");
+        pausePlayback();
+    }
+
     // PlayPause is coming from the lockscreen, hence we don't want to give up AudioFocus, so the widget doesn't disappear
     private void processPlayPauseRequest() {
-        if (mState == State.Stopped) processStartRequest();
-        else processPauseRequest();
+        if (mState == State.Stopped) {
+            logStreamStart(getApplicationContext(), "Lockscreen");
+            startPlayback();
+        } else {
+            logStop("Lockscreen");
+            pausePlayback();
+        }
 
     }
 
     // StartStop is coming from the notification. Start and Stop as usual, but don't close the service.
     private void processStartStopRequest() {
-        if (mState == State.Stopped) processStartRequest();
-        else processStopRequest();
+        if (mState == State.Stopped) {
+            logStreamStart(getApplicationContext(), "Notification");
+            startPlayback();
+        } else {
+            logStop("Notification Stop");
+            stopPlayback();
+        }
     }
 
     private void processCloseRequest() {
+        logStop("Notification Close");
         cleanup();
         giveUpAudioFocus();
         mRemoteManager.cancelAll();
@@ -115,18 +146,18 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
         stopSelf();
     }
 
-    private void processPauseRequest() {
+    private void pausePlayback() {
         cleanup();
         mRemoteManager.displayDisconnectedNotification(mState);
     }
 
-    private void processStopRequest() {
+    private void stopPlayback() {
         cleanup();
         giveUpAudioFocus();
         mRemoteManager.displayDisconnectedNotification(mState);
     }
 
-    private void processStartRequest() {
+    private void startPlayback() {
         connectionTries = 0;
         mRemoteManager.startService(this);
         tryConnect();
@@ -136,13 +167,16 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     public void onGainedAudioFocus() {
         if (mState == State.Preparing || mState == State.Playing)
             mMediaPlayer.setVolume(1.0f, 1.0f);
-        else
-            processStartRequest();
+        else {
+            logStreamStart(getApplicationContext(), "Gained Focus");
+            startPlayback();
+        }
     }
 
     @Override
     public void onLostAudioFocus(boolean canDuck) {
         if (!canDuck) {
+            logStop("LostAudioFocus");
             cleanup();
             mRemoteManager.displayDefaultNotification(mState);
         } else {
@@ -169,6 +203,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     }
 
     private void connectFailed() {
+        logStop("Disconnect");
         cleanup();
         if (isBound) {
             Toast toast = Toast.makeText(this, getString(R.string.notification_connection_error), Toast.LENGTH_SHORT);
@@ -205,6 +240,8 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
         mWifiLock.acquire();
 
         mState = State.Preparing;
+
+        startTime = new Date();
     }
 
     private void handleError() {
@@ -308,6 +345,12 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
         cleanup();
         giveUpAudioFocus();
         super.onDestroy();
+    }
+
+    public void logStop(String label) {
+        int timeDiff = (int) (new Date().getTime() - startTime.getTime()) / 1000;
+        Log.d(TAG, "logStop " + timeDiff);
+        logStreamStop(getApplicationContext(), label, timeDiff);
     }
 }
 

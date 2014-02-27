@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.TypedValue;
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 
 public class FragmentUtils {
@@ -58,5 +59,21 @@ public class FragmentUtils {
                 .build());
     }
 
+    public static void logStreamStop(Context context, String label, int duration) {
+        EasyTracker easyTracker = EasyTracker.getInstance(context);
+        String metricValue = String.valueOf(duration);
+        easyTracker.set(Fields.customMetric(1), metricValue);
 
+        easyTracker.send(MapBuilder
+                .createEvent("Music Playback", "Stop", label, null)
+                .build());
+    }
+
+    public static void logStreamStart(Context context, String label) {
+        EasyTracker easyTracker = EasyTracker.getInstance(context);
+
+        easyTracker.send(MapBuilder
+                .createEvent("Music Playback", "Start", label, null)
+                .build());
+    }
 }

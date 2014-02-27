@@ -7,7 +7,6 @@ import com.nilsbo.egofm.BuildConfig;
 
 public class App extends Application {
     private static final String TAG = "com.nilsbo.egofm.volley.App";
-    private static final boolean DEBUG = true;
 
     public void onCreate() {
         super.onCreate();
