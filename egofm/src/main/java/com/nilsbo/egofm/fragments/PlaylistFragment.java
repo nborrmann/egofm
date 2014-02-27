@@ -234,17 +234,10 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(TAG, "onItemClick");
         final String title = songs.get(position).title;
         final String artist = songs.get(position).artist;
 
-        //TODO use callback to parent fragment
-//        Intent intent = new Intent(getActivity(), SongDetailActivity.class);
-//        intent.putExtra(SongDetailFragment.ARG_SONG_TITLE, title);
-//        intent.putExtra(SongDetailFragment.ARG_SONG_ARTIST, artist);
-//        getActivity().startActivity(intent);
         mCallback.onSongClicked(artist, title);
-
     }
 
     @Override
@@ -279,7 +272,7 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        requestQueue.cancelAll(PLAYLIST_REQUEST);
+//        requestQueue.cancelAll(PLAYLIST_REQUEST);
         if (mState == State.Loading) mState = State.Empty;
 
         outState.putParcelableArrayList(SAVED_STATE_PLAYLIST_ARRAY, songs);
@@ -288,8 +281,8 @@ public class PlaylistFragment extends ListFragment implements Response.ErrorList
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroyView() {
+        super.onDestroyView();
         requestQueue.cancelAll(PLAYLIST_REQUEST);
     }
 }

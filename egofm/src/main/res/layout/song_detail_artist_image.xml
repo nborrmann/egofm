@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/song_details_header_container"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <!--<ImageView-->
+    <com.nilsbo.egofm.widgets.ResizableImageView
+        android:src="@drawable/artist_placeholder"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        tools:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:id="@+id/song_details_artist_image"
+        android:layout_gravity="center_horizontal" />
+
+    <LinearLayout
+        android:id="@+id/song_details_title_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/song_details_artist_image"
+        android:background="#AA000000"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+
+        >
+
+        <TextView
+            android:id="@+id/song_details_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="blabla"
+            style="@style/news_title" />
+
+        <TextView
+            android:id="@+id/song_details_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="blabla"
+            style="@style/news_subtitle" />
+
+    </LinearLayout>
+
+</RelativeLayout>
+
+    

@@ -157,7 +157,7 @@ public class ChartsFragment extends ListFragment implements Response.ErrorListen
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        requestQueue.cancelAll(CHARTS_REQUEST);
+//        requestQueue.cancelAll(CHARTS_REQUEST);
         if (mState == State.Loading) mState = State.Empty;
 
         outState.putParcelableArrayList(SAVED_STATE_CHARTS_ARRAY, songs);
@@ -165,8 +165,8 @@ public class ChartsFragment extends ListFragment implements Response.ErrorListen
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroyView() {
+        super.onDestroyView();
         requestQueue.cancelAll(CHARTS_REQUEST);
     }
 }

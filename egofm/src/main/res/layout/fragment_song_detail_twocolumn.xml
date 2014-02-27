@@ -8,7 +8,6 @@
     android:layout_marginLeft="@dimen/song_twopane_left_padding"
     android:layout_marginRight="@dimen/song_twopane_right_padding"
 
-
     >
 
     <ScrollView
@@ -21,52 +20,15 @@
 
         >
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/song_details_header_container"
             android:layout_width="@dimen/song_details_image_width"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-
-            <com.nilsbo.egofm.widgets.ResizableImageView
-                android:src="@drawable/artist_placeholder"
-                android:layout_width="@dimen/song_details_image_width"
-                android:layout_height="wrap_content"
-                tools:layout_height="200dp"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                android:id="@+id/song_details_artist_image"
-                android:layout_gravity="center_horizontal" />
-
-            <LinearLayout
-                android:id="@+id/song_details_title_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/song_details_artist_image"
-                android:background="#AA000000"
-                android:padding="8dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-
-                >
-
-                <TextView
-                    android:id="@+id/song_details_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="blabla"
-                    style="@style/news_title" />
-
-                <TextView
-                    android:id="@+id/song_details_artist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="blabla"
-                    style="@style/news_subtitle" />
-
-            </LinearLayout>
+            <include layout="@layout/song_detail_artist_image" />
 
             <com.nilsbo.egofm.util.IntentView
-                android:layout_below="@id/song_details_artist_image"
                 android:id="@+id/song_details_intent_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,7 +36,7 @@
                 android:background="#e6e6e6" />
 
 
-        </RelativeLayout>
+        </LinearLayout>
     </ScrollView>
 
     <ScrollView
@@ -90,117 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/song_details_album_label"
-                android:text="ALBUM"
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:textColor="@color/egofm_green"
-                android:background="@drawable/list_section_divider_egofm"
-                android:layout_marginBottom="1dp" />
-
-            <LinearLayout
-                android:id="@+id/song_details_album_container"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/egofm_list_selector_holo_light"
-                android:clickable="true">
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/song_details_album_image"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:scaleType="centerCrop" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center_vertical"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp">
-
-                    <TextView
-                        android:id="@+id/song_details_album_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        tools:text="Fancy Footwork"
-                        style="@android:style/TextAppearance.DeviceDefault.Medium" />
-
-                    <TextView
-                        android:id="@+id/song_details_album_subtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-light"
-
-                        android:textColor="#888888"
-                        tools:text="track #3 duration 3m54s"
-                        style="@android:style/TextAppearance.DeviceDefault.Small" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/song_details_artist_label"
-                android:text="@string/song_details_about_label_default"
-                android:singleLine="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:textColor="@color/egofm_green"
-                android:background="@drawable/list_section_divider_egofm"
-                android:layout_marginBottom="1dp"
-
-                />
-
-
-            <TextView
-                android:id="@+id/song_details_artist_desc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="8dp"
-                android:textAlignment="textEnd"
-                style="@android:style/TextAppearance.DeviceDefault.Small"
-                android:textSize="15sp"
-                android:lineSpacingExtra="1dp" />
-
-            <TextView
-                android:id="@+id/song_details_tags_label"
-                android:text="TAGS"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:textColor="@color/egofm_green"
-                android:background="@drawable/list_section_divider_egofm"
-                android:layout_marginBottom="1dp"
-
-                />
-
-            <TextView
-                android:id="@+id/song_details_tags"
-                style="@android:style/TextAppearance.DeviceDefault.Medium"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="4dp"
-                android:lineSpacingExtra="6dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light" />
+            <include layout="@layout/song_detail_info" />
 
         </LinearLayout>
     </ScrollView>

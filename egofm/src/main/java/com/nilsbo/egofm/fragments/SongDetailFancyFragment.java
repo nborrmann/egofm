@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.nilsbo.egofm.R;
@@ -47,6 +48,7 @@ public class SongDetailFancyFragment extends SongDetailFragment implements Obser
 
         actionbarBg = rootView.findViewById(R.id.song_details_actionbar_bg);
         scrollView = (ObservableScrollView) rootView.findViewById(R.id.song_details_scrollview);
+        headerContainer = (RelativeLayout) rootView.findViewById(R.id.song_details_header_container);
 
         scrollView.setScrollViewListener(this);
         scrollView.setFocusable(false);
@@ -115,6 +117,4 @@ public class SongDetailFancyFragment extends SongDetailFragment implements Obser
         setScrollViewPadding();
         scrollView.scrollBy(0, imageHeight - oldHeight);
     }
-
-
 }

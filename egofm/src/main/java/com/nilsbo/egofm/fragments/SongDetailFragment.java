@@ -140,7 +140,6 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
         tagsText = (TextView) rootView.findViewById(R.id.song_details_tags);
         tagsLabel = (TextView) rootView.findViewById(R.id.song_details_tags_label);
         titleContainer = (LinearLayout) rootView.findViewById(R.id.song_details_title_container);
-        headerContainer = (RelativeLayout) rootView.findViewById(R.id.song_details_header_container);
         intentView = (IntentView) rootView.findViewById(R.id.song_details_intent_container);
     }
 

@@ -250,7 +250,7 @@ public class NewsListFragment extends Fragment implements AbsListView.OnScrollLi
         super.onSaveInstanceState(outState);
 
         gridView.onRefreshComplete(); // just to be sure
-        requestQueue.cancelAll(NEWS_LIST_REQUEST);
+//        requestQueue.cancelAll(NEWS_LIST_REQUEST);
 
         outState.putParcelableArrayList(SAVED_STATE_NEWS_ARRAY, news);
         outState.putInt(SAVED_STATE_PAGE, page);
@@ -258,8 +258,8 @@ public class NewsListFragment extends Fragment implements AbsListView.OnScrollLi
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroyView() {
+        super.onDestroyView();
         requestQueue.cancelAll(NEWS_LIST_REQUEST);
     }
 }

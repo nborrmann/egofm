@@ -75,6 +75,9 @@
     <string name="song_details_album_subtitle_track">track #%1$d</string>
     <string name="song_details_about_label">About %1$s</string>
     <string name="song_details_about_label_default">ABOUT</string>
+    <string name="prefs_general_category">General</string>
+    <string name="song_details_tags_header">TAGS</string>
+    <string name="song_details_album_header">ALBUM</string>
 
 
 </resources>
