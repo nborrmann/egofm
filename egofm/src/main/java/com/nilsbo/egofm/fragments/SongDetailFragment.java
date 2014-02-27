@@ -1,6 +1,8 @@
 package com.nilsbo.egofm.fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -69,6 +72,7 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
     protected View actionbarBg;
     protected LinearLayout titleContainer;
     private IntentView intentView;
+    private ImageView lastfmBtn;
 
 
     public SongDetailFragment() {
@@ -141,6 +145,17 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
         tagsLabel = (TextView) rootView.findViewById(R.id.song_details_tags_label);
         titleContainer = (LinearLayout) rootView.findViewById(R.id.song_details_title_container);
         intentView = (IntentView) rootView.findViewById(R.id.song_details_intent_container);
+        lastfmBtn = (ImageView) rootView.findViewById(R.id.song_details_lastfm_btn);
+
+        lastfmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(String.format(mContext.getString(R.string.lastfm_btn_url), mArtist)));
+                startActivity(i);
+
+            }
+        });
     }
 
     private void setDefaultUI() {
@@ -182,7 +197,7 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
                 JSONArray images = response.getJSONObject("artist").getJSONArray("image");
                 int maxIndex = images.length() - 1;
                 String imgUrl = images.getJSONObject(maxIndex).getString("#text");
-                if (imgUrl.contains("Keep+stats+clean")) {
+                if (imgUrl.contains("Keep+stats+clean") || imgUrl.contains("Wrong+Tag")) {
                     throw new JSONException("keep stats clean image returned");
                 }
                 loadArtistImage(imgUrl);

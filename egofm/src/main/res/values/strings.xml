@@ -78,6 +78,7 @@
     <string name="prefs_general_category">General</string>
     <string name="song_details_tags_header">TAGS</string>
     <string name="song_details_album_header">ALBUM</string>
+    <string name="lastfm_btn_url">http://www.lastfm.de/music/%1$s</string>
 
 
 </resources>

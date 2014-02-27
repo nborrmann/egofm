@@ -38,6 +38,7 @@
 
             <include layout="@layout/song_detail_info" />
 
+
         </LinearLayout>
     </com.nilsbo.egofm.widgets.ObservableScrollView>
 

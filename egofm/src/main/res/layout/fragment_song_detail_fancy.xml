@@ -14,7 +14,7 @@
         android:id="@+id/song_details_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:paddingTop="200dp"
+        tools:paddingTop="100dp"
         android:paddingBottom="12dp"
         android:clipToPadding="false"
         android:orientation="vertical"
