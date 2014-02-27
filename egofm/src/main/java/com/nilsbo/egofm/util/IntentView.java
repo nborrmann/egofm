@@ -54,7 +54,6 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
 
-
         setShowDividers(SHOW_DIVIDER_MIDDLE);
         setDividerPadding(context.getResources().getDimensionPixelSize(R.dimen.intent_view_divider_padding));
         setOrientation(HORIZONTAL);
@@ -102,9 +101,9 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
             SongIntentPopupAdapter adapter = new SongIntentPopupAdapter(mDisplayResolveInfos);
             intentOverflowList.setAdapter(adapter);
             intentOverflowList.setOnItemClickListener(this);
-            intentOverflowList.setDropDownGravity(Gravity.END);
 
             if (android.os.Build.VERSION.SDK_INT >= 19) {
+                intentOverflowList.setDropDownGravity(Gravity.BOTTOM);
                 OnTouchListener dragListener = intentOverflowList.createDragToOpenListener(intentButtons[3]);
                 intentButtons[NUMBER_OF_BUTTONS].setOnTouchListener(dragListener);
             }
