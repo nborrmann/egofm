@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +70,6 @@ public class SongDetailFancyFragment extends SongDetailFragment implements Obser
                                        int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 // if the manual measuring failed (for example in landscape mode), correct it by posting a runnable.
                 if (mCurrentHeaderHeight != bottom - top) {
-                    Log.d(TAG, "oldHeaderHeight " + mCurrentHeaderHeight + "; new height: " + (bottom - top));
                     mCurrentHeaderHeight = bottom - top;
                     scrollView.post(new Runnable() {
                         @Override

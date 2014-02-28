@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <!--Replace placeholder ID with your tracking ID-->
+    <string name="ga_trackingId">UA-48488031-1</string>
+
+    <!--Enable automatic activity tracking-->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <!--Enable automatic exception tracking-->
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <integer name="ga_sessionTimeout">120</integer>
+
+    <string name="com.nilsbo.egofm.activities.MainActivity">Main</string>
+    <string name="com.nilsbo.egofm.activities.SettingsActivity">Settings</string>
+    <string name="com.nilsbo.egofm.activities.SongDetailActivity">SongDetails</string>
+    <string name="com.nilsbo.egofm.activities.NewsItemActivity">NewsItem</string>
+    <string name="com.nilsbo.egofm.activities.LicenseActivity">Licenses</string>
+
+</resources>

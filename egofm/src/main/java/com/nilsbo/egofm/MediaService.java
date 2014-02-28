@@ -257,8 +257,6 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
      * AudioFocus needs to be abandoned manually.
      */
     private void cleanup() {
-        Log.d(TAG, Log.getStackTraceString(new Exception()));
-
         mMusicNetworkingHelper.stopMetadataDownload();
         if (mMediaPlayer != null) mMediaPlayer.release();
         mMediaPlayer = null;

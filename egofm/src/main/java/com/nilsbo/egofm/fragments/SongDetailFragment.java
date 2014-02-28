@@ -39,7 +39,7 @@ import static com.nilsbo.egofm.util.FragmentUtils.logUIAction;
 /**
  * Created by Nils on 15.02.14.
  */
-public class SongDetailFragment extends Fragment implements Response.ErrorListener, LastFmArtistResponseListener {
+public class SongDetailFragment extends Fragment implements LastFmArtistResponseListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.SongDetailFragment";
 
     private static final String SAVED_STATE_SONG_ARTIST = "com.nilsb.egofm.SAVED_STATE_SONG_ARTIST";
@@ -214,11 +214,6 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
         super.onSaveInstanceState(outState);
         outState.putString(SAVED_STATE_SONG_TITLE, mTitle);
         outState.putString(SAVED_STATE_SONG_ARTIST, mArtist);
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError error) {
-        Log.w(TAG, "onErrorResponse");
     }
 
     public void setContent(String artist, String title) {

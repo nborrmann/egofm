@@ -31,8 +31,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import hugo.weaving.DebugLog;
-
 import static com.nilsbo.egofm.util.FragmentUtils.logUIAction;
 
 public class IntentView extends LinearLayout implements View.OnClickListener, AdapterView.OnItemClickListener {
@@ -198,7 +196,6 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
         }
     }
 
-    @DebugLog
     private void loadIntentList() {
         Intent mediaSearchAndPlayIntent = new Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
         Intent mediaSearchIntent = new Intent(MediaStore.INTENT_ACTION_MEDIA_SEARCH);
