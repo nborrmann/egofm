@@ -8,5 +8,7 @@ import java.util.ArrayList;
 public interface LastFmArtistResponseListener {
     public void onArtistResponse(String artistDescription, String imageUrl);
 
-    public void onTitleResponse(int duration, int trackAlbumPosition, String albumImageUrl, String albumTitle, ArrayList<String> trackTags);
+    public void onSongResponse(int duration, int trackAlbumPosition, String albumImageUrl, String albumTitle, ArrayList<String> trackTags);
+
+    public void onSongSearchResponse(String artist, String title);
 }

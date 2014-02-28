@@ -75,8 +75,8 @@ public class LastFmSongRequest {
                 Log.w(TAG, "Error parsing tags from last.fm response", e);
             }
 
-            logTiming("egoFM Request", "LastFM Song", startDate);
-            mListener.onTitleResponse(duration, trackAlbumPosition, albumImageUrl, albumTitle, trackTags);
+            logTiming("egoFM Request", "LastFM Song Info", startDate);
+            mListener.onSongResponse(duration, trackAlbumPosition, albumImageUrl, albumTitle, trackTags);
         }
     }
 }

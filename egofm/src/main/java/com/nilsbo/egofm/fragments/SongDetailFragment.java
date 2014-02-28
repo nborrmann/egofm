@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.nilsbo.egofm.Interfaces.LastFmArtistResponseListener;
 import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.networking.LastFmArtistRequest;
 import com.nilsbo.egofm.networking.LastFmSongRequest;
+import com.nilsbo.egofm.networking.LastFmSongSearchRequest;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.util.IntentView;
 import com.nilsbo.egofm.widgets.ObservableScrollView;
@@ -74,6 +76,35 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
     public SongDetailFragment() {
     }
 
+    protected void initUI() {
+        artistImage = (ResizableImageView) rootView.findViewById(R.id.song_details_artist_image);
+        albumImage = (NetworkImageView) rootView.findViewById(R.id.song_details_album_image);
+        titleText = (TextView) rootView.findViewById(R.id.song_details_title);
+        artistText = (TextView) rootView.findViewById(R.id.song_details_artist);
+        albumTitleText = (TextView) rootView.findViewById(R.id.song_details_album_title);
+        albumSubtitleText = (TextView) rootView.findViewById(R.id.song_details_album_subtitle);
+        artistDescText = (TextView) rootView.findViewById(R.id.song_details_artist_desc);
+        artistDescLabel = (TextView) rootView.findViewById(R.id.song_details_artist_label);
+        albumContainer = (LinearLayout) rootView.findViewById(R.id.song_details_album_container);
+        albumLabel = (TextView) rootView.findViewById(R.id.song_details_album_label);
+        tagsText = (TextView) rootView.findViewById(R.id.song_details_tags);
+        tagsLabel = (TextView) rootView.findViewById(R.id.song_details_tags_label);
+        titleContainer = (LinearLayout) rootView.findViewById(R.id.song_details_title_container);
+        intentView = (IntentView) rootView.findViewById(R.id.song_details_intent_container);
+        lastfmBtn = (ImageView) rootView.findViewById(R.id.song_details_lastfm_btn);
+
+        lastfmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(String.format(mContext.getString(R.string.lastfm_btn_url), mArtist)));
+                startActivity(i);
+
+                logUIAction(getActivity(), "Open Last.fm", mArtist + " - " + mTitle);
+            }
+        });
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -104,9 +135,20 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
     }
 
     private void loadLastfmData() {
-        new LastFmSongRequest(mArtist, mTitle, this, null);
+        new LastFmSongSearchRequest(mArtist, mTitle, this, null);
+    }
 
-        new LastFmArtistRequest(mArtist, this, new Response.ErrorListener() {
+    @Override
+    public void onSongSearchResponse(String artist, String title) {
+        Log.d(TAG, String.format("clean track name: %s - %s", artist, title));
+        if (TextUtils.isEmpty(artist)) artist = mArtist;
+        if (TextUtils.isEmpty(title)) title = mTitle;
+
+        artistDescLabel.setText(String.format(mContext.getString(R.string.song_details_about_label), artist));
+
+        new LastFmSongRequest(artist, title, this, null);
+
+        new LastFmArtistRequest(artist, this, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.w(TAG, "onErrorResponse: artistRequest");
@@ -116,7 +158,7 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
     }
 
     @Override
-    public void onTitleResponse(int duration, int trackAlbumPosition, String albumImageUrl, String albumTitle, ArrayList<String> trackTags) {
+    public void onSongResponse(int duration, int trackAlbumPosition, String albumImageUrl, String albumTitle, ArrayList<String> trackTags) {
         if (albumTitle != null && albumImageUrl != null) {
             albumContainer.setVisibility(View.VISIBLE);
             albumLabel.setVisibility(View.VISIBLE);
@@ -153,36 +195,6 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
             artistDescText.setText(mContext.getString(R.string.artist_description_not_found));
 
         if (imageUrl != null) loadArtistImage(imageUrl);
-    }
-
-
-    protected void initUI() {
-        artistImage = (ResizableImageView) rootView.findViewById(R.id.song_details_artist_image);
-        albumImage = (NetworkImageView) rootView.findViewById(R.id.song_details_album_image);
-        titleText = (TextView) rootView.findViewById(R.id.song_details_title);
-        artistText = (TextView) rootView.findViewById(R.id.song_details_artist);
-        albumTitleText = (TextView) rootView.findViewById(R.id.song_details_album_title);
-        albumSubtitleText = (TextView) rootView.findViewById(R.id.song_details_album_subtitle);
-        artistDescText = (TextView) rootView.findViewById(R.id.song_details_artist_desc);
-        artistDescLabel = (TextView) rootView.findViewById(R.id.song_details_artist_label);
-        albumContainer = (LinearLayout) rootView.findViewById(R.id.song_details_album_container);
-        albumLabel = (TextView) rootView.findViewById(R.id.song_details_album_label);
-        tagsText = (TextView) rootView.findViewById(R.id.song_details_tags);
-        tagsLabel = (TextView) rootView.findViewById(R.id.song_details_tags_label);
-        titleContainer = (LinearLayout) rootView.findViewById(R.id.song_details_title_container);
-        intentView = (IntentView) rootView.findViewById(R.id.song_details_intent_container);
-        lastfmBtn = (ImageView) rootView.findViewById(R.id.song_details_lastfm_btn);
-
-        lastfmBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(String.format(mContext.getString(R.string.lastfm_btn_url), mArtist)));
-                startActivity(i);
-
-                logUIAction(getActivity(), "Open Last.fm", mArtist + " - " + mTitle);
-            }
-        });
     }
 
     private void setDefaultUI() {
