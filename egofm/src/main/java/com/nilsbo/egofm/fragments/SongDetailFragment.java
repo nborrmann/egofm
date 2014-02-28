@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,23 +15,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
+import com.nilsbo.egofm.Interfaces.LastFmArtistResponseListener;
 import com.nilsbo.egofm.R;
+import com.nilsbo.egofm.networking.LastFmArtistRequest;
+import com.nilsbo.egofm.networking.LastFmSongRequest;
 import com.nilsbo.egofm.networking.MyVolley;
 import com.nilsbo.egofm.util.IntentView;
 import com.nilsbo.egofm.widgets.ObservableScrollView;
 import com.nilsbo.egofm.widgets.ResizableImageView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
 import org.jsoup.helper.StringUtil;
 
 import java.util.ArrayList;
@@ -42,7 +37,7 @@ import static com.nilsbo.egofm.util.FragmentUtils.logUIAction;
 /**
  * Created by Nils on 15.02.14.
  */
-public class SongDetailFragment extends Fragment implements Response.ErrorListener {
+public class SongDetailFragment extends Fragment implements Response.ErrorListener, LastFmArtistResponseListener {
     private static final String TAG = "com.nilsbo.egofm.fragments.SongDetailFragment";
 
     private static final String SAVED_STATE_SONG_ARTIST = "com.nilsb.egofm.SAVED_STATE_SONG_ARTIST";
@@ -51,7 +46,6 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
     public static final String ARG_SONG_ARTIST = "com.nilsb.egofm.SAVED_STATE_SONG_ARTIST";
 
     private Context mContext;
-    private RequestQueue mRequestQueue = MyVolley.getRequestQueue();
 
     protected View rootView;
 
@@ -105,32 +99,62 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
                 mArtist = getArguments().getString(ARG_SONG_ARTIST);
                 setDefaultUI();
                 loadLastfmData();
-            } else {
-                setEmptyUI();
             }
         }
     }
 
-    private void setEmptyUI() {
-//        this.setV
-
-    }
-
     private void loadLastfmData() {
-        String trackUrl = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=63e6e4b1a4db2dda7585d9e82b2f723e&artist=" + mArtist + "&track=" + mTitle + "&format=json";
-        JsonObjectRequest trackRequest = new JsonObjectRequest(Request.Method.GET, trackUrl, null, new VolleyTrackRequestListener(), this);
-        mRequestQueue.add(trackRequest);
+        new LastFmSongRequest(mArtist, mTitle, this, null);
 
-        String artistUrl = "http://ws.audioscrobbler.com/2.0/?method=artist.getInfo&artist=" + mArtist + "&api_key=63e6e4b1a4db2dda7585d9e82b2f723e&format=json";
-        JsonObjectRequest artistRequest = new JsonObjectRequest(Request.Method.GET, artistUrl, null, new VolleyArtistRequestListener(), new Response.ErrorListener() {
+        new LastFmArtistRequest(mArtist, this, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.w(TAG, "onErrorResponse: artistRequest");
                 artistDescText.setText(mContext.getString(R.string.list_connection_error));
             }
         });
-        mRequestQueue.add(artistRequest);
     }
+
+    @Override
+    public void onTitleResponse(int duration, int trackAlbumPosition, String albumImageUrl, String albumTitle, ArrayList<String> trackTags) {
+        if (albumTitle != null && albumImageUrl != null) {
+            albumContainer.setVisibility(View.VISIBLE);
+            albumLabel.setVisibility(View.VISIBLE);
+            albumImage.setImageUrl(albumImageUrl, MyVolley.getImageLoader());
+            albumTitleText.setText(albumTitle);
+
+            if (duration != 0 && trackAlbumPosition != 0) {
+                albumSubtitleText.setText(String.format(
+                        mContext.getString(R.string.song_details_album_subtitle_full),
+                        trackAlbumPosition, duration / 60000, (duration % 60000) / 1000));
+            } else if (duration != 0) {
+                albumSubtitleText.setText(String.format(
+                        mContext.getString(R.string.song_details_album_subtitle_duration),
+                        duration / 60000, (duration % 60000) / 1000));
+            } else if (trackAlbumPosition != 0) {
+                albumSubtitleText.setText(String.format(
+                        mContext.getString(R.string.song_details_album_subtitle_track),
+                        trackAlbumPosition));
+            }
+        }
+
+        if (trackTags != null && trackTags.size() > 0) {
+            tagsText.setText(StringUtil.join(trackTags, "   "));
+            tagsLabel.setVisibility(View.VISIBLE);
+            tagsText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onArtistResponse(String artistDescription, String imageUrl) {
+        if (artistDescription != null)
+            artistDescText.setText(Html.fromHtml(artistDescription));
+        else
+            artistDescText.setText(mContext.getString(R.string.artist_description_not_found));
+
+        if (imageUrl != null) loadArtistImage(imageUrl);
+    }
+
 
     protected void initUI() {
         artistImage = (ResizableImageView) rootView.findViewById(R.id.song_details_artist_image);
@@ -172,7 +196,6 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
         tagsText.setVisibility(View.GONE);
         artistDescText.setText(mContext.getString(R.string.song_details_loading));
         intentView.setQuery(String.format("%s - %s", mArtist, mTitle));
-
     }
 
     public void onSaveInstanceState(Bundle outState) {
@@ -193,34 +216,6 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
         loadLastfmData();
     }
 
-    private class VolleyArtistRequestListener implements Response.Listener<JSONObject> {
-        @Override
-        public void onResponse(JSONObject response) {
-            try {
-                JSONArray images = response.getJSONObject("artist").getJSONArray("image");
-                int maxIndex = images.length() - 1;
-                String imgUrl = images.getJSONObject(maxIndex).getString("#text");
-                if (imgUrl.contains("Keep+stats+clean") || imgUrl.contains("Wrong+Tag")) {
-                    throw new JSONException("keep stats clean image returned");
-                }
-                loadArtistImage(imgUrl);
-            } catch (JSONException e) {
-                Log.w(TAG, "Error parsing image url from last.fm response", e);
-            }
-
-            try {
-                String artistDescription = response.getJSONObject("artist").getJSONObject("bio").getString("summary");
-                if (TextUtils.isEmpty(artistDescription))
-                    throw new JSONException("empty description");
-                artistDescText.setText(Html.fromHtml(Jsoup.parse(artistDescription).text()));
-            } catch (JSONException e) {
-                Log.w(TAG, "Error parsing artist description from last.fm response", e);
-                artistDescText.setText(mContext.getString(R.string.artist_description_not_found));
-            }
-
-        }
-    }
-
     private void loadArtistImage(String imgUrl) {
         ImageLoader.ImageContainer newContainer = MyVolley.getImageLoader().get(imgUrl,
                 new ImageLoader.ImageListener() {
@@ -238,65 +233,8 @@ public class SongDetailFragment extends Fragment implements Response.ErrorListen
                 });
     }
 
+    // This is overwritten in SongDetailFancyFragment!
     protected void setArtistImage(ImageLoader.ImageContainer response) {
         artistImage.setImageBitmap(response.getBitmap());
-    }
-
-    private class VolleyTrackRequestListener implements Response.Listener<JSONObject> {
-        @Override
-        public void onResponse(JSONObject response) {
-            int duration = 0;
-            try {
-                duration = response.getJSONObject("track").getInt("duration");
-            } catch (JSONException e) {
-                Log.w(TAG, "Error parsing duration from last.fm response", e);
-            }
-
-            int trackAlbumPosition = 0;
-            try {
-                JSONObject album = response.getJSONObject("track").getJSONObject("album");
-                String albumTitle = album.getString("title");
-                JSONArray albumImages = album.getJSONArray("image");
-                String albumImageUrl = albumImages.getJSONObject(Math.min(albumImages.length(), 2)).getString("#text");
-                trackAlbumPosition = album.getJSONObject("@attr").getInt("position");
-
-                albumContainer.setVisibility(View.VISIBLE);
-                albumLabel.setVisibility(View.VISIBLE);
-                albumImage.setImageUrl(albumImageUrl, MyVolley.getImageLoader());
-                albumTitleText.setText(albumTitle);
-                albumSubtitleText.setText("track #" + trackAlbumPosition);
-            } catch (JSONException e) {
-                Log.w(TAG, "Error parsing album from last.fm response", e);
-            }
-
-            if (duration != 0 && trackAlbumPosition != 0) {
-                albumSubtitleText.setText(String.format(
-                        mContext.getString(R.string.song_details_album_subtitle_full),
-                        trackAlbumPosition, duration / 60000, (duration % 60000) / 1000));
-            } else if (duration != 0) {
-                albumSubtitleText.setText(String.format(
-                        mContext.getString(R.string.song_details_album_subtitle_duration),
-                        duration / 60000, (duration % 60000) / 1000));
-            } else if (trackAlbumPosition != 0) {
-                albumSubtitleText.setText(String.format(
-                        mContext.getString(R.string.song_details_album_subtitle_track),
-                        trackAlbumPosition));
-            }
-
-            try {
-                JSONArray trackTagsJSON = response.getJSONObject("track").getJSONObject("toptags").getJSONArray("tag");
-                ArrayList<String> trackTags = new ArrayList<String>();
-
-                for (int i = 0; i < trackTagsJSON.length(); i++) {
-                    trackTags.add(trackTagsJSON.getJSONObject(i).getString("name"));
-                }
-
-                tagsText.setText(StringUtil.join(trackTags, "   "));
-                tagsLabel.setVisibility(View.VISIBLE);
-                tagsText.setVisibility(View.VISIBLE);
-            } catch (JSONException e) {
-                Log.w(TAG, "Error parsing tags from last.fm response", e);
-            }
-        }
     }
 }
