@@ -168,7 +168,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
         if (mState == State.Preparing || mState == State.Playing)
             mMediaPlayer.setVolume(1.0f, 1.0f);
         else {
-            logStreamStart(getApplicationContext(), "Gained Focus");
+            logStreamStart(getApplicationContext(), "Gained AudioFocus");
             startPlayback();
         }
     }
@@ -176,7 +176,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     @Override
     public void onLostAudioFocus(boolean canDuck) {
         if (!canDuck) {
-            logStop("LostAudioFocus");
+            logStop("Lost AudioFocus");
             cleanup();
             mRemoteManager.displayDefaultNotification(mState);
         } else {
@@ -203,7 +203,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     }
 
     private void connectFailed() {
-        logStop("Disconnect");
+        logStop("Reconnect failed");
         cleanup();
         if (isBound) {
             Toast toast = Toast.makeText(this, getString(R.string.notification_connection_error), Toast.LENGTH_SHORT);
@@ -246,8 +246,10 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     private void handleError() {
         Log.d(TAG, "Connection error.");
+        logStop("Disconnect");
         mMusicNetworkingHelper.stopMetadataDownload();
         tryConnect();
+        logStreamStart(getApplicationContext(), "Reconnect");
     }
 
     /**
@@ -255,6 +257,8 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
      * AudioFocus needs to be abandoned manually.
      */
     private void cleanup() {
+        Log.d(TAG, Log.getStackTraceString(new Exception()));
+
         mMusicNetworkingHelper.stopMetadataDownload();
         if (mMediaPlayer != null) mMediaPlayer.release();
         mMediaPlayer = null;
@@ -340,6 +344,12 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        if (mState == State.Playing || mState == State.Preparing) {
+            logStop("Service destroyed");
+            Log.d(TAG, "onDestroy");
+        }
+
         unregisterReceiver(mAudioBecomingNoisyReceiver);
         mRemoteManager.cancelAll();
         cleanup();
@@ -349,7 +359,6 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     public void logStop(String label) {
         int timeDiff = (int) (new Date().getTime() - startTime.getTime()) / 1000;
-        Log.d(TAG, "logStop " + timeDiff);
         logStreamStop(getApplicationContext(), label, timeDiff);
     }
 }

@@ -12,6 +12,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
+
+import static com.nilsbo.egofm.util.FragmentUtils.logTiming;
 
 /**
  * Created by Nils on 21.01.14.
@@ -20,10 +23,12 @@ public class NewsItemRequest extends Request<String> {
     private static final String TAG = "com.nilsbo.egofm.volley.PlaylistRequest";
 
     private final Listener<String> mListener;
+    private Date startDate;
 
     public NewsItemRequest(int method, String url, Listener<String> listener, ErrorListener errorListener) {
         super(method, url, errorListener);
         mListener = listener;
+        startDate = new Date();
 
     }
 
@@ -46,6 +51,8 @@ public class NewsItemRequest extends Request<String> {
         } catch (UnsupportedEncodingException e) {
             parsed = new String(response.data);
         }
+
+        logTiming("egoFM Request", "Newsitem", startDate);
 
         try {
             final Document doc = Jsoup.parse(parsed);

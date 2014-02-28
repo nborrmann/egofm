@@ -13,27 +13,31 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
+
+import static com.nilsbo.egofm.util.FragmentUtils.logTiming;
 
 /**
  * Created by Nils on 21.01.14.
  */
 public class TrackRequest extends Request<String[]> {
     private final Listener<String[]> mListener;
+    private Date startDate;
 
     public TrackRequest(int method, String url, Listener<String[]> listener, ErrorListener errorListener) {
         super(method, url, errorListener);
         mListener = listener;
-
     }
 
     public TrackRequest(String url, Response.Listener<String[]> listener, ErrorListener errorListener) {
         this(Method.GET, url, listener, errorListener);
+        startDate = new Date();
     }
+
     @Override
     protected void deliverResponse(String[] response) {
         mListener.onResponse(response);
     }
-
 
     @Override
     protected Response<String[]> parseNetworkResponse(NetworkResponse response) {
@@ -44,6 +48,8 @@ public class TrackRequest extends Request<String[]> {
         } catch (UnsupportedEncodingException e) {
             parsed = new String(response.data);
         }
+
+        logTiming("egoFM Request", "Current Track", startDate);
 
         try {
             final Document doc = Jsoup.parse(parsed);
@@ -56,7 +62,9 @@ public class TrackRequest extends Request<String[]> {
         if (TextUtils.isEmpty(results[0]) || TextUtils.isEmpty(results[1])) {
             return null;
         }
+
         return Response.success(results, HttpHeaderParser.parseCacheHeaders(response));
     }
+
 
 }

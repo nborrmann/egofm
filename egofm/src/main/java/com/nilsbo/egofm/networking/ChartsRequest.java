@@ -16,9 +16,12 @@ import org.jsoup.select.Elements;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpCookie;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.nilsbo.egofm.util.FragmentUtils.logTiming;
 
 /**
  * Created by Nils on 21.01.14.
@@ -28,11 +31,13 @@ public class ChartsRequest extends Request<ArrayList<ChartItem>> {
 
     private final Listener<ArrayList<ChartItem>> mListener;
     private Pattern songRegex;
+    private Date startDate;
 
     public ChartsRequest(int method, String url, Listener<ArrayList<ChartItem>> listener, ErrorListener errorListener) {
         super(method, url, errorListener);
         mListener = listener;
         songRegex = Pattern.compile("(.+) - (.+)");
+        startDate = new Date();
     }
 
     public ChartsRequest(String url, Listener<ArrayList<ChartItem>> listener, ErrorListener errorListener) {
@@ -54,6 +59,8 @@ public class ChartsRequest extends Request<ArrayList<ChartItem>> {
         } catch (UnsupportedEncodingException e) {
             parsed = new String(response.data);
         }
+
+        logTiming("egoFM Request", "42 Request", startDate);
 
         try {
             String cookies = getCookies(response);

@@ -37,6 +37,7 @@ public class MyVolley {
                 .getMemoryClass();
         // Use 1/8th of the available memory for this memory cache.
         int cacheSize = 1024 * 1024 * memClass / 8;
+
         mImageLoader = new ImageLoader(mRequestQueue, new BitmapLruCache(cacheSize));
     }
 

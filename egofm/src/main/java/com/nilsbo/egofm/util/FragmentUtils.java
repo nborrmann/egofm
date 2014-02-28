@@ -8,6 +8,10 @@ import android.util.TypedValue;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
+import com.nilsbo.egofm.networking.App;
+
+import java.util.Date;
 
 public class FragmentUtils {
     /**
@@ -65,7 +69,7 @@ public class FragmentUtils {
         easyTracker.set(Fields.customMetric(1), metricValue);
 
         easyTracker.send(MapBuilder
-                .createEvent("Music Playback", "Stop", label, null)
+                .createEvent("Music Playback", "Stop", label, (long) duration)
                 .build());
     }
 
@@ -76,4 +80,17 @@ public class FragmentUtils {
                 .createEvent("Music Playback", "Start", label, null)
                 .build());
     }
+
+    public static void logTiming(String category, String name, Date startDate) {
+        if (App.getAppContext() == null)
+            return;
+
+        Tracker easyTracker = EasyTracker.getInstance(App.getAppContext());
+
+        Long loadTime = new Date().getTime() - startDate.getTime();
+        easyTracker.send(MapBuilder
+                .createTiming(category, loadTime, name, null)
+                .build());
+    }
+
 }

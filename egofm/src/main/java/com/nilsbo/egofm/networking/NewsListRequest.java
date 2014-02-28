@@ -15,6 +15,9 @@ import org.jsoup.select.Elements;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
+
+import static com.nilsbo.egofm.util.FragmentUtils.logTiming;
 
 /**
  * Created by Nils on 21.01.14.
@@ -24,11 +27,12 @@ public class NewsListRequest extends Request<ArrayList<NewsItem>> {
 
     private final Listener<ArrayList<NewsItem>> mListener;
     private static final String BASE_URL = "http://www.egofm.de%s";
+    private Date startDate;
 
     public NewsListRequest(int method, String url, Listener<ArrayList<NewsItem>> listener, ErrorListener errorListener) {
         super(method, url, errorListener);
         mListener = listener;
-
+        startDate = new Date();
     }
 
     public NewsListRequest(String url, Listener<ArrayList<NewsItem>> listener, ErrorListener errorListener) {
@@ -50,6 +54,8 @@ public class NewsListRequest extends Request<ArrayList<NewsItem>> {
         } catch (UnsupportedEncodingException e) {
             parsed = new String(response.data);
         }
+
+        logTiming("egoFM Request", "Newslist", startDate);
 
         try {
             final Document doc = Jsoup.parse(parsed);

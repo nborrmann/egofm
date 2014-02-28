@@ -15,6 +15,9 @@ import org.jsoup.select.Elements;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
+
+import static com.nilsbo.egofm.util.FragmentUtils.logTiming;
 
 /**
  * Created by Nils on 21.01.14.
@@ -23,10 +26,12 @@ public class PlaylistRequest extends Request<ArrayList<PlaylistItem>> {
     private static final String TAG = "com.nilsbo.egofm.volley.PlaylistRequest";
 
     private final Listener<ArrayList<PlaylistItem>> mListener;
+    private Date startDate;
 
     public PlaylistRequest(int method, String url, Listener<ArrayList<PlaylistItem>> listener, ErrorListener errorListener) {
         super(method, url, errorListener);
         mListener = listener;
+        startDate = new Date();
 
     }
 
@@ -50,8 +55,9 @@ public class PlaylistRequest extends Request<ArrayList<PlaylistItem>> {
             parsed = new String(response.data);
         }
 
-        try {
+        logTiming("egoFM Request", "Playlist", startDate);
 
+        try {
             final Document doc = Jsoup.parse(parsed);
             Elements playlistElements = doc.select("div.playlist > div.playlist_row");
 

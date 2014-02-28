@@ -57,7 +57,7 @@
             android:background="@drawable/egofm_list_selector_holo_light"
             android:gravity="center_vertical">
 
-        <TextView
+            <TextView
                 tools:text="HELP ME LOSE MY MIND "
                 android:ellipsize="marquee"
                 android:id="@+id/charts_title"
@@ -99,7 +99,7 @@
             android:visibility="gone"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginLeft="32dp"
+            android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp" />
 
 

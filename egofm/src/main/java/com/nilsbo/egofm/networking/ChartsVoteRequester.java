@@ -13,8 +13,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.nilsbo.egofm.util.FragmentUtils.logTiming;
 
 /**
  * Created by Nils on 09.02.14.
@@ -24,10 +27,12 @@ public class ChartsVoteRequester {
     private final ChartVoteListener mCallback;
     private final int mTag;
     private final String voteUrl = "http://www.egofm.de/musik/egofm-42?hitcount=0";
+    private Date startDate;
 
     public ChartsVoteRequester(ChartItem song, ChartVoteListener mCallback, int tag) {
         this.mCallback = mCallback;
         mTag = tag;
+        startDate = new Date();
         new VoteRequest().execute(song);
     }
 
@@ -80,6 +85,10 @@ public class ChartsVoteRequester {
         }
 
         protected void onPostExecute(Integer status) {
+            if (status == 0) {
+                logTiming("egoFM Request", "42 Vote", startDate);
+            }
+
             if (status == 0 && mCallback != null) mCallback.onSuccessfulVote(mTag);
             if (status == 1 && mCallback != null) mCallback.onNetworkError(mTag);
             if (status == 2 && mCallback != null) mCallback.onUnknownError(mTag);
