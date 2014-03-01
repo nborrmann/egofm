@@ -363,12 +363,10 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     }
 
     public void logStop(String label) {
-        if (mState == State.Playing || mState == State.Preparing) {
-            Log.d(TAG, "logging " + label);
+        if ((mState == State.Playing || mState == State.Preparing) && startTime != null) {
             int timeDiff = (int) (new Date().getTime() - startTime.getTime()) / 1000;
             logStreamStop(getApplicationContext(), label, timeDiff);
-        } else {
-            Log.d(TAG, "not logging " + label);
+            startTime = null;
         }
     }
 }
