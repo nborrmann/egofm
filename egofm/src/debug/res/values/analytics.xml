@@ -9,7 +9,11 @@
     <!--Enable automatic exception tracking-->
     <bool name="ga_reportUncaughtExceptions">true</bool>
 
+    <string name="ga_logLevel">verbose</string>
+
     <integer name="ga_sessionTimeout">120</integer>
+
+    <integer name="ga_dispatchPeriod">300</integer>
 
     <string name="com.nilsbo.egofm.activities.MainActivity">Main</string>
     <string name="com.nilsbo.egofm.activities.SettingsActivity">Settings</string>

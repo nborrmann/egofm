@@ -99,6 +99,7 @@ public class EgofmRemoteManager {
 
     private Notification buildMediaNotification(String title, String text, String ticker, MediaService.State state) {
         Intent resultIntent = new Intent(context, MainActivity.class);
+        resultIntent.setAction("Music Notification");
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addNextIntentWithParentStack(resultIntent);
 

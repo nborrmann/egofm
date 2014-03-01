@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <!--Replace placeholder ID with your tracking ID-->
-    <string name="ga_trackingId">UA-48488031-2</string>
+    <string name="ga_trackingId">UA-48488031-3</string>
 
     <!--Enable automatic activity tracking-->
     <bool name="ga_autoActivityTracking">true</bool>
@@ -10,6 +10,8 @@
     <bool name="ga_reportUncaughtExceptions">true</bool>
 
     <integer name="ga_sessionTimeout">120</integer>
+
+    <integer name="ga_dispatchPeriod">300</integer>
 
     <string name="com.nilsbo.egofm.activities.MainActivity">Main</string>
     <string name="com.nilsbo.egofm.activities.SettingsActivity">Settings</string>

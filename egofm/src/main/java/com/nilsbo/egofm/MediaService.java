@@ -14,6 +14,7 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.GAServiceManager;
 import com.nilsbo.egofm.Interfaces.EgofmActivityInterface;
 import com.nilsbo.egofm.Interfaces.MediaServiceInterface;
 import com.nilsbo.egofm.Interfaces.MetaDataListener;
@@ -28,6 +29,7 @@ import java.util.Date;
 
 import static com.nilsbo.egofm.util.FragmentUtils.logStreamStart;
 import static com.nilsbo.egofm.util.FragmentUtils.logStreamStop;
+import static com.nilsbo.egofm.util.FragmentUtils.logUIAction;
 
 
 public class MediaService extends Service implements MediaServiceInterface, MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
@@ -138,7 +140,9 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     }
 
     private void processCloseRequest() {
-        logStop("Notification Close");
+        if (mState == State.Playing || mState == State.Preparing) logStop("Notification Close");
+        else logUIAction(getApplicationContext(), "Notification closed", null);
+
         cleanup();
         giveUpAudioFocus();
         mRemoteManager.cancelAll();
@@ -248,8 +252,8 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
         Log.d(TAG, "Connection error.");
         logStop("Disconnect");
         mMusicNetworkingHelper.stopMetadataDownload();
-        tryConnect();
         logStreamStart(getApplicationContext(), "Reconnect");
+        tryConnect();
     }
 
     /**
@@ -342,11 +346,11 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy");
         if (mState == State.Playing || mState == State.Preparing) {
             logStop("Service destroyed");
-            Log.d(TAG, "onDestroy");
         }
+
+        GAServiceManager.getInstance().dispatchLocalHits();
 
         unregisterReceiver(mAudioBecomingNoisyReceiver);
         mRemoteManager.cancelAll();

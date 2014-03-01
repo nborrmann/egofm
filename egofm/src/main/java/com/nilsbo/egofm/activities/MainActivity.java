@@ -16,6 +16,8 @@ import com.nilsbo.egofm.R;
 import com.nilsbo.egofm.adapters.SectionsPagerAdapter;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import static com.nilsbo.egofm.util.FragmentUtils.logUIAction;
+
 public class MainActivity extends EgofmActivity {
     private static final String TAG = "com.nilsbo.egofm.activities.MainActivity";
 
@@ -57,6 +59,11 @@ public class MainActivity extends EgofmActivity {
         tintManager.setStatusBarTintResource(R.color.egofm_grey);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        if (getIntent() != null && getIntent().getAction() != null
+                && getIntent().getAction().equals("Music Notification")) {
+            logUIAction(this, "Notification clicked", null);
+        }
     }
 
     private void trackFragmentSelected(int position) {
