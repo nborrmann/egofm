@@ -68,13 +68,8 @@ public class MainActivity extends EgofmActivity {
 
     private void trackFragmentSelected(int position) {
         Tracker easyTracker = EasyTracker.getInstance(this);
-
         easyTracker.set(Fields.SCREEN_NAME, SCREEN_NAMES[position]);
-
-        easyTracker.send(MapBuilder
-                .createAppView()
-                .build()
-        );
+        easyTracker.send(MapBuilder.createAppView().build());
     }
 
     @Override

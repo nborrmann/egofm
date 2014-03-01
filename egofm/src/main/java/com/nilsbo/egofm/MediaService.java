@@ -111,9 +111,12 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
         stopPlayback();
     }
 
+    // Audio becoming Noisy
     private void processPauseRequest() {
-        logStop("AudioBecomingNoisy");
-        pausePlayback();
+        if (mState == State.Playing || mState == State.Preparing) {
+            logStop("AudioBecomingNoisy");
+            pausePlayback();
+        }
     }
 
     // PlayPause is coming from the lockscreen, hence we don't want to give up AudioFocus, so the widget doesn't disappear
@@ -360,8 +363,13 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     }
 
     public void logStop(String label) {
-        int timeDiff = (int) (new Date().getTime() - startTime.getTime()) / 1000;
-        logStreamStop(getApplicationContext(), label, timeDiff);
+        if (mState == State.Playing || mState == State.Preparing) {
+            Log.d(TAG, "logging " + label);
+            int timeDiff = (int) (new Date().getTime() - startTime.getTime()) / 1000;
+            logStreamStop(getApplicationContext(), label, timeDiff);
+        } else {
+            Log.d(TAG, "not logging " + label);
+        }
     }
 }
 

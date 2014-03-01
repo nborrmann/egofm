@@ -9,7 +9,7 @@
     <!--Enable automatic exception tracking-->
     <bool name="ga_reportUncaughtExceptions">true</bool>
 
-    <string name="ga_logLevel">verbose</string>
+    <!--<string name="ga_logLevel">verbose</string>-->
 
     <integer name="ga_sessionTimeout">120</integer>
 
