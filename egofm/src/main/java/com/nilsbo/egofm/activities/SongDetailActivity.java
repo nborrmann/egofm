@@ -14,14 +14,15 @@ public class SongDetailActivity extends EgofmActivity {
     protected void onCreate(Bundle savedInstanceState) {
         if (getResources().getBoolean(R.bool.use_fancy_news_item) && android.os.Build.VERSION.SDK_INT >= 14) {
             setTheme(R.style.Theme_Egofm_TransparentActionBar);
-        } else {
+        }
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_song_detail);
+
+        if (!getResources().getBoolean(R.bool.use_fancy_news_item) || android.os.Build.VERSION.SDK_INT < 14) {
             SystemBarTintManager tintManager = new SystemBarTintManager(this);
             tintManager.setStatusBarTintEnabled(true);
             tintManager.setStatusBarTintResource(R.color.egofm_grey);
         }
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_song_detail);
 
         if (savedInstanceState == null) {
             SongDetailFragment songDetailFragment;

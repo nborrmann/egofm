@@ -85,7 +85,7 @@ public class EgofmActivity extends ActionBarActivity implements EgofmActivityInt
                 startService(new Intent(MediaService.ACTION_START));
                 return true;
             case R.id.action_stop:
-                startService(new Intent(MediaService.ACTION_CLOSE));
+                startService(new Intent(MediaService.ACTION_STOP));
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));

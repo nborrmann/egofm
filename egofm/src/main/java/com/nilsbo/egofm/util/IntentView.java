@@ -296,7 +296,7 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
 
-                logUIAction(context, "Launch Intent", String.format("%s : %s", activityName, query));
+                logUIAction(context, "Launch Intent", activityName);
             } catch (Exception e) {
                 Log.d(TAG, "error starting activity " + activityName, e);
             }

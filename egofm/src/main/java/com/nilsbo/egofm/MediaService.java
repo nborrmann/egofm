@@ -102,13 +102,19 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     }
 
     private void processStartRequest() {
-        logStreamStart(getApplicationContext(), "Actionbar");
+//        logStreamStart(getApplicationContext(), "Actionbar");
+        logStart("Actionbar");
         startPlayback();
     }
 
     private void processStopRequest() {
         logStop("Actionbar");
-        stopPlayback();
+
+        cleanup();
+        giveUpAudioFocus();
+        mRemoteManager.cancelAll();
+        stopForeground(true);
+        stopSelf();
     }
 
     // Audio becoming Noisy
@@ -122,7 +128,8 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     // PlayPause is coming from the lockscreen, hence we don't want to give up AudioFocus, so the widget doesn't disappear
     private void processPlayPauseRequest() {
         if (mState == State.Stopped) {
-            logStreamStart(getApplicationContext(), "Lockscreen");
+//            logStreamStart(getApplicationContext(), "Lockscreen");
+            logStart("Lockscreen");
             startPlayback();
         } else {
             logStop("Lockscreen");
@@ -134,7 +141,8 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     // StartStop is coming from the notification. Start and Stop as usual, but don't close the service.
     private void processStartStopRequest() {
         if (mState == State.Stopped) {
-            logStreamStart(getApplicationContext(), "Notification");
+//            logStreamStart(getApplicationContext(), "Notification");
+            logStart("Notification");
             startPlayback();
         } else {
             logStop("Notification Stop");
@@ -175,7 +183,8 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
         if (mState == State.Preparing || mState == State.Playing)
             mMediaPlayer.setVolume(1.0f, 1.0f);
         else {
-            logStreamStart(getApplicationContext(), "Gained AudioFocus");
+//            logStreamStart(getApplicationContext(), "Gained AudioFocus");
+            logStart("Gained AudioFocus");
             startPlayback();
         }
     }
@@ -238,6 +247,8 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     }
 
     private void connect() throws IOException {
+        startTime = new Date();
+        mState = State.Preparing;
         createMediaPlayerIfNeeded();
 
         Log.d(TAG, "connecting to " + mMusicNetworkingHelper.getUrl());
@@ -247,16 +258,17 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
         mWifiLock.acquire();
 
-        mState = State.Preparing;
 
-        startTime = new Date();
     }
 
     private void handleError() {
         Log.d(TAG, "Connection error.");
-        logStop("Disconnect");
         mMusicNetworkingHelper.stopMetadataDownload();
-        logStreamStart(getApplicationContext(), "Reconnect");
+        if (connectionTries == 0) {
+            logStop("Disconnect");
+            mState = State.Stopped;
+            logStart("Reconnect");
+        }
         tryConnect();
     }
 
@@ -354,7 +366,6 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
             logStop("Service destroyed");
         }
 
-        GAServiceManager.getInstance().dispatchLocalHits();
 
         unregisterReceiver(mAudioBecomingNoisyReceiver);
         mRemoteManager.cancelAll();
@@ -368,6 +379,17 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
             int timeDiff = (int) (new Date().getTime() - startTime.getTime()) / 1000;
             logStreamStop(getApplicationContext(), label, timeDiff);
             startTime = null;
+            GAServiceManager.getInstance().dispatchLocalHits();
+        }
+    }
+
+    private void logStart(String label) {
+        if (mState == State.Stopped) {
+            if (startTime != null) {
+                logStreamStop(getApplicationContext(), String.format("Unknown: %s", label), 0);
+                startTime = null;
+            }
+            logStreamStart(getApplicationContext(), label);
         }
     }
 }

@@ -15,8 +15,6 @@ import org.jsoup.nodes.Document;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
-import static com.nilsbo.egofm.util.FragmentUtils.logTiming;
-
 /**
  * Created by Nils on 21.01.14.
  */
@@ -49,7 +47,7 @@ public class TrackRequest extends Request<String[]> {
             parsed = new String(response.data);
         }
 
-        logTiming("egoFM Request", "Current Track", startDate);
+//        logTiming("egoFM Request", "Current Track", startDate);
 
         try {
             final Document doc = Jsoup.parse(parsed);
