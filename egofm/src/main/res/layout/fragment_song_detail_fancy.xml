@@ -32,7 +32,7 @@
                 android:id="@+id/song_details_intent_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#e6e6e6"
+                android:background="@color/intent_view_bg"
                 android:layout_marginBottom="8dp" />
 
             <include layout="@layout/song_detail_info" />

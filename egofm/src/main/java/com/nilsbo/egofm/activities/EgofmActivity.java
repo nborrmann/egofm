@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -17,7 +17,7 @@ import com.nilsbo.egofm.Interfaces.MediaServiceInterface;
 import com.nilsbo.egofm.MediaService;
 import com.nilsbo.egofm.R;
 
-public class EgofmActivity extends FragmentActivity implements EgofmActivityInterface {
+public class EgofmActivity extends ActionBarActivity implements EgofmActivityInterface {
     private static final String TAG = "com.nilsbo.egofm.activities.EgofmActivity";
 
     public MediaServiceInterface serviceCallback;
@@ -32,6 +32,7 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
 
         super.onCreate(savedInstanceState);
         mediaServiceIntent = new Intent(this, MediaService.class);
+
     }
 
     @Override
@@ -47,7 +48,7 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
     @Override
     protected void onResume() {
         super.onResume();
-        invalidateOptionsMenu();
+        supportInvalidateOptionsMenu();
     }
 
     @Override
@@ -114,6 +115,6 @@ public class EgofmActivity extends FragmentActivity implements EgofmActivityInte
 
     @Override
     public void playbackStateChanged() {
-        invalidateOptionsMenu();
+        supportInvalidateOptionsMenu();
     }
 }

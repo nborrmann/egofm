@@ -45,8 +45,9 @@
             android:layout_marginRight="2dp"
             android:id="@+id/btn_now"
             android:layout_width="match_parent"
-            android:textSize="16sp"
             android:layout_height="match_parent"
+            android:textSize="16sp"
+            android:gravity="center"
             android:layout_weight="1"
             android:singleLine="true"
             android:text="@string/datetimepicker_now" />
@@ -60,6 +61,9 @@
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/songlist_side_padding"
         android:paddingRight="@dimen/songlist_side_padding"
+        android:fadingEdge="none"
+        android:divider="#cfcfcf"
+        android:dividerHeight="1dp"
         android:scrollbarStyle="outsideOverlay" />
 
     <LinearLayout

@@ -6,4 +6,5 @@
     <color name="egofm_grey">#282828</color>
     <color name="background_light_grey">#f1f1f1</color>
     <color name="transparent">#00ffffff</color>
+    <color name="intent_view_bg">#e6e6e6</color>
 </resources>

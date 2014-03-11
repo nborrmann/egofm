@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="48dp"
+    android:background="@drawable/background_selectable_green_popupmenu"
     android:minWidth="196dip"
     android:paddingEnd="16dip"
     android:paddingLeft="4dp">
@@ -20,7 +21,7 @@
         android:id="@+id/popup_menu_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
+        android:textSize="18sp"
         android:singleLine="true"
         android:duplicateParentState="true"
         android:ellipsize="marquee"

@@ -3,8 +3,8 @@
 
     <style name="news_twopane_item">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginRight">16dp</item>
-        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">0dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
     </style>
 
     <style name="news_list">
@@ -36,6 +36,10 @@
         <item name="android:shadowDx">1</item>
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">1</item>
+    </style>
+
+    <style name="song_detail_two_pane_one_column">
+        <item name="android:layout_width">match_parent</item>
     </style>
 
 

@@ -187,7 +187,8 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
             cleanup();
             mRemoteManager.displayDefaultNotification(mState);
         } else {
-            if (mMediaPlayer.isPlaying()) mMediaPlayer.setVolume(0.1f, 0.1f);
+            if (mMediaPlayer != null && mMediaPlayer.isPlaying())
+                mMediaPlayer.setVolume(0.1f, 0.1f);
         }
     }
 

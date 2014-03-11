@@ -14,13 +14,14 @@
 
     <com.nilsbo.egofm.widgets.ObservableScrollView
         android:id="@+id/song_details_scrollview"
-        android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:paddingBottom="12dp"
-        android:paddingTop="8dp"
+        android:paddingTop="@dimen/song_detail_two_pane_one_column_top_padding"
         android:clipToPadding="false"
         android:orientation="vertical"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:fadingEdge="none"
+        style="@style/song_detail_two_pane_one_column">
 
         <LinearLayout
             android:orientation="vertical"
@@ -33,7 +34,7 @@
                 android:id="@+id/song_details_intent_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#e6e6e6"
+                android:background="@color/intent_view_bg"
                 android:layout_marginBottom="8dp" />
 
             <include layout="@layout/song_detail_info" />

@@ -108,7 +108,12 @@ public class SongDetailFragment extends Fragment implements LastFmArtistResponse
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_song_detail_fancy, container, false);
+        if (android.os.Build.VERSION.SDK_INT >= 14) {
+            rootView = inflater.inflate(R.layout.fragment_song_detail_fancy, container, false);
+        } else {
+            rootView = inflater.inflate(R.layout.fragment_song_detail, container, false);
+        }
+
         mContext = getActivity();
         return rootView;
     }
@@ -237,7 +242,8 @@ public class SongDetailFragment extends Fragment implements LastFmArtistResponse
                             setArtistImage(response);
                         }
                     }
-                });
+                }
+        );
     }
 
     // This is overwritten in SongDetailFancyFragment!

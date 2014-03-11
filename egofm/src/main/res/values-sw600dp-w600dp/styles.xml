@@ -6,4 +6,9 @@
         <item name="android:layout_marginRight">64dp</item>
         <item name="android:layout_marginLeft">64dp</item>
     </style>
+
+    <style name="song_detail_two_pane_one_column">
+        <item name="android:layout_width">@dimen/song_detail_two_pane_one_column_width</item>
+    </style>
+
 </resources>

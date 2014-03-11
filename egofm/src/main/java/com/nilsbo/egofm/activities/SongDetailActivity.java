@@ -12,7 +12,7 @@ public class SongDetailActivity extends EgofmActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (getResources().getBoolean(R.bool.use_fancy_news_item)) {
+        if (getResources().getBoolean(R.bool.use_fancy_news_item) && android.os.Build.VERSION.SDK_INT >= 14) {
             setTheme(R.style.Theme_Egofm_TransparentActionBar);
         } else {
             SystemBarTintManager tintManager = new SystemBarTintManager(this);
@@ -25,7 +25,7 @@ public class SongDetailActivity extends EgofmActivity {
 
         if (savedInstanceState == null) {
             SongDetailFragment songDetailFragment;
-            if (getResources().getBoolean(R.bool.use_fancy_news_item)) {
+            if (getResources().getBoolean(R.bool.use_fancy_news_item) && android.os.Build.VERSION.SDK_INT >= 14) {
                 songDetailFragment = new SongDetailFancyFragment();
             } else {
                 songDetailFragment = new SongDetailFragment();

@@ -1,5 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:egofm="http://schemas.android.com/apk/res-auto"
     tools:context="com.nilsbo.egofm.activities.MainActivity">
 
     <item
@@ -7,5 +8,5 @@
         android:icon="@drawable/ic_action_play"
         android:title="@string/menu_start_playback"
         android:orderInCategory="100"
-        android:showAsAction="always" />
+        egofm:showAsAction="always" />
 </menu>

@@ -6,6 +6,7 @@
     android:clipToPadding="false"
     android:scrollbars="none"
     android:background="#ffffff"
+    android:fadingEdge="none"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -35,7 +36,7 @@
                 android:background="#AA000000"
                 android:id="@+id/news_item_header_text"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
                 android:singleLine="true"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="1"

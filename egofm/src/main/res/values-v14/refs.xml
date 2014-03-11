@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item type="xml" name="preferences">@xml/preferences_v14</item>
+
+</resources>

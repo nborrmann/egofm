@@ -28,6 +28,8 @@
         ptr:ptrListViewExtrasEnabled="true"
         ptr:ptrScrollingWhileRefreshingEnabled="true"
 
+        android:fadingEdge="none"
+
         style="@style/news_list" />
 
 </LinearLayout>

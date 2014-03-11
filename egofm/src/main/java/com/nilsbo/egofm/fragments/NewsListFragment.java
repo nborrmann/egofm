@@ -130,10 +130,12 @@ public class NewsListFragment extends Fragment implements AbsListView.OnScrollLi
         gridView.setOnScrollListener(this);
         gridView.setEmptyView(emptyView);
 
-        View internalGridView = getView().findViewById(R.id.gridview);
-        int sidePadding = (int) getResources().getDimension(R.dimen.news_list_side_padding);
-        int topPadding = (int) getResources().getDimension(R.dimen.news_list_top_padding);
-        internalGridView.setPadding(sidePadding, topPadding, sidePadding, topPadding);
+        if (android.os.Build.VERSION.SDK_INT >= 14) {
+            View internalGridView = getView().findViewById(R.id.gridview);
+            int sidePadding = (int) getResources().getDimension(R.dimen.news_list_side_padding);
+            int topPadding = (int) getResources().getDimension(R.dimen.news_list_top_padding);
+            internalGridView.setPadding(sidePadding, topPadding, sidePadding, topPadding);
+        }
     }
 
     private void loadNews(int page, VolleyListener listener) {

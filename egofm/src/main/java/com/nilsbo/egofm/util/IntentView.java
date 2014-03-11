@@ -21,11 +21,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListPopupWindow;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.nilsbo.egofm.R;
+import com.nilsbo.egofm.widgets.backport.ListPopupWindow;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -42,8 +42,9 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
     private final PackageManager mPackageManager;
     private final ArrayList<ResolveInfo> mResolveInfos;
     public final ArrayList<DisplayResolveInfo> mDisplayResolveInfos;
+    private android.support.v7.internal.widget.ListPopupWindow intentOverflowListPort;
 
-    private ListPopupWindow intentOverflowList;
+    private android.widget.ListPopupWindow intentOverflowList;
     private final LayoutInflater layoutInflater;
     private final ImageButton[] intentButtons;
     private String query = "";
@@ -54,15 +55,10 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
 
-        setShowDividers(SHOW_DIVIDER_MIDDLE);
-        setDividerPadding(context.getResources().getDimensionPixelSize(R.dimen.intent_view_divider_padding));
-        setOrientation(HORIZONTAL);
-        if (!isInEditMode()) {
-            int[] attribute = new int[]{android.R.attr.dividerVertical};
-            TypedValue typedValue = new TypedValue();
-            TypedArray array = context.obtainStyledAttributes(typedValue.resourceId, attribute);
-            setDividerDrawable(array != null ? array.getDrawable(0) : null);
+        if (android.os.Build.VERSION.SDK_INT >= 14) {
+            setUpDividers();
         }
+        setOrientation(HORIZONTAL);
 
         mPackageManager = context.getPackageManager();
         mResolveInfos = new ArrayList<ResolveInfo>();
@@ -95,35 +91,75 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
         if (mDisplayResolveInfos.size() < NUMBER_OF_BUTTONS + 1) {
             intentButtons[NUMBER_OF_BUTTONS].setVisibility(View.GONE);
         } else {
-            intentOverflowList = new ListPopupWindow(context);
-            intentOverflowList.setAnchorView(intentButtons[NUMBER_OF_BUTTONS]);
-            intentOverflowList.setWidth((int) context.getResources().getDimension(R.dimen.song_details_popup_width));
-            SongIntentPopupAdapter adapter = new SongIntentPopupAdapter(mDisplayResolveInfos);
-            intentOverflowList.setAdapter(adapter);
-            intentOverflowList.setOnItemClickListener(this);
+            if (android.os.Build.VERSION.SDK_INT >= 11) {
+                intentOverflowList = new android.widget.ListPopupWindow(context);
 
-            if (android.os.Build.VERSION.SDK_INT >= 19) {
-                intentOverflowList.setDropDownGravity(Gravity.BOTTOM);
-                OnTouchListener dragListener = intentOverflowList.createDragToOpenListener(intentButtons[3]);
-                intentButtons[NUMBER_OF_BUTTONS].setOnTouchListener(dragListener);
-            }
+                intentOverflowList.setAnchorView(intentButtons[NUMBER_OF_BUTTONS]);
+                intentOverflowList.setWidth((int) context.getResources().getDimension(R.dimen.song_details_popup_width));
+                SongIntentPopupAdapter adapter = new SongIntentPopupAdapter(mDisplayResolveInfos);
+                intentOverflowList.setAdapter(adapter);
+                intentOverflowList.setOnItemClickListener(this);
 
-            try {
-                final Field popupWindowField = ListPopupWindow.class.getDeclaredField("mPopup");
-                popupWindowField.setAccessible(true);
-                popupWindow = (PopupWindow) popupWindowField.get(intentOverflowList);
-                popupWindow.setFocusable(true);
-            } catch (Exception e) {
-                Log.w(TAG, "Error setting up ListPopupWindow", e);
-            }
-
-            intentButtons[NUMBER_OF_BUTTONS].setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    intentOverflowList.show();
+                if (android.os.Build.VERSION.SDK_INT >= 19) {
+                    intentOverflowList.setDropDownGravity(Gravity.BOTTOM);
+                    OnTouchListener dragListener = intentOverflowList.createDragToOpenListener(intentButtons[3]);
+                    intentButtons[NUMBER_OF_BUTTONS].setOnTouchListener(dragListener);
                 }
-            });
 
+                try {
+                    final Field popupWindowField = ListPopupWindow.class.getDeclaredField("mPopup");
+                    popupWindowField.setAccessible(true);
+                    popupWindow = (PopupWindow) popupWindowField.get(intentOverflowList);
+                    popupWindow.setFocusable(true);
+                } catch (Exception e) {
+                    Log.w(TAG, "Error setting up ListPopupWindow", e);
+                }
+
+                intentButtons[NUMBER_OF_BUTTONS].setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        intentOverflowList.show();
+                    }
+                });
+
+            } else {
+                intentOverflowListPort = new android.support.v7.internal.widget.ListPopupWindow(context);
+
+                intentOverflowListPort.setAnchorView(intentButtons[NUMBER_OF_BUTTONS]);
+                intentOverflowListPort.setWidth((int) context.getResources().getDimension(R.dimen.song_details_popup_width));
+                SongIntentPopupAdapter adapter = new SongIntentPopupAdapter(mDisplayResolveInfos);
+                intentOverflowListPort.setAdapter(adapter);
+                intentOverflowListPort.setOnItemClickListener(this);
+
+                try {
+                    final Field popupWindowField = android.support.v7.internal.widget.ListPopupWindow.class.getDeclaredField("mPopup");
+                    popupWindowField.setAccessible(true);
+                    popupWindow = (PopupWindow) popupWindowField.get(intentOverflowListPort);
+                    popupWindow.setFocusable(true);
+                } catch (Exception e) {
+                    Log.w(TAG, "Error setting up ListPopupWindow", e);
+                }
+
+                intentButtons[NUMBER_OF_BUTTONS].setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        intentOverflowListPort.show();
+                    }
+                });
+            }
+
+        }
+    }
+
+    private void setUpDividers() {
+        setShowDividers(SHOW_DIVIDER_MIDDLE);
+        setDividerPadding(context.getResources().getDimensionPixelSize(R.dimen.intent_view_divider_padding));
+
+        if (!isInEditMode()) {
+            int[] attribute = new int[]{android.R.attr.dividerVertical};
+            TypedValue typedValue = new TypedValue();
+            TypedArray array = context.obtainStyledAttributes(typedValue.resourceId, attribute);
+            setDividerDrawable(array != null ? array.getDrawable(0) : null);
         }
     }
 
@@ -176,7 +212,7 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
 
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = layoutInflater.inflate(R.layout.popup_menu_intent, null, false);
+                convertView = layoutInflater.inflate(R.layout.popup_menu_intent, parent, false);
 
                 holder.icon = (ImageView) convertView.findViewById(R.id.popup_menu_icon);
                 holder.title = (TextView) convertView.findViewById(R.id.popup_menu_title);

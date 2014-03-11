@@ -1,9 +1,10 @@
 package com.nilsbo.egofm.fragments;
 
-import android.app.ActionBar;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class SongDetailFancyFragment extends SongDetailFragment implements Obser
     protected void initUI() {
         super.initUI();
 
-        ActionBar mActionBar = getActivity().getActionBar();
+        ActionBar mActionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowCustomEnabled(true);
         mActionBar.setDisplayHomeAsUpEnabled(false);
         mActionBar.setDisplayShowHomeEnabled(false);

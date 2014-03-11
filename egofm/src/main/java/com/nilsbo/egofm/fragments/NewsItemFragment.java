@@ -1,8 +1,8 @@
 package com.nilsbo.egofm.fragments;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +42,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
 
     protected String webViewText;
 
-    protected ActionBar mActionBar;
+    protected android.support.v7.app.ActionBar mActionBar;
     protected LayoutInflater mInflater;
     protected View rootView;
     protected WebView webView;
@@ -61,7 +61,11 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mInflater = inflater;
-        rootView = inflater.inflate(R.layout.fragment_news_item_fancy, container, false);
+        if (android.os.Build.VERSION.SDK_INT >= 14) {
+            rootView = inflater.inflate(R.layout.fragment_news_item_fancy, container, false);
+        } else {
+            rootView = inflater.inflate(R.layout.fragment_news_item, container, false);
+        }
         return rootView;
     }
 
@@ -89,7 +93,7 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
     }
 
     protected void initUI() {
-        mActionBar = getActivity().getActionBar();
+        mActionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
 
         mHeader = (RelativeLayout) rootView.findViewById(R.id.news_item_header);
         mHeaderText = (TextView) rootView.findViewById(R.id.news_item_header_text);
@@ -150,8 +154,11 @@ public class NewsItemFragment extends Fragment implements Response.ErrorListener
         if (android.os.Build.VERSION.SDK_INT >= 19) {
             webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
             webView.getSettings().setUseWideViewPort(true);
-        } else {
+        } else if (android.os.Build.VERSION.SDK_INT >= 14) {
             webView.getSettings().setTextZoom(90);
+            webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            webView.getSettings().setUseWideViewPort(false);
+        } else {
             webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             webView.getSettings().setUseWideViewPort(false);
         }

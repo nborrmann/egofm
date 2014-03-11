@@ -17,14 +17,12 @@
         android:id="@+id/song_details_album_container"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:layout_gravity="center_vertical"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/egofm_list_selector_holo_light"
-        android:clickable="true">
+        android:layout_marginBottom="8dp">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/song_details_album_image"

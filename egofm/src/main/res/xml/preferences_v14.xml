@@ -3,7 +3,7 @@
 
     <PreferenceCategory android:title="@string/prefs_general_category">
 
-        <ListPreference
+        <com.nilsbo.egofm.widgets.CustomListPreference
             android:title="@string/prefs_streamquality_title"
             android:summary="@string/prefs_streamquality_summary"
             android:key="streamquality"
@@ -11,7 +11,7 @@
             android:entries="@array/quality_entries"
             android:entryValues="@array/quality_values" />
 
-        <ListPreference
+        <com.nilsbo.egofm.widgets.CustomListPreference
             android:title="@string/prefs_metadata"
             android:key="metadata_interval"
             android:defaultValue="20"

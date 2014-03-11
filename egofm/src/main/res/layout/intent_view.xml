@@ -10,7 +10,7 @@
         android:layout_weight="1"
         android:scaleType="fitCenter"
         style="@android:style/Widget.Holo.Button.Borderless"
-        android:background="@drawable/selectable_background_egofm"
+        android:background="@drawable/background_selectable_green"
 
         />
 
@@ -22,7 +22,7 @@
         android:layout_weight="1"
         android:scaleType="fitCenter"
         style="@android:style/Widget.Holo.Button.Borderless"
-        android:background="@drawable/selectable_background_egofm" />
+        android:background="@drawable/background_selectable_green" />
 
     <ImageButton
         android:id="@+id/song_details_intent_button3"
@@ -32,7 +32,7 @@
         android:layout_weight="1"
         android:scaleType="fitCenter"
         style="@android:style/Widget.Holo.Button.Borderless"
-        android:background="@drawable/selectable_background_egofm" />
+        android:background="@drawable/background_selectable_green" />
 
     <ImageButton
         android:id="@+id/song_details_intent_overflow"
@@ -41,5 +41,5 @@
         android:padding="8dp"
         android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
         style="@android:style/Widget.Holo.Button.Borderless"
-        android:background="@drawable/selectable_background_egofm" />
+        android:background="@drawable/background_selectable_green" />
 </merge>

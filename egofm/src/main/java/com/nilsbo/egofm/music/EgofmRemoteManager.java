@@ -98,6 +98,9 @@ public class EgofmRemoteManager {
     }
 
     private Notification buildMediaNotification(String title, String text, String ticker, MediaService.State state) {
+        if (android.os.Build.VERSION.SDK_INT < 14) {
+            return buildMediaNotificationCompat(title, text, ticker, state);
+        }
         Intent resultIntent = new Intent(context, MainActivity.class);
         resultIntent.setAction("Music Notification");
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
@@ -116,14 +119,12 @@ public class EgofmRemoteManager {
             contentView.setImageViewResource(R.id.notification_startstop, R.drawable.ic_action_stop);
         }
 
-
         Intent closeIntent = new Intent();
         closeIntent.setAction(MusicIntentReceiver.NOTIFICATION_CONTROL_CLOSE);
         PendingIntent closePendingIntent =
                 PendingIntent.getBroadcast(context, 0, closeIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT);
         contentView.setOnClickPendingIntent(R.id.notification_close, closePendingIntent);
-
 
         Intent startStopIntent = new Intent();
         startStopIntent.setAction(MusicIntentReceiver.NOTIFICATION_CONTROL_STARTSTOP);
@@ -138,6 +139,26 @@ public class EgofmRemoteManager {
         mBuilder.setTicker(ticker);
         mBuilder.setPriority(1);
         mBuilder.setOngoing(true);
+
+        return mBuilder.build();
+    }
+
+    private Notification buildMediaNotificationCompat(String title, String text, String ticker, MediaService.State state) {
+        Intent resultIntent = new Intent(context, MainActivity.class);
+        resultIntent.setAction("Music Notification");
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(resultIntent);
+
+        PendingIntent resultPendingetent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingetent);
+
+        mBuilder.setSmallIcon(R.drawable.notification_small);
+        mBuilder.setTicker(ticker);
+        mBuilder.setPriority(1);
+        mBuilder.setOngoing(true);
+        mBuilder.setContentTitle(title);
+        mBuilder.setContentText(text);
+
 
         return mBuilder.build();
     }
@@ -208,22 +229,26 @@ public class EgofmRemoteManager {
 
             PendingIntent mediaPendingetent = PendingIntent.getBroadcast(context, 0, mediaButtontent, 0);
             // create and register the remote control client
-            myRemoteControlClient = new RemoteControlClient(mediaPendingetent);
-            mAudioManager.registerRemoteControlClient(myRemoteControlClient);
+            if (android.os.Build.VERSION.SDK_INT >= 14) {
+                myRemoteControlClient = new RemoteControlClient(mediaPendingetent);
+                mAudioManager.registerRemoteControlClient(myRemoteControlClient);
+            }
         }
     }
 
     private void updateRemoteControlClient(String title, String subtitle, int state) {
-        createRemoteControlClientIfNeeded();
+        if (android.os.Build.VERSION.SDK_INT >= 14) {
+            createRemoteControlClientIfNeeded();
 
-        myRemoteControlClient.setPlaybackState(state);
-        myRemoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY);
+            myRemoteControlClient.setPlaybackState(state);
+            myRemoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY);
 
-        myRemoteControlClient.editMetadata(true)
-                .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, title)
-                .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, subtitle)
-                .putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK,
-                        mAlbumArt)
-                .apply();
+            myRemoteControlClient.editMetadata(true)
+                    .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, title)
+                    .putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, subtitle)
+                    .putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK,
+                            mAlbumArt)
+                    .apply();
+        }
     }
 }
