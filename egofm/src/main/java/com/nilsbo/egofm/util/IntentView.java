@@ -25,7 +25,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.nilsbo.egofm.R;
-import com.nilsbo.egofm.widgets.backport.ListPopupWindow;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -107,7 +106,7 @@ public class IntentView extends LinearLayout implements View.OnClickListener, Ad
                 }
 
                 try {
-                    final Field popupWindowField = ListPopupWindow.class.getDeclaredField("mPopup");
+                    final Field popupWindowField = android.widget.ListPopupWindow.class.getDeclaredField("mPopup");
                     popupWindowField.setAccessible(true);
                     popupWindow = (PopupWindow) popupWindowField.get(intentOverflowList);
                     popupWindow.setFocusable(true);
