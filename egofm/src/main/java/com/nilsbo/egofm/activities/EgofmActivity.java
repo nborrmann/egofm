@@ -61,7 +61,7 @@ public class EgofmActivity extends ActionBarActivity implements EgofmActivityInt
         }
 
         // Kill service if it isn't playing
-        if (serviceCallback != null && serviceCallback.getPlaybackState() == MediaService.State.Stopped) {
+        if (serviceCallback != null && (serviceCallback.getPlaybackState() == MediaService.State.Stopped || serviceCallback.getPlaybackState() == MediaService.State.Paused)) {
             stopService(mediaServiceIntent);
         }
 

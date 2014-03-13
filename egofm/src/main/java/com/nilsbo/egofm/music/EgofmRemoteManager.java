@@ -113,7 +113,7 @@ public class EgofmRemoteManager {
         contentView.setImageViewResource(R.id.notification_image, R.drawable.notification_big);
         contentView.setTextViewText(R.id.notification_title, title);
         contentView.setTextViewText(R.id.notification_text, text);
-        if (state == MediaService.State.Stopped) {
+        if (state == MediaService.State.Stopped || state == MediaService.State.Paused) {
             contentView.setImageViewResource(R.id.notification_startstop, R.drawable.ic_action_play);
         } else {
             contentView.setImageViewResource(R.id.notification_startstop, R.drawable.ic_action_stop);

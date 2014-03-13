@@ -60,9 +60,9 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     public enum State {
         Stopped,    // media player is stopped and not prepared to play
         Preparing,  // media player is preparing...
-        Playing    // playback active (media player ready!). (but the media player may actually be
-        // paused in this state if we don't have audio focus. But we stay in this state
-        // so that we know we have to resume playback once we get focus back)
+        Playing,    // playback active (media player ready!).
+        Paused      // actually Stopped, but indicates that it was stopped due to losing AudioFocus,
+        // so we will start playback on gaining AudioFocus the next time.
     }
 
     ;
@@ -127,7 +127,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     // PlayPause is coming from the lockscreen, hence we don't want to give up AudioFocus, so the widget doesn't disappear
     private void processPlayPauseRequest() {
-        if (mState == State.Stopped) {
+        if (mState == State.Stopped || mState == State.Paused) {
 //            logStreamStart(getApplicationContext(), "Lockscreen");
             logStart("Lockscreen");
             startPlayback();
@@ -140,7 +140,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     // StartStop is coming from the notification. Start and Stop as usual, but don't close the service.
     private void processStartStopRequest() {
-        if (mState == State.Stopped) {
+        if (mState == State.Stopped || mState == State.Paused) {
 //            logStreamStart(getApplicationContext(), "Notification");
             logStart("Notification");
             startPlayback();
@@ -182,8 +182,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     public void onGainedAudioFocus() {
         if (mState == State.Preparing || mState == State.Playing)
             mMediaPlayer.setVolume(1.0f, 1.0f);
-        else {
-//            logStreamStart(getApplicationContext(), "Gained AudioFocus");
+        else if (mState == State.Paused) {
             logStart("Gained AudioFocus");
             startPlayback();
         }
@@ -194,6 +193,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
         if (!canDuck) {
             logStop("Lost AudioFocus");
             cleanup();
+            mState = State.Paused; // Overwrite State.Stopped so we know to resume Playback on gaining AudioFocus
             mRemoteManager.displayDefaultNotification(mState);
         } else {
             if (mMediaPlayer != null && mMediaPlayer.isPlaying())
@@ -384,7 +384,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
     }
 
     private void logStart(String label) {
-        if (mState == State.Stopped) {
+        if (mState == State.Stopped || mState == State.Paused) {
             if (startTime != null) {
                 logStreamStop(getApplicationContext(), String.format("Unknown: %s", label), 0);
                 startTime = null;
