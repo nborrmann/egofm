@@ -180,6 +180,7 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     @Override
     public void onGainedAudioFocus() {
+        Log.d(TAG, "onGainedAudioFocus " + mState);
         if (mState == State.Preparing || mState == State.Playing)
             mMediaPlayer.setVolume(1.0f, 1.0f);
         else if (mState == State.Paused) {
@@ -190,11 +191,17 @@ public class MediaService extends Service implements MediaServiceInterface, Medi
 
     @Override
     public void onLostAudioFocus(boolean canDuck) {
+        Log.d(TAG, "onLostAudioFocus " + mState);
         if (!canDuck) {
-            logStop("Lost AudioFocus");
-            cleanup();
-            mState = State.Paused; // Overwrite State.Stopped so we know to resume Playback on gaining AudioFocus
-            mRemoteManager.displayDefaultNotification(mState);
+            if (mState == State.Playing || mState == State.Preparing) {
+                logStop("Lost AudioFocus");
+                cleanup();
+                mState = State.Paused; // Overwrite State.Stopped so we know to resume Playback on gaining AudioFocus
+                mRemoteManager.displayDefaultNotification(mState);
+            } else if (mState == State.Paused) {
+                mState = State.Stopped; // We lost AudioFocus twice without regaining, so we can
+                // assume the user isn't aware of us anymore.
+            }
         } else {
             if (mMediaPlayer != null && mMediaPlayer.isPlaying())
                 mMediaPlayer.setVolume(0.1f, 0.1f);
